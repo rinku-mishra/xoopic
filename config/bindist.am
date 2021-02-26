@@ -1,0 +1,75 @@
+## ####################################################################
+##
+## File:		bindist.am
+##
+## Purpose:	Adds in targets for creating a binary distribution.
+##
+## Version:	$Id: bindist.am 672 2001-12-29 18:02:59Z cary $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+os_tag	= @os_tag@
+loc_bindistdir = $(PACKAGE)-$(VERSION)-$(os_tag)
+top_bindistdir = $(loc_bindistdir)
+BINDISTFILES = $(bin_PROGRAMS) $(EXTRA_BINDIST)
+ALLBINDISTFILES = $(BINDISTFILES) .
+# Must have at least one subdir, or chokes, so we 
+# add in . but do not use it
+ALLBINDISTSUBDIRS = $(BINDISTSUBDIRS) .
+ALLCVS_REMOVES = $(CVS_REMOVES) .
+
+# bindist: $(bindistdir)
+bindist: bindistdir
+	-chmod -R a+r $(top_bindistdir)
+# To simplify installation, move classes to under html
+	if test -d $(top_bindistdir)/classes; then \
+	  if test -d $(top_bindistdir)/html; then \
+	    mv $(top_bindistdir)/classes $(top_bindistdir)/html/classes; \
+	  fi; \
+	fi
+	# GZIP=$(GZIP_ENV) $(TAR) chozf $(top_bindistdir).tgz $(top_bindistdir)
+	$(TAR) chozf $(top_bindistdir).tgz $(top_bindistdir)
+	-rm -rf $(top_bindistdir)
+# bindistdir: $(bindistdir)
+# $(bindistdir): $(BINDISTFILES)
+bindistdir: $(ALLBINDISTFILES)
+	-rm -rf $(loc_bindistdir)
+	mkdir $(loc_bindistdir)
+	-chmod 777 $(loc_bindistdir)
+	d=$(srcdir); \
+	for file in $(ALLBINDISTFILES); do \
+	  if test "$$file" = .; then \
+	    :; \
+	  elif test -d $$d/$$file; then \
+	    cp -pr $$d/$$file $(loc_bindistdir)/$$file; \
+	  else \
+	    test -f $(loc_bindistdir)/$$file \
+	    || ln $$d/$$file $(loc_bindistdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(loc_bindistdir)/$$file || :; \
+	  fi; \
+	done
+	for subdir in $(ALLBINDISTSUBDIRS); do \
+	  if test "$$subdir" = .; then \
+	    :; \
+	  else \
+	    test -d $(loc_bindistdir)/$$subdir \
+	    || mkdir $(loc_bindistdir)/$$subdir \
+	    || exit 1; \
+	    chmod 777 $(loc_bindistdir)/$$subdir; \
+	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_bindistdir=../$(loc_bindistdir) loc_bindistdir=../$(loc_bindistdir)/$$subdir bindistdir) \
+	    || exit 1; \
+	  fi; \
+	done
+	for cvssubdir in $(ALLCVS_REMOVES); do \
+	  if test "$$cvssubdir" = .; then \
+	    :; \
+	  else \
+	    rm -rf $(loc_bindistdir)/$$cvssubdir; \
+	  fi; \
+	done
+	  
+
+

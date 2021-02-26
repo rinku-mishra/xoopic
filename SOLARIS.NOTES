@@ -1,0 +1,13 @@
+Someone successfully got XOOPIC working with Solaris 2.5
+and SunSoft C++ 4.1.
+
+
+He had to change the makefiles to use the new compiler,
+and compile the advisor with debugging and no optimization.
+
+He also had to make sure that 
+#include <stdlib.h>
+was uncommented in xg/list.h
+
+Versions higher than XOOPIC 2.0 should work without
+modification with SunSoft C++ 4.2.

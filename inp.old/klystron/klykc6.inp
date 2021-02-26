@@ -1,0 +1,220 @@
+default
+{
+kc's klystron
+}
+Grid
+{
+	n2 = 1.000e+00
+	x2f = 1.090e-01
+	x2s = 0.000e+00
+	K = 36
+	n1 = 1.000e+00
+	x1f = .38
+	x1s = 0.000e+00
+	J = 74
+	Rule
+	{
+	Limit
+	 n1 < 2.500e-01
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+}
+Control
+{
+	B01 = 6.000e+01
+	dt = 5.000e-12
+	Rule
+	{
+	Limit
+	 dt <= 0.000e+00
+	 Fatal -- time step must be positive
+	}
+}
+CylindricalAxis
+{
+	normal = 1
+	k2 = 0
+	j2 = 74
+	k1 = 0
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 0
+	j2 = 0
+	k1 = 20
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 20
+	j2 = 0
+	k1 = 36
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 36
+	j2 = 63
+	k1 = 36
+	j1 = 74
+}
+Conductor
+{
+	normal = -1
+	k2 = 36
+	j2 = 0
+	k1 = 36
+	j1 = 51
+}
+ExitPort
+{
+	normal = -1
+	k2 = 36
+	j2 = 63
+	k1 = 36
+	j1 = 51
+	EFFlag = 1
+	R = 47.124
+}
+Conductor
+{
+	normal = -1
+	k2 = 22
+	j2 = 74
+	k1 = 36
+	j1 = 74
+}
+Species
+{
+	name = electrons
+	m = 9.11e-31
+	q = -1.6e-19
+}
+BeamEmitter
+{
+	numberparticlesinmacro = 2.000e+7
+	I = 3
+	speciesName = electrons
+	vthcutoff = 0.000e+00
+	vrcutoff = 0.000e+00
+	vzcutoff = 0.000e+00
+	vththermal = 0.000e+00
+	vrthermal = 0.000e+00
+	vzthermal = 0.000e+00
+	vthdrift = 0.000e+00
+	vrdrift = 0.000e+00
+	vzdrift = 6.6e+07
+	normal = 1
+	k2 = 13
+	j2 = 0
+	k1 = 15
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 16
+	j2 = 22
+	k1 = 16
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 18
+	j2 = 22
+	k1 = 16
+	j1 = 22
+}
+Conductor
+{
+	normal = 1
+	k2 = 18
+	j2 = 12
+	k1 = 18
+	j1 = 22
+}
+Conductor
+{
+	normal = 1
+	k2 = 36
+	j2 = 12
+	k1 = 18
+	j1 = 12
+}
+Conductor
+{
+	normal = -1
+	k2 = 36
+	j2 = 24
+	k1 = 36
+	j1 = 13
+}
+Conductor
+{
+	normal = -1
+	k2 = 16
+	j2 = 24
+	k1 = 36
+	j1 = 24
+}
+Conductor
+{
+	normal = -1
+	k2 = 16
+	j2 = 51
+	k1 = 16
+	j1 = 24
+}
+Conductor
+{
+	normal = 1
+	k2 = 36
+	j2 = 51
+	k1 = 16
+	j1 = 51
+}
+Conductor
+{
+	normal = 1
+	k2 = 18
+	j2 = 53
+	k1 = 18
+	j1 = 63
+}
+Conductor
+{
+	normal = -1
+	k2 = 16
+	j2 = 53
+	k1 = 18
+	j1 = 53
+}
+Conductor
+{
+	normal = -1
+	k2 = 18
+	j2 = 63
+	k1 = 36
+	j1 = 63
+}	
+Conductor
+{
+	normal = -1
+	k2 = 16
+	j2 = 74
+	k1 = 16
+	j1 = 53
+}
+Conductor
+{
+	normal = -1
+	k2 = 0
+	j2 = 74
+	k1 = 16
+	j1 = 74
+}

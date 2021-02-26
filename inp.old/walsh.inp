@@ -1,0 +1,90 @@
+walsh
+{
+	Cerenkov Maser
+}
+Grid
+{
+	J = 80
+	x1s = 0.0
+	x1f = 0.15
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.00625
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 3e-13
+	B01 = .1
+}
+VarWeightBeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 9
+	normal = 1
+	speciesName = electrons
+	thetadot = 0.0
+	I = 7.5
+	numberparticlesinmacro = 1.0E7
+	vzdrift = 2.1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 9
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 20
+	j2 = 80
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = 80
+	k1 = 20
+	j2 = 80
+	k2 = 0
+	normal = -1
+}
+DielectricRegion
+{
+	er = 4.0
+	j1 = 0
+	k1 = 13
+	j2 = 80
+	k2 = 20
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 80
+	k2 = 0
+	normal = 1
+}

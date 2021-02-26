@@ -1,0 +1,132 @@
+default
+{
+ecr
+}
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.02
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	B01 = .0650
+	B02 = .0450
+	betwig = 157.0796
+	dt = 1e-12
+	ElectrostaticFlag = 0
+	gasPressure = 0.001
+        eCollisionalFlag = 1
+	FieldSubFlag = 25
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+        name = ions
+        m = 9.11E-29
+        q = 1.6e-19
+}
+Load
+{
+        speciesName = ions
+        zMinMKS = .0008
+        zMaxMKS = .02
+        rMinMKS = .0
+        rMaxMKS = .02
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 1e4
+        cutoff = 0
+        density = 1e14
+        np2c = 5e5
+}
+Load
+{
+        speciesName = electrons
+	zMinMKS = .0008
+        zMaxMKS = .02
+        rMinMKS = .0
+        rMaxMKS = .02
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 1e6
+        cutoff = 0
+        density = 1e14
+        np2c = 5e5
+}
+PortTM
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 5
+	normal = 1
+	frequency = 1.539e10
+	A = 5e4
+	C = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 0
+	k2 = 10
+	normal = 1
+}	
+DielectricRegion
+{
+	j1 = 0
+	k1 = 0
+	j2 = 2
+	k2 = 10
+	er = 2.5
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 50
+	k2 = 10
+	normal = -1
+}
+ExitPort
+{
+	j1 = 50
+	k1 = 10
+	j2 = 50
+	k2 = 0
+	normal = -1
+	C = 0
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}

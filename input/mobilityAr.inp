@@ -1,0 +1,100 @@
+mobilityAr
+{
+measure mobility of argon
+}
+Region
+{
+Grid
+{
+	J = 16
+	x1s = 0.0
+	x1f = 1.0
+	n1 = 1.0
+	K = 16
+	x2s = 0.0
+	x2f = 1.0
+	n2 = 1.0
+	Geometry = 1
+	PeriodicFlagX2 = 1	
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-10
+	ElectrostaticFlag = 4
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+MCC
+{
+	gas = Ar
+	pressure = 1.0
+	eSpecies = electrons
+	iSpecies = ions
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19 
+	collisionModel = 1
+}
+Species
+{
+	name = ions
+        m = 6.67e-26
+        q = 1.6e-19
+	collisionModel = 2
+	rmsDiagnosticsFlag = 1
+}
+Equipotential
+{
+	C = 1000
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 16
+	normal = 1
+}
+Conductor
+{
+	j1 = 16
+	k1 = 0
+	j2 = 16
+	k2 = 16
+	normal = -1
+}
+Load
+{
+	x1MinMKS = 0.10
+	x1MaxMKS = 0.30
+	x2MinMKS = 0.00
+	x2MaxMKS = 1.0
+	speciesName = ions
+	density = 1.0e2
+	np2c = 3.0E-3
+	 LoadMethodFlag =1
+	temperature = 0.0
+}
+//Load
+//{
+//	x1MinMKS = 0.00
+//	x1MaxMKS = 0.05
+//	x2MinMKS = 0.00
+//	x2MaxMKS = 0.01
+//	speciesName = argon
+//	density = 1.0e15
+//	np2c = 1.1e6
+//	 LoadMethodFlag=1
+//	temperature = 4.9e2
+//}
+}

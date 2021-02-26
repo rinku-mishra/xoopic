@@ -1,0 +1,150 @@
+default
+{
+sumitomo's surface wave source, 20cmx20cm !!!!
+}
+Grid
+{
+	J = 49
+	x1s = 0.0
+	x1f = 0.20
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.20
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt = 1.594387e-12
+	ElectrostaticFlag = 0
+	gasPressure = 0.01
+        eCollisionalFlag = 1
+	FieldSubFlag = 25
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+        name = ions
+        m = 6.626e-26
+        q = 1.6e-19
+}
+Diagnostic
+{
+        Ave = 40000 
+        PlotLabel = JdotE
+        j1 = 1
+        k1 = 1
+        j2 = 48
+        k2 = 48
+        VarName = JdotE
+}
+Load
+{
+        speciesName = electrons
+        zMinMKS = .022
+        zMaxMKS = .2
+        rMinMKS = .0
+        rMaxMKS = .19
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 4.2e5
+        cutoff = 0
+        density = 3e14
+        np2c = 1e9
+}
+Load
+{
+        speciesName = ions
+        zMinMKS = .022
+        zMaxMKS = .2
+        rMinMKS = .0
+        rMaxMKS = .19
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 4.2e2
+        cutoff = 0
+        density = 3e14
+        np2c = 1e9
+}
+Gap
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+	frequency = 1.539e10
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+DielectricRegion
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 49
+	er = 2.5
+}
+ExitPort
+{
+	R = 1
+	C = 0
+	j1 = 5
+	k1 = 0
+	j2 = 49
+	k2 = 0
+	normal = +1
+}
+ExitPort
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 49
+	R = 1
+	C = 0
+	normal = +1
+}
+ExitPort
+{
+	j1 = 0
+	k1 = 49
+	j2 = 49
+	k2 = 49
+	R = 1
+	C = 0
+	normal = -1
+}
+Equipotential
+{
+	C = -50
+	A =  90
+	frequency = 2.5e5
+	phase = 0
+	j1 = 49
+	k1 = 0
+	j2 = 49
+	k2 = 49
+	normal = -1
+}

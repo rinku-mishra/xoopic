@@ -1,0 +1,301 @@
+The implementation of the dump/restore is somewhat non-intuitive.
+For some objects, such as the fields and grid, there is only one of
+them, so there is no problem deciding which object the data in
+the dump file refers to.  However, for boundaries, it is not clear
+which boundary in memory belongs to the current boundary being read
+in the file.
+
+For that reason, all the boundaries (and diagnostics, which are analogous)
+have the same macroscopic format, usually a few ints, one of which is
+a number of floats of data to be loaded, another which is the type
+of boundary.  Because of this uniform format, a boundary (or diagnostic)
+can be loaded without ever finding a corresponding object in memory.
+
+The reason for the changes was better support of multiprocessing.
+The multiprocessor version of XOOPIC geometrically 
+divides the simulation region into subdomains, one for each CPU.
+Dump and restore could have been implemented by sending all the
+data to one CPU to do the file I/O:  this would serialize dump/restore
+operations and forfeit some of the advantage of multiprocessing.
+Also, the dump/restore data has been split into as many files as
+there are CPUs.  This avoids synchronization issues of many CPUs
+writing to the same file.  The files are named like this:
+
+file.1 file.2 file.3 file.4.... file.n.
+
+Data is tagged with sufficient geometric data so that on restore,
+each process can restore only the parts of a particular dump file
+that belong in its portion of the simulation domain: i.e., if
+the dump file was made from a CPU with 1 region, and the restore
+is onto 2 CPUs, some boundaries might be cut in half.  Each
+CPU will restore only the information from the data file that applies
+to it.  Alternately, CPUs may look into several datafiles to 
+gather all the data needed for its domain, 
+if the number of CPUs is reduced.
+
+This is another reason for the uniform, predictable format of
+the boundary and diagnostic data dumps.  A particular CPU might
+be reading a datafile, and come across a boundary that doesn't
+exist in it.  It won't therefore be able to call that boundary's
+restore function to read in the data, but nevertheless, it must
+proceed to the next set of boundary data.  With a uniform format,
+it will know how to skip to the next boundary.
+
+
+High level format:
+
+Version 2.6
+
+Data	    Purpose		    Where		    Example
+4 char	    Version code	    xg/dump.cpp		    2.60
+
+1 int	    random number seed	    physics/sptlrgn.cpp	    43498593
+1 int	    length of name	    physics/sptlrgn.cpp	    10
+n+1 char    the chars of the name   physics/sptlrgn.cpp	    "electron gun"
+1 float	    simulation time	    physics/sptlrgn.cpp	    1.233e-9
+
+4 float	    Physical region covered physics/sptlrgn.cpp	    xs,ys,xf,yf
+	    (xmin ymin xmax ymax, the physical dimensions dumped in this file)
+
+
+1 int	    Number of boundaries    physics/sptlrgn.cpp	    20
+
+//This next is a repeating block, repeating as many times as there
+//are boundaries:
+
+{
+
+4 float	    dimension descriptor    physics/boundary.cpp    xs,ys,xf,yf
+1 int	    type of this boundary   physics/boundary.cpp    3
+
+// The next area is a variable region, dumped depending on what 
+// the particular boundry needs, but they must ALL
+// follow this format: 1 int (n),1 int (unused),1 int(unused), 4n floats
+
+// This is the format for an ExitPort
+{
+1 int	    number of datapoints    physics/boundary.cpp    5
+1 int	    (unused)
+1 int	    (unused)
+4nfloat	    x,y,oldH1,oldH2		    physics/exitport.cpp    x,y,oldH1,oldH2
+   the x location, the y location (in MKS) and H stored there.
+}
+
+// This is the format for a Dielectric and DielectricRegion
+{
+1 int	    number of datapoints    physics/dielectr.cpp    7
+1 int	    (unused)
+1 int	    (unused)
+4n float    x,y,Q(x,y),unused	    physics/dielectr.cpp    x,y,Q(x,y),0
+}
+
+}
+
+
+1 int	    number of diagnostics   physics/sptlrgn.cpp	    4
+
+// This next is a repeating block, repeating as many times as
+//there are  diagnostics:  they must ALL follow this format:
+
+
+// This is the format for a generic Diagnostic
+{
+4 float	    dimension descriptor    xg/newdiag.cpp	    xs,ys,xf,yf
+1 int	    xlength
+1 int	    ylength  
+1 int	    title length	    xg/newdiag.cpp	    10
+n+1char	    the title		    xg/newdiag.cpp	    "foo\0"
+1 int	    history flag	    xg/newdiag.cpp	    0
+
+// additional stuff for a generic History, which all follow this format:
+//  3 int as shown below, hist_num floats, 1 int n, 11 more ints, n floats.
+1 int	    hist_num		    xg/history.cpp	    3
+1 int	    hist_hi		    xg/history.cpp	    3
+1 int	    alloc_size		    xg/history.cpp	    3
+hist_num floats (the time array)    xg/history.cpp	    
+
+// All derived histories need to be in the following data format:
+//  1 int n, 11 user-defined ints, 
+//  n floats.
+
+// additional stuff forming a Scalar_History
+1 int	    hist_num
+1 int	    comb		    xg/history.cpp	    3
+1 int	    n_comb		    xg/history.cpp	    3
+1 int	    take_state		    xg/history.cpp	    0
+1 int	    step		    xg/history.cpp	    
+7 ints	    unused
+hist_num floats (the data array)    xg/history.cpp	    
+
+// additional stuff forming a Scalar_Local_History
+1 int	      hist_num
+1 int	      left_shift	    xg/history.cpp	    5
+10 ints	      unused
+hist_num floats (the data array)
+
+// additional stuff forming a Scalar_Ave_Local_History	    
+1 int	      hist_num		
+1 int	      left_shift	    xg/history.cpp	    5
+1 int	      ave		    xg/history.cpp	    5
+1 int	      step		    xg/history.cpp	    5
+1 int	      take_state	    xg/history.cpp	    5
+7 ints	      unused 
+hist_num floats (the data array)
+
+// additional stuff for Scalar_Ave_History
+1 int	      hist_num					    1
+1 int	      left_shift				    2
+1 int	      ave					    3
+1 int	      step_ave					    4
+1 int	      take_state_ave				    5
+1 int	      comb					    6
+1 int	      step comb					    7
+1 int	      n_comb					    8
+1 int	      take_state_comb				    9
+1 int	      step					    10
+2 int	      unused					   (11&12)
+
+hist_num floats	(the data array)
+
+// additional stuff for Vec_Pointers_History
+1 int	      datasize = hist_num * vector_size
+1 int	      comb	    
+1 int	      n_comb
+1 int	      take_state
+1 int	      step
+1 int	      vector_size
+6 int	      (unused)
+hist_num * vector_size floats	(the data)
+
+// additional stuff for Vec_Pointers_History_Ave
+1 int	      datasize = hist_num * vector_size
+1 int	      comb
+1 int	      ave
+1 int	      n_comb
+1 int	      take_state
+1 int	      step
+1 int	      vector_size
+5 int	      unused
+hist_num * vector_size floats	(the data)
+
+// additional stuff for Vec_Pointers_History_Local_Ave
+1 int	      datasize = hist_num * vector_size
+1 int	      left_shift
+1 int	      ave
+1 int	      take_state
+1 int	      step
+1 int	      vector_size
+6 int	      (unused)
+hist_num * vector_size floats	(the data)
+
+
+
+
+// additional stuff for Vector_History
+1 int	      datasize = hist_num * vector_size
+1 int	      comb
+1 int	      n_comb
+1 int	      take_state
+1 int	      step
+1 int	      vector_size
+6 int	      (unused)
+hist_num * vector_size floats	(the data)
+
+// additional stuff for Vec_Pointers_Local_History
+1 int	      datasize = hist_num * vector_size
+1 int	      left_shift
+1 int	      vector_size
+9 int	      (unused)
+hist_num * vector_size floats	(the data)
+
+
+// additional stuff for Vector_Local_History
+1 int	      datasize = hist_num * vector_size
+1 int	      left_shift
+1 int	      vector_size
+9 int	      (unused)
+hist_num * vector_size floats	(the data)
+
+// additional stuff for JE_Region_History
+1 int	      datasize = x*y
+1 int	      Ave
+1 int	      x_array_size
+1 int	      y_array_size
+8 int	      unused
+x*y floats    data
+
+// additional stuff for Region_History
+1 int	      datasize = x*y
+1 int	      hist_hi
+1 int	      Ave
+1 int	      x_array_size
+1 int	      y_array_size
+7 int	      (unused)
+x*y floats    data
+
+
+
+
+
+Fields format:
+
+1 int	      J
+1 int	      K
+
+Repeating block J*K :
+{
+1 float	      x location of these fields
+1 float	      y location of these fields
+1 Vector3     intEdl(x,y)
+1 Vector3     intBdS(x,y)
+1 Vector3     I(x,y)
+}
+
+1 float	      EMdamping
+
+if EMDAMING > 0
+repeating block J*K {
+1 float   xloc
+1 float   yloc
+Vector3   intEdlBar(x,y)
+}
+
+
+Particles format:
+1 int	      SpeciesID
+1 int	      vary_np2c	(flag)
+1 float	      np2c0	
+1 int	      n
+
+if (vary_np2c)
+Repeating block n*
+{
+1 float	      qArray[i]
+1 Vector2     x
+1 Vector3     u
+}
+else
+Repeating block n*
+{
+1 Vector2     x
+1 Vector3     u
+}
+
+
+
+	// Now the hard part... read in the data into the right part
+	// of the array.
+	for(int i=0; i<hist_num; i++) {
+		Scalar inDat;
+		Scalar xfrac,yfrac,xstart,ystart;
+		int is=0;
+		int datalength=MAX(xl,yl);
+		int mylength=MAX((j2-j1),(k2-k1));
+		Scalar ReadLength=MAX(_B1-_A1,_B2-_A2);
+		XGRead(&inDat, 4, 1, DMPFile, "Scalar");
+		if(B1!=A1) xfrac = (_B1-_A1)/(B1-A1);
+		else xfrac = 0;
+		if(B2!=A2) yfrac = (_B2-_A2)/(B2-A2);
+		else yfrac = 0;
+		
+	}

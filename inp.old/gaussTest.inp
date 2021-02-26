@@ -1,0 +1,161 @@
+gaussP1_new.inp
+{
+
+ - Pulse with transverse Gaussian profile and y polarization is launched from
+   the left boundary. 
+
+-  Cartesian geometry.
+
+ - The wave is defined by the variables:
+
+     - spotSize_p0      = Half width at amplitude of central amplitde over
+                          e at the beam waist. 
+     - waveLeng_p0      = wavelenght.
+     - focus_p0         = position of focus. 
+     - amp_p0           = peak wave amplitude.    
+     - chirp_p0         = change of wavelength from begining of pulse
+                          to end.
+     - pulShp_p0        = pulse shape (0=trapezoid; 1=Gaussian; 2=half-sine)
+     - tdelay_p0        = time delay to start pulse. 
+     - pulLeng_p0       = pulse length (meters). (half-width for trapezoid and
+                          Gaussian full for half-sine).
+}
+
+Variables
+{
+// Grid variables
+
+      Nx = 250 
+      Ny = 64 
+      Lx = 150.0e-06 
+      Ly = 80.0e-06 
+
+// General parameters
+
+      electronMass = 9.1094e-31 
+      electronCharge = -1.6022e-19
+      permit = 8.8542e-12 
+      speedLight = 2.9979e8
+      speedLight2 = speedLight*speedLight 
+      electronCharge2 = electronCharge*electronCharge 
+      qOverm = electronCharge/electronMass
+      Pi = 3.14159265358979323846 
+
+// Plasma parameters
+
+//      elecPlasmaDensity =  1.0e23
+      elecPlasmaDensity = 0.0
+      elecPlasmaFreq = sqrt(electronCharge*qOverm*elecPlasmaDensity/permit)
+ 
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+}
+Region
+{
+Grid
+{
+	J = Nx 
+	x1s = 0.0
+	x1f = Lx 
+	n1 = 1.0
+	K = Ny 
+	x2s = 0.0
+	x2f = Ly 
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 1.0e-15 
+	ElectrostaticFlag = 0
+	movingWindow =0 
+	shiftDelayTime = 2.016e-13 
+}
+Species
+{
+        name = electrons
+        m = electronMass 
+        q = electronCharge 
+}
+Species
+{
+        name = ions
+        m = 1.67e-27
+        q = 1.6e-19
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = electrons
+        density = elecPlasmaDensity 
+        np2c = 1.2e11
+        LoadMethodFlag = 1
+        temperature = 0.0
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = ions
+        density = elecPlasmaDensity 
+        np2c = 0.0
+}
+
+PortGauss
+{
+	j1 = 0 
+	k1 = 0 
+	j2 = 0 
+	k2 = Ny 
+	normal = 1
+
+// Wave (0)
+	A = 0
+	C = 1.0 
+	pulShp_p0 = 2 
+	tdelay_p0 = 0.0 
+	pulLeng_p0 = 10e-05 
+        chirp_p0 = 0
+        spotSize_p0 = 8e-06  
+        waveLeng_p0 = 6.2e-06 
+        focus_p0 = 0.5*Lx 
+        amp_p0 = 0.0 
+
+// Wave (1)
+	A = 0
+	C = 1.0 
+        pulShp_p1 = 0
+        tdelay_p1 = 0.0
+        pulLeng_p1 = 10e-05
+        chirp_p1 = 0
+        spotSize_p1 = 8e-06
+        waveLeng_p1 = 6.2e-06
+        focus_p1 = 0.5*Lx
+        amp_p1 = 8.0e12 
+
+	EFFlag = 0 
+	name = PortGauss
+}
+Conductor
+{
+	j1 = 0
+	k1 = Ny 
+	j2 = Nx 
+	k2 = Ny 
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0 
+	j2 = Nx 
+	k2 = 0 
+	normal = 1
+}
+}

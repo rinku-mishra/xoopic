@@ -1,0 +1,331 @@
+$Id: README.notes 923 1999-02-11 23:06:26Z kgl $
+
+This file should be removed from the CVS repository at a later date.
+It contains notes about Phase I compilation of this qtg directory.
+
+---------------------------------------------------------------
+Documentation:
+---------------------------------------------------------------
+
+I used doc++ and there is a makefile target make docs
+All new .cpp files have doc++ documentation in the .h files.
+
+We might be able to use both doxygen (for Qt) and doc++ 
+since doc++ reads the .h files and doxygen can read .cpp files
+
+The make docs will create a directory oopic/docs and place
+the html there.
+
+---------------------------------------------------------------
+Windows:
+---------------------------------------------------------------
+
+This code at present can only be compiled with the cygwin compilers.
+Use oopic/make-cygwin for compilation with win32-gcc rules
+(set OOPIC_ENV=win32-gcc in windows)
+
+
+---------------------------------------------------------------
+XG:
+---------------------------------------------------------------
+
+The xg*.c files should be converted to .cpp;
+however, there might be some difficulty with this.
+The xginitc.c uses va_list and va_start and va_arg
+in XGStructure.  I do not know if there is a egcs g++
+equivalent for that, and even if so, if there are other
+compiler equivalents.  The module should probably be re-written.
+
+The xgdatamacros.h must be re-done.
+This header is required to define a WindowType, but causes errors if multiply included.  
+Because of this and the Qt moc requirement of using .h file as input, 
+I had to create Plot3D.h, Plot3DWindow.h and PlotWindow.h 
+which are identical to 
+GLPLot3D.h TxqPlot3DWindow.h and TxqPlotWindow.h
+without the includes: 
+// XG Includes
+#include "xgdatamacros.h"
+#include "windowtype.h"
+
+The xg*.h files should also be looked at and remove ones that are not needed.
+
+For phase II, data should be sent directly to the graph from the physics
+code rather than going through the xg*.c routines.
+
+If the xg*.c routines were removed, then the Borland and DCC compilers may be able
+to compile the code.
+
+The WindowType structure needs to be re-done as a .cpp class.
+
+
+---------------------------------------------------------------
+Two D:
+---------------------------------------------------------------
+
+The emulation of the two-d code is pretty good.
+This is done in TxqPlotWindow::plotPoints
+
+What is left to do are the window buttons and Log re-scaling.
+
+The Is* flags in general do not work.  These must be re-defined correctly
+(at least the Is_?_AutoRescale is broken.)  I used the label pointer
+value.  (See xgrescale.c)
+ie in xgrescale.c
+// This is broken, use label_Ptr
+// if (Is_X_AutoRescale(theWindow) && (n = *(theWindow->data->npoints))) {
+    label_Ptr->X_Max = label_Ptr->X_Min = CurveX(data_Ptr,0);
+ 
+
+
+---------------------------------------------------------------
+OpenGL:
+---------------------------------------------------------------
+
+Currently we are using Mesa 3.0 libs on linux and solaris.
+The solaris machine, ring, has OpenGL installed but needs
+the correct frame buffer (Creator3D) to open a GLX display.
+Tech-x, the SGI machine, does not at this date, have Mesa 
+installed, but does have OpenGL installed.
+
+Mesa and Qt have an error in the QGLWidget::makeCurrent() method.
+Once inserted, memory rises if more than one open window is opened.
+This does not occur on Windows.  I tried to verify with
+an OpenGL machine, tech-x, but was unable to get the oopic
+code compiled there.  (See below)
+
+The Qt documentation says that the QGLWidget::makeCurrent() method
+need not be called if you are doing an updateGL, but
+this was required for more than one window being opened at 
+at time.  Possibly a Qt error?
+
+
+The OpenGL has many areas to be enhanced.  I tried
+very simly to use glEnable(GL_DEPTH_TEST) around the
+line drawings (after glBegin) but was unsuccessful.
+Further study of how to do hidden line removal on
+surfaces is required.  I also tried to make the data box
+by using QUADS then applying a black color to them
+but I could not make the black invisible.  I believe
+I would need to glEnable(GL_ALPHA) for this.
+
+OOPIC uses the XAllocColor to look up hardware colors
+for three-d.  We would need to write or use an OpenGL
+color table for this emulation.
+
+The GLPlot3D tries to emulate the xgrafix/src/xgpaint3d.c
+Paint_ThreeD_Window function.  All the data type features are not
+emulated, especially: Is_Irr_Sur Is_Scatter Is_ColorCode Is_?_Log
+
+At present, I do not know how to create fonts correctly.
+I have a program in ~kgl/qt/opengl/font that will display a font
+and text and allow the sliders to work.  (After starting up, pull down 
+the last slider, eye, till you see the text)
+However, the problem with this code is that the fonts have to
+be in screen coordinates and not data coordinates.  This
+might be an easy fix.
+
+
+---------------------------------------------------------------
+Tech-x compilation of qtg:
+---------------------------------------------------------------
+
+Qt is compiled correctly for KCC, DCC, egcs1.1, and g++
+but not egcs1.0 .  The egcs1.0 compiler must be in error on tech-x
+
+However, opengl extensions will only work for DCC since it
+is a .so file.  The egcs compiler cannot find the GL lib.
+
+oopic is compiled with egcs1.1 on tech-x in ~kgl/projects/oopic.tech-x
+using ~kgl/projrules/irix-dcc (not in cvs)
+evaluator.tab.c could not be compiled.
+Some slight modifications had to be made to the code. (see below)
+However, the DCC compiler could not find the .c routines of xgrafix
+I believe the XG* link errors are due to using extern void and void
+for these routines in the xgrafix.h  and xgrafixint.h headers.
+
+The Xmu* error will need the Xmu lib
+Since I could not compile the evaluator.tab.c the rest are from that routine.
+
+Here is the link output:
+Unresolved:
+XGSet3D
+XGSurfVector
+XGSurf
+XGSetVec
+XGVectorVector
+XGSet2D
+XGScat2D
+XGStructureArray
+XGStructure
+XGCurve
+SetUpNewVar
+XGInit
+XGStart
+EVAL_STRING
+SYMBOL_TABLE
+Sindex
+yyparse
+EVAL_RESULT
+XGWrite
+XGRead
+RescaleTwoDWindow
+RescaleThreeDWindow
+init_table
+nint
+getsym
+putsym
+delete_table
+XmuLookupStandardColormap
+
+The modifications to the code to get DCC to compile were not put
+into CVS since I was unsure of how this would affect the egcs compilation.
+At this late date of the project, I did not want to change that compilation.
+
+Here are the cvs diffs:
+tech-x.txcorp.com(9)% cd ..
+/home/research/kgl/projects/oopic.tech-x
+tech-x.txcorp.com(10)% cvs diff |more
+cvs diff: Diffing .
+cvs diff: Diffing advisor
+cvs diff: Diffing bench
+cvs diff: Diffing bin
+cvs diff: Diffing doc
+cvs diff: Diffing g++-fixes
+cvs diff: Diffing inp
+cvs diff: Diffing inp/klystron
+cvs diff: Diffing input
+cvs diff: Diffing physics
+Index: physics/mcc.cpp
+===================================================================
+RCS file: /projects/oopic/physics/mcc.cpp,v
+retrieving revision 1.2
+diff -r1.2 mcc.cpp
+657c657
+<   int n;      
+---
+>   //int n;    
+Index: physics/multigrid.cpp
+===================================================================
+RCS file: /projects/oopic/physics/multigrid.cpp,v
+retrieving revision 1.2
+diff -r1.2 multigrid.cpp
+48,49c48,49
+<         printf("Multigrid may not be the Poisson solve for you.  Try to have 2^N = Jmax and 2^M = Km
+< ax.");
+---
+>         printf("Multigrid may not be the Poisson solve for you.");
+>         printf("  Try to have 2^N = Jmax and 2^M = Km ax.");
+cvs diff: Diffing qtg
+Index: qtg/ButtonCmds.cpp
+===================================================================
+RCS file: /projects/oopic/qtg/ButtonCmds.cpp,v
+--More--cvs diff: Diffing xg
+retrieving revision 1.23
+diff -r1.23 ButtonCmds.cpp
+95c95
+<   for (int i=0; i<winList->plot3DWindows.Size(); i++)  {
+---
+>   for (i=0; i<winList->plot3DWindows.Size(); i++)  {
+Index: qtg/Makefile
+===================================================================
+RCS file: /projects/oopic/qtg/Makefile,v
+retrieving revision 1.29
+diff -r1.29 Makefile
+13c13
+< MOC     = $(QTDIR)/bin/egcs/moc
+---
+> MOC     = $(QTDIR)/bin/CC/moc
+40c40
+< # QTDIR     = /usr/local/qt
+---
+> QTDIR     = /usr/local/qt
+110c110,111
+< LIBDIRS = -L/usr/lib  -L../physics -L../advisor $(QT_LIB_DIR)  $(OPENGL_LIB_DIR)
+---
+> # LIBDIRS = -L/usr/lib  -L../physics -L../advisor $(QT_LIB_DIR)  $(OPENGL_LIB_DIR)
+> LIBDIRS =   -L../physics -L../advisor $(QT_LIB_DIR)  $(OPENGL_LIB_DIR)
+158c159
+< newdiag.o gridprob.o probergn.o evaluator.tab.o xgnox.o \
+---
+> newdiag.o gridprob.o probergn.o  xgnox.o \
+162a164,165
+> 
+> # newdiag.o gridprob.o probergn.o evaluator.tab.o xgnox.o \
+Index: qtg/TxqMainWin.cpp
+===================================================================
+RCS file: /projects/oopic/qtg/TxqMainWin.cpp,v
+retrieving revision 1.15
+diff -r1.15 TxqMainWin.cpp
+68c68
+<    for (int i=0; i<wl->plot3DLabel.Size(); i++) {
+---
+>    for (i=0; i<wl->plot3DLabel.Size(); i++) {
+Index: qtg/evaluator.tab.c
+===================================================================
+RCS file: /projects/oopic/qtg/evaluator.tab.c,v
+retrieving revision 1.3
+diff -r1.3 evaluator.tab.c
+973d972
+< #ifdef UNIX
+975d973
+< #endif
+Index: qtg/fft.c
+===================================================================
+RCS file: /projects/oopic/qtg/fft.c,v
+retrieving revision 1.1
+diff -r1.1 fft.c
+141c141
+<       void realft();
+---
+>       // void realft();
+172c172
+<       void realft();
+---
+>       // void realft();
+220c220
+<       void four1();
+---
+>       // void four1();
+Index: qtg/xginitc.c
+===================================================================
+RCS file: /projects/oopic/qtg/xginitc.c,v
+retrieving revision 1.8
+diff -r1.8 xginitc.c
+20c20
+<   fillFlag = va_arg(ap,int);
+---
+>   fillFlag = (STRUCT_FILL) va_arg(ap,int);
+Index: qtg/xgrafix.h
+===================================================================
+RCS file: /projects/oopic/qtg/xgrafix.h,v
+retrieving revision 1.4
+diff -r1.4 xgrafix.h
+37a38
+> extern "C" {
+93a95
+> }
+
+
+---------------------------------------------------------------
+Phase II:
+---------------------------------------------------------------
+
+Here is a summary list of things to do in phase II in regard
+to the Qt OpenGL port:
+
+1. Finish the Two-D window buttons.  
+   Possibly re-design the layout.
+2. Finish the Log scale.
+3. Finish the main buttons.
+4. Complete the OpenGL port
+   a. Test two windows opened against true OpenGL 
+      (Perhaps at a later time, the Mesa libs will be enhanced.)
+   b. Implement Hidden line and surface removal
+   c. Implement the QUAD coloring
+   d. Implement labels.
+   e. Finish the rest of the data types and Log scaling.
+5. Compile on other Unix compilers to remove other compiler errors.
+6. Remove as much as possible the xg* routines and headers from qtg
+7. Create a new .cpp Window structure instead of the C WindowType
+   structure so that the data can be passed freely from the Physics code to the plot.
+8. Compile under Borland after finishing number 5.

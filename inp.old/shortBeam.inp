@@ -1,0 +1,204 @@
+shortBeam
+{
+
+Low-energy attosecond electron pulse (from laser wakefield) --
+  how long does it take to increase 10-fold in length and radius?
+
+Moving window:
+  Once the electron beam has fully entered the simulation region, 
+  a moving window algorithm is invoked so that the beam can be 
+  modeled for long times.
+
+Boundary conditions:
+  The simulation region is bounded by insulators.
+}
+
+// Define variables that can be used throughout this input file.
+
+Variables
+{
+// First, define some useful constants.
+	pi = 3.14159
+	speedOfLight = 2.998e+08
+	unitCharge = 1.602e-19
+	electronCharge = -1 * unitCharge
+	electronMass = 9.1095e-31
+	electronMassEV = electronMass * speedOfLight * speedOfLight / unitCharge
+
+// Next, define the parameters of the high-energy electron beam.
+  beamGamma = 12
+	beamEnergyEV = (beamGamma-1.) * electronMassEV
+	beamTempEV = 0.0003 * beamEnergyEV
+	totalNumBeam = 1.0e+06
+	totalBeamCharge = totalNumBeam * electronCharge
+	rmsBeamRadius = 800.e-09
+	rmsBeamLength = 9.e-09
+	rmsBeamTime = rmsBeamLength / speedOfLight
+	radialCutoffFac = 3
+	axialCutoffFac = 3
+	totalBeamRadius = radialCutoffFac * rmsBeamRadius
+	totalBeamLength = 2 * axialCutoffFac * rmsBeamLength
+	beamAspectRatio = totalBeamLength / totalBeamRadius
+  totalBeamArea = pi * totalBeamRadius * totalBeamRadius
+  rmsBeamVolume = pi * rmsBeamRadius * rmsBeamRadius * rmsBeamLength
+  rmsBeamEmittanceNormPiMRad = 1.0e-08  // not used!
+
+// Define the number of grids in R and Z
+	simRadiusOverBeamRadius = 1.5
+	simLengthOverBeamLength = 50
+	numRgridsAcrossBeam = 8
+	numZgridsAcrossBeam = 24
+	numRgrids = numRgridsAcrossBeam * simRadiusOverBeamRadius
+	numZgrids = numZgridsAcrossBeam * simLengthOverBeamLength
+	numCells = numRgrids * numZgrids
+
+// Number of beam particles
+	numBeamPtclsPerCell = 10
+	numBeamCells = numRgridsAcrossBeam * numZgridsAcrossBeam
+	numBeamPtcls = numBeamPtclsPerCell * numBeamCells
+	beamNumRatio = totalNumBeam / numBeamPtcls
+
+// Intermediate calculations for modeling Gaussian shape of the beam.
+	invSigRsq = 1.0 / ( rmsBeamRadius * rmsBeamRadius )
+	invSigZsq = 0.5 / ( rmsBeamLength * rmsBeamLength )
+	invSigTsq = invSigZsq * speedOfLight * speedOfLight
+
+// Calculate the size of the simulation region, grid spacings, time step.
+// We are assuming the same grid size in both z and r	
+  maxRadiusMKS = simRadiusOverBeamRadius * totalBeamRadius
+  maxLengthMKS = simLengthOverBeamLength * totalBeamLength
+	rGridSize = maxRadiusMKS / numRgrids
+	zGridSize = maxLengthMKS / numZgrids
+
+  effGridSize = 1./sqrt(1./(zGridSize*zGridSize)+1./(rGridSize*rGridSize))
+	timeStep = 0.999 * effGridSize / speedOfLight
+
+// This is the desired delay time before the moving window algorithm activates.
+	movingWindowDelay = 0.95 * maxLengthMKS / speedOfLight
+
+// Calculate peak currents for defining emission of the beam.
+  peakCurrentDensity=totalBeamCharge*speedOfLight/rmsBeamVolume/sqrt(2.*pi)
+	peakCurrent = peakCurrentDensity * totalBeamArea
+	pulseLengthSec = totalBeamLength / speedOfLight
+  oneHalfPulse = pulseLengthSec/2.
+  oneEighthPulse = pulseLengthSec/8.
+  threeEighthsPulse = 3.*oneEighthPulse
+  sevenEighthsPulse = 7.*oneEighthPulse
+}
+
+// This simulation has only one "region", which contains grid, all particles, etc.
+Region
+{
+
+// Define the grid for this region.
+Grid
+{
+
+// Define number of grids along Z-axis and physical coordinates.
+	J = numZgrids
+	x1s = 0.0
+	x1f = maxLengthMKS
+	n1 = 1.0
+
+// Define number of grids along R-axis and physical coordinates.
+	K = numRgrids
+	x2s = 0.0
+	x2f = maxRadiusMKS
+	n2 = 1.0
+}
+
+// Specify "control" parameters for this region
+Control
+{
+// Specify the time step.
+	dt = timeStep
+
+// Turn on the moving window algorithm.
+	movingWindow = 1
+	shiftDelayTime = movingWindowDelay
+}
+
+// Define the beam electrons.
+Species
+{
+	name = electrons
+	m = electronMass
+	q = electronCharge
+}
+
+// Define the beam emitter, which introduces the beam into the simulation.
+
+BeamEmitter
+{
+	speciesName = electrons
+	I = peakCurrent
+
+// Define the 2-D function F(x,t) that specifies beam emission profile.
+  xtFlag = 3
+  F=exp(-invSigRsq*x*x)*exp(-invSigTsq*(t-oneHalfPulse)*(t-oneHalfPulse))*step(pulseLengthSec-t)
+
+// Macroparticles are emitted from the left boundary, close to the axis of symmetry.
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numRgridsAcrossBeam
+	normal = 1
+	np2c = beamNumRatio
+
+// Emit particles, directed along the Z-axis,  with specified energy and temperature.
+	units = EV
+	v1drift = beamEnergyEV
+	v1thermal = beamTempEV
+	v2thermal = 0.0
+	v3thermal = 0.0
+}
+
+// Specify an insulator along the left boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the
+//   simulation) and minimizes perturbations to the fields.
+
+Dielectric
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numRgrids
+	normal = 1
+}
+
+// Specify an insulator along the radial boundary.
+
+Dielectric
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = numRgrids
+	normal = -1
+}
+
+// Specify a perfect conductor along the right boundary.
+// The fields are zero here anyway, and this helps to suppress
+//   an instability in which Er and Bphi suddenly begin to
+//   grow rapidly at this boundary.
+
+Conductor
+{
+	j1 = numZgrids
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = 0
+	normal = -1
+}
+
+// Define the cylindrical symmetry axis.
+CylindricalAxis
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = 0
+	k2 = 0
+	normal = 1
+}
+
+}

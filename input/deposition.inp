@@ -1,0 +1,185 @@
+deposition
+{
+	A model for ion deposition on a substrate surface, including a trench
+   Periodic in x1, assumes ions already accelerated into the sheath.
+}
+Variables
+{
+   W = 1.5e-6 // sim width, m
+   H = 5e-6 // sim height, m
+   J = 30 // horizontal cells
+   K = 100 // vertical cells
+   Te = 5 // electron temperature in the plasma, eV
+   Ti = 0.025 // ion temperature in the plasma, eV
+   M = 40 // mass ratio Mi/me
+   Vsheath = 100 // sheath bias, V
+   p = 10e-3 // gas pressure in Torr
+   Je = 5e4 // electron current to inject (nev_thermal/4), A/m^2
+   Ji = 1.5e5 // ion current to inject (nev_sheath), A/m^2
+   Wtrench = 0.5e-6 // trench width
+   Htrench = 1e-6 // trench height
+}
+Region
+{
+Grid
+{
+	J = J
+	x1s = 0.0
+	x1f = W
+	K = K
+	x2s = 0.0
+	x2f = H
+	Geometry = 1 // x-y coordinates
+   PeriodicFlagX1 = 1 // periodic in x1
+}
+Control
+{
+	dt = 1.0E-13
+	ElectrostaticFlag = 4
+}
+MCC
+{
+   gas = Ar
+   pressure = p
+   eSpecies = electrons
+   iSpecies = ions
+   ecxFactor = M // compensate for reduced mass ratio
+   icxFactor = M
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+   collisionModel = electron
+}
+Species
+{
+	name = ions
+	m = 9.11E-31*M
+	q = 1.6e-19
+   collisionModel = ion
+}
+BeamEmitter
+{
+   A1 = 0
+   A2 = H
+   B1 = W
+   B2 = H
+	normal = -1
+	speciesName = electrons
+	I = Je*W
+	np2c = 1e4
+   units = EV
+   temperature = Te
+}
+BeamEmitter
+{
+   A1 = 0
+   A2 = H
+   B1 = W
+   B2 = H
+	normal = -1
+	speciesName = ions
+	I = Ji*W
+	np2c = 1e4
+   units = EV
+   temperature = Ti
+}
+Dielectric
+{
+   name = trenchLeft
+   A1 = (W - Wtrench)/2
+   A2 = Htrench
+   B1 = (W - Wtrench)/2
+   B2 = 0
+   normal = 1
+   QuseFlag = 1
+   IdiagFlag = 1
+   Ihist_avg = 8
+   nxbins = 20
+   nenergybins = 20
+   energy_min = 0
+   energy_max = 1.1*Vsheath
+   nthetabins = 30
+   theta_min = -90
+   theta_max = 0   
+}
+Dielectric
+{
+   name = trenchBottom
+   A1 = (W - Wtrench)/2
+   A2 = Htrench/10
+   B1 = (W + Wtrench)/2
+   B2 = Htrench/10
+   normal = 1
+   QuseFlag = 1
+   IdiagFlag = 1
+   Ihist_avg = 8
+   nxbins = 20
+   nenergybins = 20
+   energy_min = 0
+   energy_max = 1.1*Vsheath
+   nthetabins = 30
+   theta_min = -90
+   theta_max = 90   
+}
+Dielectric
+{
+   name = trenchRight
+   A1 = (W + Wtrench)/2
+   A2 = 0
+   B1 = (W + Wtrench)/2
+   B2 = Htrench
+   normal = -1
+   QuseFlag = 1
+   IdiagFlag = 1
+   Ihist_avg = 8
+   nxbins = 20
+   nenergybins = 20
+   energy_min = 0
+   energy_max = 1.1*Vsheath
+   nthetabins = 30
+   theta_min = 0
+   theta_max = 90   
+}
+DielectricRegion
+{
+   name = leftSlab
+	er = 10.0
+   A1 = 0
+   A2 = 0
+   B1 = (W - Wtrench)/2
+   B2 = Htrench
+	QuseFlag = 1
+}
+DielectricRegion
+{
+   name = bottomSlab
+	er = 10.0
+   A1 = (W - Wtrench)/2
+   A2 = 0
+   B1 = (W + Wtrench)/2
+   B2 = Htrench/10
+	QuseFlag = 1
+}
+DielectricRegion
+{
+   name = rightSlab
+	er = 10.0
+   A1 = (W + Wtrench)/2
+   A2 = 0
+   B1 = W
+   B2 = Htrench
+	QuseFlag = 1
+}
+Equipotential
+{
+   name = substrate
+   C = -Vsheath
+   A1 = 0
+   A2 = 0
+   B1 = W
+   B2 = 0
+}
+}

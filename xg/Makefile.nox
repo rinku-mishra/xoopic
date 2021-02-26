@@ -1,0 +1,93 @@
+.SUFFIXES: .cpp .C
+##
+##	Xoopic Makefile 
+##
+FILE_EXT = 
+##
+EXEC = oopic
+##
+##
+C++ = g++
+CC = gcc
+LD = g++
+##
+CFLAGS= $(DEFINES) -DUNIX 
+
+##
+##C++FLAGS= -O2 $(DEFINES) -DUNIX
+#C++FLAGS= -g -O2  $(DEFINES) -DUNIX 
+C++FLAGS= -g $(DEFINES) -DUNIX -DNOX
+##
+LDFLAGS= 
+##
+
+#LIBDIRS = -L/usr/lib/xgrafix -L/usr/local/lib -L/usr/lib/Xlib -L../physics -L../advisor
+
+#for COLOS:
+#LIBDIRS = -L../xgrafix -L/usr/lib -L../../lib -L../physics -L../advisor
+
+LIBDIRS = -L/usr/lib  -L../physics -L../advisor
+
+LIBS = -ladv -lpic -lm -lefence -liostream
+#LIBS = -ladv -lpic -lm
+
+INCLUDES = -I../physics -I../advisor -I../xg -I. -I../xgrafix -I ../../include
+
+XGOBJ= physics.o main.o dump.o xgmain.o fft.o evaluator.tab.o c_utils.o diagn.o newdiag.o history.o gridprob.o probergn.o
+
+OBJ= $(XGOBJ)
+
+all:	.non-fft.stamp $(EXEC) $(OBJ) 
+
+.C.o: 
+	-rm -f $@
+	$(C++) -c $(INCLUDES) $(C++FLAGS) $*.C
+.cpp.o: 
+	-rm -f $@
+	$(C++) -c $(INCLUDES) $(C++FLAGS) $*.cpp
+.c.o:
+	-rm -f $@
+	$(CC) -c $(INCLUDES) $(CFLAGS) $*.c
+
+.non-fft.stamp:
+	-touch .non-fft.stamp && ls .fftversion.stamp && /bin/rm -f initwin.o diagn.o dump.o physics.o .fftversion.stamp &&  make
+
+
+$(EXEC):	$(OBJ) ../advisor/libadv.a ../physics/libpic.a
+	-rm -f $@
+	$(LD) $(LDFLAGS) $(C++FLAGS) -o $(EXEC) $(OBJ) $(LIBDIRS) $(LIBS)
+	-chmod g+rw $(OBJ)
+	-chmod g+rwx $(EXEC)
+	echo ""
+
+FFT:
+	-ls .non-fft.stamp && /bin/rm -f .non-fft.stamp initwin.o diagn.o dump.o physics.o
+	-touch .fftversion.stamp
+	make all EXEC=xfft DEFINES="-DUNIX -DFFTVERSION"
+
+fft:	
+	make all EXEC=xfft DEFINES="-DUNIX -DFFTVERSION"
+
+RCS:
+	mkdir RCS
+	chmod g+rwx RCS
+	chmod g+rwx .
+	chmod -R g+r RCS
+	csh makeRCS.csh
+
+permission:
+	-chmod -R g+rX *
+	-chmod g+rw *.o *.a
+	-chmod g+rw RCS .
+
+utils:
+	g++ half.C -o half $(INCLUDES) $(LIBDIRS) $(LIBS) 
+
+clean:
+	@/bin/rm -f *.o *~
+
+depend:
+	makedepend $(INCLUDES) *.C *.h *.cpp *.c
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+

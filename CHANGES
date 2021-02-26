@@ -1,0 +1,106 @@
+CHANGES to XOOPIC
+
+XOOPIC 2.7 -- Requires concurrent 2.7 XGrafix, later than June 10, 2010
+o Mostly various compile and link bugfixes for modern compilers and systems
+
+XOOPIC 2.5 --  Requires XGrafix version later than Mar. 29, 2005.
+
+o	fixing routines converting particles' velocity into their
+	energy and gamma to be correct in both relativistic and
+	non-relativistic regimes
+o	moving window added.
+o	analytic initial fields added to Control
+o	bugfix to plasma source
+o	bugfix to exitport:  dump/restore stored the wrong fields.
+o	changing the save file name in the GUI is now recognized
+        by xoopic
+o	dump file format changed to better support multiprocessing
+
+XOOPIC 2.1
+
+o	Secondary subgroup added to Dielectric, allowing most boundaries to 
+	have multiple incident species unduce secondary emission.
+o	Energy threshold added for secondary emission.
+o	Freeze Fields.
+
+*****************************************************************
+*****************************************************************
+
+XOOPIC 2.0  8/20/97  --  Requires Xgrafix Ver. 2.4
+
+o Equation parser/evaluator
+o Timefunctions via evaluator
+o Magnetic field via evaluator
+o Load/PlasmaSource via evaluator
+o Named variables in input file
+o EM damping
+o Dielectric triangular region
+o Oblique equipotentials
+o Dielectric::reflection
+o equation parse for grid setup
+o oblique beam emitter and var wt bm emitter
+o supercycling (for low-space charge species which must be pushed 
+  faster than electrostatic fields change due to particle Courant)
+o MCC package flexibility improved; see gas.inp for example
+o MCC package can handle multiple (noble) gases
+o Input file format changed, for emitters, vzdrift -->  v1drift,
+  and other variables similarly to better support multiple geometries.
+  The following definitions where used to define the temperature:
+	temperature: 3/2 kT = 1/2 m (Vtx^2+Vty^2+Vtz^2) = 1/2 m Vt^2
+	v1thermal:  1/2 kT = 1/2 m Vtx^2	
+	v2thermal:  1/2 kT = 1/2 m Vty^2
+	v3thermal:  1/2 kT = 1/2 m Vtz^2
+o Current Regions: given currents in regions and lines.
+o Input file changed to allow multiple spatial regions
+o Subgroups added
+o Conductor, equipotential, polarizer, foil boundaries
+  can be multi-segment.
+o Multiple gas packages possible (see MCC in input.txt)
+
+
+*********************************************************************
+*********************************************************************
+XOOPIC 1.1  5/29/96  --  Requires Xgrafix Ver. 2.2
+
+WARNING:  time function frequency for boundaries
+changed from rad/s to Hz.
+
+* bugfixes in the EM boundary conditions
+
+* bugfixes to the Field Emitter boundary
+
+* Rambo-Friedman EM damping of short wavelengths
+
+* oblique conductors and equipotentials automatically stairstepped
+
+* rectangular and triangular dielectric regions
+
+* volume plasma source object added 
+
+* Subcycling fields added  
+
+* Enhanced diagnostics
+
+* Secondaries improved, > 1 coefficient allowed
+
+* Particle subcycling added.
+
+* Misc. changes for wider cross-platform compatibility.
+
+* Improved accuracy of field interpolation on the boundaries
+
+* Normals for boundaries indicated on configuration space diagnostic
+
+* spatially varying magnetic fields
+
+* generic bug fixes.
+
+*********************************************************************
+*********************************************************************
+XOOPIC 1.00  9/18/95
+
+Initially released version.
+
+
+
+

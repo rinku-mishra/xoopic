@@ -1,0 +1,79 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 4
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 4
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-12
+	B01 = 1.0
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 2
+	normal = 1
+	speciesName = electrons
+	numberparticlesinmacro = 1E6
+	I = 1.0
+	thetadot = 0.0
+	vzdrift = 1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 2
+	j2 = 0
+	k2 = 4
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 4
+	j2 = 4
+	k2 = 4
+	normal = -1
+}
+Conductor
+{
+	j1 = 4
+	k1 = 4
+	j2 = 4
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 4
+	k2 = 0
+	normal = 1
+}

@@ -1,0 +1,335 @@
+CsTest.inp
+{
+
+High-energy electron bunch enters a neutral Cs gas in cylindrical geometry --
+The purpose of this input file is to test the implementation of the 
+tunneling ionization for Cs.
+
+Collisional effects are ignored for both beam and plasma electrons.
+
+This simulation models a beam-plasma wake-field accelerator (PWFA):
+a)  The background gas is NOT pre-ionized.
+b)  Electron/ion pairs are created by tunneling ionization.
+c)  Beam density exceeds generated electron plasma density, so the beam
+    "blows out" plasma electrons near the symmetry axis.
+d)  The electron beam is Gaussian in z and r.
+
+Moving window:
+a)  Once the electron beam has entered the grid and is close to the far
+    edge of the simulation region, a moving window algorithm is invoked
+    so that the beam can be modeled for long times.
+
+Boundary conditions:
+a)  The simulation region must be bounded by either conductors or
+    insulators, in order to capture lost particles.
+b)  Conductors are used at r=r_max and z=z_max.
+    Along z=0, the an insulator is used, so the wake is not affected.
+    Along r=0, cylindrical symmetry is applied.
+}
+
+// Define variables that can be used throughout this input file.
+
+Variables
+{
+// First, define some useful constants.
+  pi = 3.14159
+  speedOfLight = 2.998e+08
+  unitCharge = 1.602e-19
+  electronCharge = -1 * unitCharge
+  electronMass = 9.1095e-31
+  electronMassEV = electronMass * speedOfLight * speedOfLight / unitCharge
+  ionCharge = unitCharge
+  unitMassMKS = 1.6606e-27
+  cesiumMassNum = 132.9055
+  cesiumMass = unitMassMKS * cesiumMassNum
+
+// Next, define the parameters of the high-energy electron beam.
+  beamEnergyEV = 30.67e+09
+  totalNumBeam =    1.e+10
+  totalBeamCharge = totalNumBeam * electronCharge
+  rmsBeamWidth = 5.e-06
+  rmsBeamRadius = sqrt(2.) * rmsBeamWidth
+  rmsBeamLength = 20.e-06
+  rmsBeamTime = rmsBeamLength / speedOfLight
+  radialCutoffFac = 3
+  axialCutoffFac = 3
+  totalBeamRadius = radialCutoffFac * rmsBeamRadius
+  totalBeamLength = 2 * axialCutoffFac * rmsBeamLength
+  totalBeamArea = pi * totalBeamRadius * totalBeamRadius
+  rmsBeamVolume = pi * rmsBeamRadius * rmsBeamRadius * rmsBeamLength
+
+// Define the number of grids in R and Z
+  numRgrids = 160
+  numZgrids = 320
+  numCells = numRgrids * numZgrids
+
+// Specify the size of the simulation region, grid spacings, time step.
+  maxRadiusMKS =  120.e-06
+  maxLengthMKS =  240.0e-06
+  rGridSize = 7.5e-07
+  zGridSize = 7.5e-07
+//  timeStep     =    7.e-15  // used by UCLA for OSIRIS, satisfies Courant
+//  timeStep     =    6.e-15  // used in OOPIC, because 7e-15 is unstable (very odd...)
+  timeStep = 1.25e-15
+
+// Number of beam particles
+  numBeamPtclsPerCell = 25
+  numRgridsAcrossBeam = totalBeamRadius / rGridSize
+  numZgridsAcrossBeam = totalBeamLength / zGridSize
+  numBeamCells = numRgridsAcrossBeam * numZgridsAcrossBeam
+  numBeamPtcls = numBeamPtclsPerCell * numBeamCells
+  beamNumRatio = totalNumBeam / numBeamPtcls
+
+// Intermediate calculations for modeling Gaussian shape of the beam.
+  invSigRsq = 1.0 / ( rmsBeamRadius * rmsBeamRadius )
+  invSigZsq = 0.5 / ( rmsBeamLength * rmsBeamLength )
+  invSigTsq = invSigZsq * speedOfLight * speedOfLight
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = (0.5 * maxLengthMKS + 0.5 * totalBeamLength) / speedOfLight
+
+
+// Calculate peak currents for defining emission of the high-energy beam.
+  peakCurrentDensity=totalBeamCharge*speedOfLight/rmsBeamVolume/sqrt(2.*pi)
+  peakCurrent = peakCurrentDensity * totalBeamArea
+  pulseLengthSec = totalBeamLength / speedOfLight
+  oneHalfPulse = pulseLengthSec / 2.
+
+// Define gas parameters
+  gasTempEV = 0.00001
+gasDensityMKS = 125.e21
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+
+  numZeroCells = 0.25 * numZgrids
+  numRampCells = 20
+  numFlatCells = numZgrids - numRampCells - numZeroCells
+  zeroEnd = (numZeroCells + .5) * zGridSize
+  rampEnd = (numZeroCells + numRampCells + .5) * zGridSize
+
+  numPtclsPerCell = 20
+}
+
+// This simulation has only one "region", which contains grid, all particles, etc.
+Region
+{
+
+// Define the grid for this region.
+Grid
+{
+
+// Define number of grids along Z-axis and physical coordinates.
+  J = numZgrids
+  x1s = 0.0
+  x1f = maxLengthMKS
+  n1 = 1.0
+
+// Define number of grids along R-axis and physical coordinates.
+  K = numRgrids
+  x2s = 0.0
+  x2f = maxRadiusMKS
+  n2 = 1.0
+}
+
+// Specify "control" parameters for this region
+Control
+{
+// Specify the time step.
+  dt = timeStep
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+
+// Turn on damping for the high-frequency EM fields
+  emdamping = 0.49
+
+// Turn off the initial Poisson solve
+  initPoissonSolve = 0
+
+// Use bilinear current weighting
+  CurrentWeighting=1
+}
+
+
+Species
+{
+  name = CsPlus
+  m = cesiumMass
+  q = ionCharge
+// advance the ions only once every 100 steps, because they
+//   are essentially stationary
+  subcycle = 100
+  particleLimit = 8.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+Species
+{
+  name = CsPlusPlus
+  m = cesiumMass
+  q = 2*ionCharge
+// advance the ions only once every 100 steps, because they
+//   are essentially stationary
+  subcycle = 100
+  particleLimit = 8.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+// Define the plasma electrons.
+Species
+{
+  name = electrons
+  m = electronMass
+  q = electronCharge
+// prevent out-of-control growth in # of ptcls
+  particleLimit = 8.e+05
+}
+
+// Define the beam electrons.
+Species
+{
+  name = beam_electrons
+  m = electronMass
+  q = electronCharge
+//  collisionModel = 1
+
+// request RMS diagnostics of beam size and momentum
+//  rmsDiagnosticsFlag = 1
+}
+
+
+// Define the beam emitter, which introduces the high-energy beam into the
+// simulation.
+//EmitPort
+//BeamEmitter
+VarWeightBeamEmitter
+{
+  speciesName = beam_electrons
+  I = peakCurrent
+
+// Define the 2-D function F(x,t) that specifies beam emission profile.
+  xtFlag = 3
+  nIntervals = 32
+  F=exp(-invSigRsq*x*x)*exp(-invSigTsq*(t-oneHalfPulse)*(t-oneHalfPulse))*step(pulseLengthSec-t)
+
+// Macroparticles are emitted from the left boundary, close to the axis of symmetry.
+  j1 = 0
+  j2 = 0
+  k1 = 0
+  k2 = numRgridsAcrossBeam
+  normal = 1
+  np2c = beamNumRatio
+
+// Emit particles, directed along the Z-axis,  with specified energy and temperature.
+  units = EV
+  v1drift = beamEnergyEV
+}
+
+
+// Specify the tunneling ionization parameters for background Li gas
+MCC
+{
+  gas = Cs
+  pressure = gasPressureTorr
+  temperature = gasTempEV
+  analyticF = gasDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd) )
+
+  eSpecies = electrons
+  iSpecies = CsPlus
+  iSpeciesPlusPlus = CsPlusPlus
+
+// turn off collision ionization
+  relativisticMCC = 1
+  collisionFlag = 0
+
+// turn on tunneling ionization 
+  tunnelingIonizationFlag     = 1 
+  ETIPolarizationFlag = 1
+
+// fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = numPtclsPerCell
+}
+
+
+// Specify a perfect conductor along the left boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_r is forced to vanish).
+//Dielectric
+Conductor
+{
+  j1 = 0
+  j2 = 0
+  k1 = 0
+  k2 = numRgrids
+  normal = 1
+}
+
+// Specify a perfect conductor along the radial boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_z is forced to vanish).
+Conductor
+{
+  j1 = 0
+  j2 = numZgrids
+  k1 = numRgrids
+  k2 = numRgrids
+  normal = -1
+}
+
+// Specify a perfect conductor along the right boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_r is forced to vanish).
+Conductor
+{
+  j1 = numZgrids
+  j2 = numZgrids
+  k1 = numRgrids
+  k2 = 0
+  normal = -1
+}
+
+// Define the cylindrical symmetry axis.
+CylindricalAxis
+{
+  j1 = 0
+  j2 = numZgrids
+  k1 = 0
+  k2 = 0
+  normal = 1
+}
+
+H5Diagnostic
+{
+VarName = E1
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+H5Diagnostic
+{
+VarName = E2
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+H5Diagnostic
+{
+VarName = NGD
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+H5Diagnostic
+{
+VarName = beam_electrons_numberDensity
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+H5Diagnostic
+{
+VarName = electrons_numberDensity
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+H5Diagnostic
+{
+VarName = CsPlus_numberDensity
+dumpPeriod = 0
+fileName = runs/cesium_new_100.e-06_5.e-06_Diags
+}
+}

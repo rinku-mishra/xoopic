@@ -1,0 +1,47 @@
+This is XOOPIC.  Before using, please read the COPYRIGHT.  Please
+cite XOOPIC if you use it to publish.
+
+Development of XOOPIC was supported by the AFOSR.
+
+Contents:
+
+physics/*	OOPIC physical model files
+advisor/*	OOPIC expert advisor files
+xg/*		XOOPIC GUI and top-level control files
+doc/*		documentation
+input/*.inp	input files for OOPIC
+bench/*		Some benchmark input files and
+
+README_INSTALL  compilation instructions
+README.PARALLEL Notes and instructions for the parallel version.
+README		this file
+g++-fixes/*	things you might need to do to g++ to get it to work
+BUGS		known bugs
+COPYRIGHT	University of California COPYRIGHT
+CHANGES		A description of the changes to the code.
+
+Authors:  John Verboncoeur	johnv@langmuir.eecs.berkeley.edu
+		(head of the physical model development)
+	  Tom Gladd		ntgladd@langmuir.eecs.berkeley.edu
+		(head of the expert advisor development)
+	  Peter Mardahl		peterm@langmuir.eecs.berkeley.edu
+		(X version of OOPIC, XY-geometry for OOPIC, ES OOPIC)
+	  Keith Cartwright	kc@langmuir.eecs.berkeley.edu
+		(EM boundary conditions, boltzmann electrons)
+	  Bill Peter		peter@langmuir.eecs.berkeley.edu
+		(EM boundary conditions, field emitter)
+
+Contributers of code:
+
+	  Ronald Cohen of Lawrence Livermore National Labs
+		(some code for a more general static magnetic field
+		 at t=0)
+
+
+HTTP site:
+XOOPIC is available for download at langmuir.nuc.berkeley.edu in the
+directory pub/codes.
+
+email: xoopic@ptsg.eecs.berkeley.edu 
+
+

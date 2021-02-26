@@ -1,0 +1,24 @@
+## ####################################################################
+##
+## File:	doxygen.am
+##
+## Purpose:	Adds in doxygen targets.
+##
+## Version:	$Id: doxygen.am 658 2001-12-24 18:50:37Z cary $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+apidocs: cxxapidocs
+DOXYGEN	= @DOXYGEN@
+cxxapidocs:
+	if test -n "$(DOXYGEN)"; then \
+	  doxfile=`ls *.dox`; \
+	  $(DOXYGEN) $$doxfile; \
+	  outdir=`grep ^OUTPUT_DIRECTORY $$doxfile | sed 's/^.*=//'`; \
+	  chmod a+x $$outdir; \
+	  chmod -R a+r $$outdir; \
+	fi
+

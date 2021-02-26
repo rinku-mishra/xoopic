@@ -1,0 +1,148 @@
+boltz.inp
+{
+demonstration of hybrid Boltzmann solver
+}
+Variables
+{
+   L = 0.1 // length in m
+   R = 0.1 // outer radius in m
+   I = 0.001 // current in A
+   p = 0.1 // pressure in Torr
+   n0 = 3e12 // initial density
+   dt = 1e-10 // timestep in sec
+   np2c = 1e5 // physical/computer particle ratio
+}
+Region
+{
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6E-19
+	collisionModel=electron
+}
+Species
+{
+   name = argon
+   m = 6.67e-26
+   q = 1.6E-19
+	collisionModel=ion
+}
+Grid
+{
+	J = 64
+	x1s = 0.0
+	x1f = L
+	n1 = 1.0
+	K = 64
+	x2s = 0.0
+	x2f = R
+	n2 = 1.0
+}
+Control
+{
+	dt = dt
+	ElectrostaticFlag = 4
+	BoltzmannFlag = 1
+	BoltzmannTemp = 1
+	BoltzmannDensity = n0
+	BoltzmannCharge = -1
+	BoltzmannChargeRatio = 1
+	BoltzSpecies = electrons
+	BoltzmannEBFlag = 0
+}
+MCC
+{
+	gas = Ar
+	pressure = p   
+	eSpecies = electrons
+	iSpecies = argon
+}
+Conductor
+{
+	A1 = L
+	A2 = 0
+	B1 = L
+	B2 = R
+	name = Cathode
+	normal = -1
+	Secondary
+	{
+		secondary = 0.2
+		secSpecies = electrons
+		iSpecies = argon
+	}
+}
+Equipotential
+{
+	C = 0.0
+	phase = 0
+	A1 = 0
+	A2 = 0
+	B1 = 0
+	B2 = R
+	name = Anode
+	normal = 1
+	Secondary
+	{
+		secondary = 0.2
+		secSpecies = electrons
+		iSpecies = argon
+	}
+	nxbins=60
+	nenergybins=60
+	nthetabins = 30
+	energy_min = 0
+	energy_max = 200
+}
+Dielectric
+{
+	er = 1.0
+	A1 = 0
+	A2 = R
+	B1 = L
+	B2 = R
+	name = OuterWall
+	normal = -1
+	Secondary
+	{
+		secondary = 0
+		secSpecies = electrons
+		iSpecies = argon
+	}
+}
+CylindricalAxis
+{
+	A1 = 0
+	A2 = 0
+	B1 = L
+	B2 = 0
+	normal = 1
+}
+//Load
+//{
+//	x1MinMKS = 0
+//	x1MaxMKS = L
+//	x2MinMKS = 0
+//	x2MaxMKS = R
+//	speciesName = electrons
+//	density = n0
+//	np2c = np2c
+//	LoadMethodFlag =1
+//  units = EV
+//	temperature = 4
+//}
+Load
+{
+	x1MinMKS = 0
+	x1MaxMKS = L
+	x2MinMKS = 0
+	x2MaxMKS = R
+	speciesName = argon
+	density = n0
+	np2c = np2c
+	LoadMethodFlag=1
+   units = EV
+	temperature = 0.025
+}
+}

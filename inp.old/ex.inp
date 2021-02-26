@@ -1,0 +1,83 @@
+default
+{
+waveguide
+}
+Grid
+{
+	J = 100
+	x1s = 0.0
+	x1f = 0.01
+	n1 = 1.0
+	K = 25
+	x2s = 0.0
+	x2f = 0.0025
+	n2 = 1.0
+	Geometry = 1
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.5707963e-13
+	ElectrostaticFlag = 0
+	FieldSubFlag = 1
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+PortTM
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 25
+	normal = 1
+	frequency = 1e12
+	A = 1
+	C = 0
+	a0 = 1
+	EFFlag = 1
+	name = PortTM
+}
+Conductor
+{
+	j1 = 0
+	k1 = 25
+	j2 = 100
+	k2 = 25
+	normal = -1
+}
+ExitPort
+{
+	j1 = 100
+	k1 = 25
+	j2 = 100
+	k2 = 0
+	EFFlag = 1
+	normal = -1
+	name = ExitPort
+	C = 0
+	A = 0
+	frequency = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 100
+	k2 = 0
+	normal = 1
+}

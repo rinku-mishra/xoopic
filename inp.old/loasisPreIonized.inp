@@ -1,0 +1,308 @@
+loasisPreIonized.inp
+{
+
+Here we make an initial attempt to model some aspects of
+the laser plasma experiments in the l'OASIS laboratory of
+Wim Leemans et al. at LBNL.
+
+Pulse with transverse Gaussian profile and y polarization is launched from
+the left boundary. 
+
+Cartesian geometry, with a pre-ionized electron plasma and a stationary
+background of He++ ions.  The primary goal is to see how the laser pulse
+evolution (especially blue-shifting) differs for a pre-ionized plasma 
+as compared to a laser pulse that must create its own plasma.
+
+This is derived from loasisHe.inp -- here we replace the neutral He gas
+with a pre-ionized electron plasma.
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverM = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+  HeMassNum = 4.0026
+  HeMass = unitMassMKS * HeMassNum
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+//   Here, we specify a zero plasma density, because we launch the laser
+//   pulse into a vacuum region.  Down below, we define the parameters
+//   used for loading the initial electron plasma into the simulation.
+  elecPlasmaDensity =  0.0 
+  elecPlasmaFreq = sqrt(electronCharge*qOverM*elecPlasmaDensity/permit)
+ 
+// **********************************************************************
+// Laser pulse parameters - y polarization
+// **********************************************************************
+//   We are modeling a laser pulse with wavelength of 0.8 micron and
+//   FHWM pulse length of 50 fs to 200 fs, and a peak intensity of
+//   10^16 to 10^18 W/cm^2
+//
+  peakLaserIntensity = 1e+17  // W/cm^2
+  pulseLengthFWHM = 50.e-15
+  laserWavelength = 0.8e-06
+  laserFrequency = 2.*PI*speedLight/laserWavelength
+  // We must convert the intensity to MKS units
+  peakLaserIntensityMKS = peakLaserIntensity * 1.0e+04
+  peakElectricField = sqrt(2.*peakLaserIntensityMKS/speedLight/permit)
+
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+// We must resolve the laser wavelength
+  Nx = 512
+  Ny = 256
+  numGridsPerWavelength = 16
+  dx = laserWavelength / numGridsPerWavelength
+  gridSizeRatio = 10
+  dy = dx * gridSizeRatio
+  Lx = Nx * dx
+  Ly = Ny * dy
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.7 * d / speedLight
+
+// **********************************************************************
+// More laser parameters:
+// **********************************************************************
+// We model the laser pulse envelope as a Gaussian (nPulseShape=1).
+  nPulseShape = 1
+  pulseLength  = pulseLengthFWHM * speedLight
+
+// Here we specify the waist size, Rayleigh length, etc.
+// These parameters are for a pulse with y-polarization.
+  waistSize = 6.0e-06 
+  angFreq = laserFrequency
+  angFreq2 = angFreq * angFreq
+  waveVector = sqrt( (angFreq2-elecPlasmaFreq*elecPlasmaFreq) / speedLight2 )
+  rayleighLength = waistSize * waistSize * waveVector / 2.
+  waistLocation = 3.0 * rayleighLength
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+  plasmaDensityMKS = 4.0e+25
+  simulationVolume = Lx * Ly * 1.0
+  totalNumPlasma = plasmaDensityMKS * simulationVolume
+  numPtclsPerCell = 8
+  numCells = Nx * Ny
+  numPlasmaPtcls = numPtclsPerCell * numCells
+  plasmaNumRatio = totalNumPlasma / numPlasmaPtcls
+
+  numZeroCells = 10
+  numFlatCells = Nx-20
+  numRampCells = Nx - numFlatCells - numZeroCells
+  zeroEnd = (numZeroCells + .5) * dx
+  rampEnd = (numZeroCells + numRampCells + .5) * dx
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = (Nx-10) * dx / speedLight
+}
+
+Region
+{
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx 
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+}
+
+Control
+{
+  dt = timeStep
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+}
+
+// Define the electron macro-particles
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+  particleLimit = 2.0e+06 // prevents out-of-control growth in # of ptcls
+}
+
+
+// Load the plasma electrons over the entire simulation region, but
+//   leave the last dx strip of cells empty, because this strip must
+//   be handled separately to accomodate the moving window algorithm.
+Load
+{
+  speciesName = electrons
+  density = plasmaDensityMKS
+  x1MinMKS = 0.0
+  x1MaxMKS = Lx - dx
+  x2MinMKS = 0.0
+  x2MaxMKS = Ly
+  np2c = plasmaNumRatio
+
+  analyticF = plasmaDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd) * step(Lx-0.5*dx-x1) )
+
+// Specify loading that is more uniform than random
+  LoadMethodFlag = 1
+}
+
+
+// Load the plasma electrons into the last dx strip of cells, which was
+//   omitted by the load instruction above.
+Load
+{
+// Name this load group "shiftLoad" so that the moving window algorithm
+//   knows to invoke it every time the simulation window is shifted.
+  Name = shiftLoad
+  speciesName = electrons
+  density = plasmaDensityMKS
+
+// The fudged values for x1MaxMKS and x2MaxMKS are required, because a
+//   bug in the load algorithm occasionally puts a randomly loaded macro-
+//   particle right on the boundary, which then crashes the code.
+  x1MinMKS = Lx - dx
+  x1MaxMKS = Lx
+  x2MinMKS = 0.0
+  x2MaxMKS = Ly
+  np2c = 2 * plasmaNumRatio
+
+// Specify loading that is more uniform than random
+  LoadMethodFlag = 1
+}
+
+
+// Define the He++ species (no macro-particles will be generated).
+Species
+{
+  name = HePlusPlus
+  m = HeMass
+  q = 2*ionCharge
+}
+
+
+
+
+// Load the plasma ions over the entire simulation region.
+Load
+{
+  speciesName = HePlusPlus
+  // There's one He++ ion for every two electrons
+  density = 0.5*plasmaDensityMKS
+  x1MinMKS = 0.0
+  x1MaxMKS = Lx
+  x2MinMKS = 0.0
+  x2MaxMKS = Ly
+
+  analyticF = 0.5*plasmaDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd) )
+
+// This specifies a static uniform background (no macro-particles).
+  np2c = 0
+}
+
+Diagnostic
+{
+	j1 = 0
+	j2 = Nx
+	k1 = 0
+	k2 = Ny
+	VarName = WaveDirDiagnostic
+        polarizationEB = EzBy
+        psd1dFlag = 1 // calculate the 1d power spectral density
+        windowName = Blackman
+	title = Wave Energy
+	x1_Label = x
+	x2_Label = y
+	x3_Label = Wave Energy
+}
+
+// Launch the laser pulse
+PortGauss
+{
+  j1 = 0 
+  k1 = 0 
+  j2 = 0 
+  k2 = Ny 
+  normal = 1
+
+  A = 0
+  C = 1.0 
+
+// Wave (0)
+  pulShp_p0 = nPulseShape
+  tdelay_p0 = 0.0 
+  pulLeng_p0 = pulseLength
+  chirp_p0 = 0.0
+  spotSize_p0 = waistSize
+  waveLeng_p0 = laserWavelength
+  focus_p0 = waistLocation
+  amp_p0 = 0.0
+
+// Wave (1)
+  pulShp_p1 = nPulseShape
+  tdelay_p1 = 0.0
+  pulLeng_p1 = pulseLength
+  chirp_p1 = 0.0
+  spotSize_p1 = waistSize
+  waveLeng_p1 = laserWavelength
+  focus_p1 = waistLocation
+  amp_p1 = peakElectricField
+
+  EFFlag = 0 
+  name = PortGauss
+}
+
+
+Conductor
+{
+  j1 = 0
+  k1 = Ny 
+  j2 = Nx 
+  k2 = Ny 
+  normal = -1
+}
+
+
+Conductor
+{
+  j1 = 0
+  k1 = 0 
+  j2 = Nx 
+  k2 = 0 
+  normal = 1
+}
+
+
+Conductor
+{
+  j1 = Nx
+  k1 = 0
+  j2 = Nx
+  k2 = Ny
+  normal = -1
+}
+
+}

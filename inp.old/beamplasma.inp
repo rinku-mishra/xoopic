@@ -1,0 +1,345 @@
+beamplasma
+{
+
+High-energy electron bunch enters a quiet plasma in cylindrical geometry --
+
+This simulation models a beam-plasma wake-field accelerator:
+a)  The background plasma is pre-ionized.  Ions are assumed stationary.
+b)  Beam density exceeds electron plasma density, so the beam "blows out"
+    plasma electrons near the symmetry axis.
+c)  The electron beam is Gaussian in z and (will soon be) Gaussian in r.
+d)  Electrons at the head of the beam are decelerated by the resulting
+    electromagnetic fields, while electrons near the tail of the beam
+    are accelerated by these fields.
+e)  The electron beam is overfocussed by these fields and so executes
+    betatron oscillations;  however, the focussing force varies axially.
+
+Moving window:
+a)  Once the electron beam has entered the grid and is close to the far
+    edge of the simulation region, a moving window algorithm is invoked
+    so that the beam can be modeled for long times.
+
+Boundary conditions:
+a)  The simulation region must be bounded by either conductors or
+    insulators, in order to capture lost particles.
+b)  Conductors were chosen, to avoid any charge build up.
+c)  The choice of conducting boundary conditions means that electric
+    fields parallel to the boundaries are forced to zero;  however,
+    fields near the boundaries of the simulation must be small anyway
+    to accurately model a semi-infinite plasma, so this is OK.
+}
+
+// Define variables that can be used throughout this input file.
+
+Variables
+{
+// First, define some useful constants.
+  pi = 3.14159265358979323846
+  speedOfLight = 2.99792458e+08
+  electronMass = 9.1093897e-31
+  unitCharge = electronMass * 1.75881962e11
+  electronCharge = -1. * unitCharge
+  electronMassEV = electronMass * speedOfLight * speedOfLight / unitCharge
+  ionCharge = unitCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  lithiumMassNum = 6.942
+  lithiumMass = unitMassMKS * lithiumMassNum
+
+// Next, define the parameters of the high-energy electron beam.
+	beamEnergyEV = 30.0e+09
+  beamGammaMin1 = beamEnergyEV / electronMassEV
+  beamGamma = 1 + beamGammaMin1
+  beamBetaGamma = sqrt( beamGammaMin1 * (beamGammaMin1+2) )
+  beamBeta = beamBetaGamma / beamGamma
+
+	totalNumBeam = 4.0e+10
+	totalBeamCharge = totalNumBeam * electronCharge
+	rmsBeamRadius = 0.75e-04
+	rmsBeamLength = 6.00e-04
+	rmsBeamTime = rmsBeamLength / speedOfLight
+	radialCutoffFac = 3
+	axialCutoffFac = 3
+	totalBeamRadius = radialCutoffFac * rmsBeamRadius
+	totalBeamLength = 2 * axialCutoffFac * rmsBeamLength
+	beamAspectRatio = totalBeamLength / totalBeamRadius
+  totalBeamArea = pi * totalBeamRadius * totalBeamRadius
+  rmsBeamVolume = pi * rmsBeamRadius * rmsBeamRadius * rmsBeamLength
+
+  rmsEnergySpread = 0.001
+  beamTempEV = rmsEnergySpread * beamEnergyEV
+  thermalBeamSpeedEV = 0.5 * beamTempEV
+  rmsNormalizedEmittance = 4.0e-06
+  rmsBeamSize = rmsBeamRadius / sqrt(2)
+  rmsThermalBeta = rmsNormalizedEmittance / rmsBeamSize
+  rmsThermalGamma = 1. / sqrt(1.-rmsThermalBeta*rmsThermalBeta)
+  rmsVelocityMKS = rmsThermalBeta * speedOfLight
+  rmsVelocityEV = (rmsThermalGamma-1.)*electronMassEV
+  rmsEfactor = 8.0e-04
+  rmsVfactor = 1.0e-04
+
+// Define the number of grids in R and Z
+	lengthOverRadiusAspectRatio = 6
+	simRadiusOverBeamRadius = 4
+	numRgridsAcrossBeam = 8
+	numZgridsAcrossBeam = numRgridsAcrossBeam * beamAspectRatio
+	numRgrids = numRgridsAcrossBeam * simRadiusOverBeamRadius
+	numZgrids = numRgrids * lengthOverRadiusAspectRatio
+	numCells = numRgrids * numZgrids
+
+// Number of beam particles
+	numBeamPtclsPerCell = 1000
+	numBeamCells = numRgridsAcrossBeam * numZgridsAcrossBeam
+	numBeamPtcls = numBeamPtclsPerCell * numBeamCells
+	beamNumRatio = totalNumBeam / numBeamPtcls
+
+// Intermediate calculations for modeling Gaussian shape of the beam.
+	invSigRsq = 1.0 / ( rmsBeamRadius * rmsBeamRadius )
+	invSigZsq = 0.5 / ( rmsBeamLength * rmsBeamLength )
+	invSigTsq = invSigZsq * speedOfLight * speedOfLight
+
+// Calculate the size of the simulation region, grid spacings, time step.
+// We are assuming the same grid size in both z and r	
+  maxRadiusMKS = simRadiusOverBeamRadius * totalBeamRadius
+	rGridSize = maxRadiusMKS / numRgrids
+	zGridSize = rGridSize
+	maxLengthMKS = numZgrids * zGridSize
+	timeStep = 0.41 * rGridSize / speedOfLight
+
+// This is the desired delay time before the moving window algorithm activates.
+	movingWindowDelay = 0.94 * maxLengthMKS / speedOfLight
+
+// Calculate peak currents for defining emission of the high-energy beam.
+  peakCurrentDensity=totalBeamCharge*speedOfLight/rmsBeamVolume/sqrt(2.*pi)
+	peakCurrent = peakCurrentDensity * totalBeamArea
+	pulseLengthSec = totalBeamLength / speedOfLight
+  oneHalfPulse = pulseLengthSec/2.
+  oneEighthPulse = pulseLengthSec/8.
+  threeEighthsPulse = 3.*oneEighthPulse
+  sevenEighthsPulse = 7.*oneEighthPulse
+
+// Define the plasma density, number of plasma electron macro-particles, etc.
+	plasmaDensityMKS = 2.1e+20
+	simulationVolume = pi * maxRadiusMKS * maxRadiusMKS * maxLengthMKS
+	totalNumPlasma = plasmaDensityMKS * simulationVolume
+	numPtclsPerCell = 20
+	numPlasmaPtcls = numPtclsPerCell * numCells
+	plasmaNumRatio = totalNumPlasma / numPlasmaPtcls
+
+// Define plasma temperature and resulting flux of electrons into the simulation region.
+	plasmaTempEV = 0.0
+	thermalSpeed = speedOfLight * sqrt( plasmaTempEV / electronMassEV )
+	currentFactor = maxRadiusMKS * thermalSpeed * plasmaDensityMKS * electronCharge
+	endCurrent = currentFactor * maxRadiusMKS * sqrt(pi/2.)
+	shellCurrent = currentFactor * maxLengthMKS * sqrt(2.*pi)
+}
+
+// This simulation has only one "region", which contains grid, all particles, etc.
+Region
+{
+
+// Define the grid for this region.
+Grid
+{
+
+// Define number of grids along Z-axis and physical coordinates.
+	J = numZgrids
+	x1s = 0.0
+	x1f = maxLengthMKS
+	n1 = 1.0
+
+// Define number of grids along R-axis and physical coordinates.
+	K = numRgrids
+	x2s = 0.0
+	x2f = maxRadiusMKS
+	n2 = 1.0
+}
+
+// Specify "control" parameters for this region
+Control
+{
+// Specify the time step.
+	dt = timeStep
+
+// Turn on the moving window algorithm.
+	movingWindow = 1
+	shiftDelayTime = movingWindowDelay
+
+// Turn on damping for the high-frequency EM fields
+	emdamping = 0.49
+
+        initPoissonSolve=0
+}
+
+// Define the plasma ions.
+Species
+{
+	name = plasma_ions
+	m = lithiumMass
+	q = ionCharge
+}
+
+// Load the plasma ions over the entire simulation region.
+Load
+{
+	speciesName = plasma_ions
+	density = plasmaDensityMKS
+	x1MinMKS = 0.0
+	x1MaxMKS = maxLengthMKS
+	x2MinMKS = 0.0
+	x2MaxMKS = maxRadiusMKS
+
+// This specifies a static uniform background (no macro-particles).
+	np2c = 0
+}
+
+// Define the plasma electrons.
+Species
+{
+	name = plasma_electrons
+	m = electronMass
+	q = electronCharge
+}
+
+// Load the plasma electrons over the entire simulation region, but
+//   leave the last dz strip of cells empty, because this strip must
+//   be handled separately to accomodate the moving window algorithm.
+
+VarWeightLoad
+{
+	speciesName = plasma_electrons
+	density = plasmaDensityMKS
+	x1MinMKS = 0.0
+	x1MaxMKS = maxLengthMKS - zGridSize
+	x2MinMKS = 0.0
+	x2MaxMKS = maxRadiusMKS
+	np2c = 2 * plasmaNumRatio
+
+// Specify a finite plasma temperature (can be zero, of course).
+//	units = EV
+//	temperature = plasmaTempEV
+	v1thermal = thermalSpeed
+	v2thermal = thermalSpeed
+	v3thermal = 0.0
+
+// Specify loading that is more uniform than random
+	LoadMethodFlag = 1
+}
+
+// Load the plasma electrons into the last dz strip of cells, which was
+//   omitted by the load instruction above.
+
+VarWeightLoad
+{
+// Name this load group "shiftLoad" so that the moving window algorithm
+//   knows to invoke it every time the simulation window is shifted.
+	Name = shiftLoad
+	speciesName = plasma_electrons
+	density = plasmaDensityMKS
+
+// The fudged values for x1MaxMKS and x2MaxMKS are required, because a
+//   bug in the load algorithm occasionally puts a randomly loaded macro-
+//   particle right on the boundary, which then crashes the code.
+	x1MinMKS = maxLengthMKS - zGridSize
+	x1MaxMKS = maxLengthMKS - 0.001 * zGridSize
+	x2MinMKS = 0.0
+	x2MaxMKS = maxRadiusMKS - 0.001 * rGridSize
+	np2c = 2 * plasmaNumRatio
+
+// Specify a finite plasma temperature (can be zero, of course).
+//	units = EV
+//	temperature = plasmaTempEV
+	v1thermal = thermalSpeed
+	v2thermal = thermalSpeed
+	v3thermal = 0.0
+
+// Specify loading that is more uniform than random
+	LoadMethodFlag = 1
+}
+
+// Define the beam electrons.
+Species
+{
+	name = beam_electrons
+	m = electronMass
+	q = electronCharge
+}
+
+// Define the beam emitter, which introduces the high-energy beam into the
+// simulation.
+
+VarWeightBeamEmitter
+{
+	speciesName = beam_electrons
+	I = peakCurrent
+
+// Define the 2-D function F(x,t) that specifies beam emission profile.
+  xtFlag = 3
+  nIntervals = 32
+  F=exp(-invSigRsq*x*x)*exp(-invSigTsq*(t-oneHalfPulse)*(t-oneHalfPulse))*step(pulseLengthSec-t)
+
+// Macroparticles are emitted from the left boundary, close to the axis of symmetry.
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numRgridsAcrossBeam
+	normal = 1
+	np2c = beamNumRatio
+
+// Emit particles, directed along the Z-axis,  with specified energy and temperature.
+  units = EV
+  v1drift = beamEnergyEV
+  v1thermal = rmsEfactor * rmsVelocityEV
+  v2thermal = rmsVfactor * rmsVelocityEV
+//  v3thermal = rmsVfactor * rmsVelocityEV
+}
+
+// Specify a perfect conductor along the left boundary.  This serves as a particle
+//   boundary condition (catches particles that leave the simulation) and as a
+//   field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numRgrids
+	normal = 1
+}
+
+// Specify a perfect conductor along the radial boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_z is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = numRgrids
+	normal = -1
+}
+
+// Specify a perfect conductor along the right boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = numZgrids
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = 0
+	normal = -1
+}
+
+// Define the cylindrical symmetry axis.
+CylindricalAxis
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = 0
+	k2 = 0
+	normal = 1
+}
+
+}

@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Get options
+#
+for i in $*; do
+  case $i in
+
+    -mpi)
+      MPICMDS="--with-mpi-lib=/usr/local/mpich/build/LINUX/ch_p4/lib --with-mpi-header=/usr/local/mpich/include"
+      ;;
+
+  esac
+done
+
+# Configure
+#
+cmd="configure --enable-test-par --with-xpm=/usr/X11R6/include --with-XGRAFIX-lib=/usr/local/xgrafix-float/lib --with-XGRAFIX-include=/usr/local/xgrafix-float/include $MPICMDS"
+echo $cmd
+$cmd

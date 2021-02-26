@@ -1,0 +1,79 @@
+xytest
+{
+  This input file tests the poisson solve.  The resulting potential should
+be a sin-sin profile with a maximum value of 1.
+
+}
+Variables
+{
+  PI = 3.141592654
+}
+Region
+{
+Grid
+{
+	J = 20
+	x1s = 0.0
+	x1f = 1.0
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 1.0
+	n2 = 1.0
+	Geometry = 1
+}
+Species
+{
+	name = positrons
+	m = 9.11E-31
+	q = 1.6e-19
+}
+Control
+{
+	dt = 5e-9
+	ElectrostaticFlag = 1
+//	ElectrostaticFlag = 4
+}
+Conductor
+{
+	normal = 1
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 20
+}
+Conductor
+{
+	QuseFlag = 0
+	j1 = 20
+	j2 = 20
+	k1 = 0
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	j2 = 20
+	k1 = 0
+	k2 = 0
+}
+Conductor
+{
+	j1 = 0
+	j2 = 20
+	k1 = 20
+	k2 = 20
+	normal = -1
+}
+Load
+{
+	//analytical rho background
+	analyticF = 1.098e9*sin(PI * x1) * sin(PI * x2)
+	np2c = 0
+	speciesName = positrons
+	x1MinMKS = 0.001
+	x1MaxMKS = 0.999
+	x2MinMKS = 0.001
+	x2MaxMKS = 0.999
+}

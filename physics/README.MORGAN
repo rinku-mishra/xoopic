@@ -1,0 +1,58 @@
+oslake 10/24/97  --  another beautiful day on the stock market...
+
+Changes made to OOPIC to accomodate Krylov inverters for use in Poisson solve:
+Currently working in freespace with periodicInX, conducting, and/or equipotential 
+boundaries on uniform Cartesian meshes. 
+
+/home/maxwell/oslake/research/code/oopic
+
+test cases:
+	see inp/README.MORGAN
+
+files added:
+	complex.h
+	N_vector.h
+		--> class template representing n-dimensional vectors
+		--> accomodates complex-valued elements
+	domain.h
+	domain.cpp
+		--> extracts pertinent data from class Grid and class 
+		    Boundary objects
+		--> note: type Scalar redefined here
+	operator.h
+		--> abstract base class for operators (matrices) defined by stencils
+	electrostatic_operator.h	 
+	electrostatic_operator.cpp
+		--> operator (matrix) used in poisson solve
+		--> laplacian and boundary conditions wrapped into single matrix
+		--> currently working in freespace with periodicInX,conducting,
+		    equipotential boundaries on uniform cartesian meshes 
+	inverter.h
+		--> abstract base class for krylov inverters (cg and gmres)
+		--> inherits from class PoissonSolve
+		--> interface between Inverter objects and PoissonSolve objects
+	cg.h
+	cg.cpp
+		--> conjugate gradient inverter
+	gmres.h
+	gmres.cpp
+		--> GMRES(m) inverter
+
+files modified:
+	Makefile
+		--> DEFINES = -DDEBUG_INVERTER
+	psolve.h
+		--> constructor overloaded to accomodate Inverter objects
+	fields.h
+		--> #define ELECTROMAGNETIC_SOLVE 0
+		    #define DADI_SOLVE 1
+		    #define CG_SOLVE 2
+		    #define GMRES_SOLVE 3
+		    #define MGRID_SOLVE 4
+		    #define PERIODIC_X1_DADI 5
+	fields.cpp
+		--> Fields::set_up_inverter(Grid*) added
+		    instantiates Domain object (above)
+	bolztmann.cpp
+
+

@@ -1,0 +1,63 @@
+Bug list
+
+This is a list of the known bugs in XOOPIC.
+
+To report new bugs, mail
+ xoopic@langmuir.eecs.berkeley.edu
+
+or use the bug report form:
+ http://ptsg.eecs.berkeley.edu
+
+
+Bug #2
+
+All platforms.
+
+The number density plot is upside-down for negatively charged species.
+The numbers reported are correct, however.
+
+
+
+Bug/Feature #3
+
+Electrostatic simulations only
+
+All platforms.  If you put two equipotential surfaces on top of each
+other, you'll get a possibly unintended poisson solution.  This is a 
+consequence
+of the decomposition of the fields solution (see the algorithm manual)
+into a poisson solution and a laplace solution for each of the equipotentials.
+The laplace solution is computed separately for each equipotential,
+and they'll superimpose.  If you have two equipotentials on top of each
+other, the potential near them might be double what you expect.
+
+
+Bug #4  -- XGRAFIX
+
+Two windows with exactly the same title will cause XGrafix 2.0 to
+behave in a weird fashion.
+
+
+Bug #5 -- hollow.inp
+
+gives this warning:
+
+warning: segment in boundary Noname at (0, 32)- (35, 32) has normal directed outside the region
+
+Bug #6--  ambipolar.inp -- DADI does something funny with the
+corner.
+
+Bug #7-- ToNodes does not take into account charge on the wall.
+
+Bug #8-- 
+	emit should be put inside push loop, emit does not know about species
+	maybe species should be passed into emit so that it emits the same species
+	that is being pushed.
+
+Bug/Feature #9
+	should steperate input file diag from the rest of the diag so that the
+	default diag are not done with -nox option
+
+Bug/Feature #10 
+	 EM boundary cond crash in applyFields on alphas when runing ES field solve 
+	because of Arithmetic exception.

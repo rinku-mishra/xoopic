@@ -1,0 +1,137 @@
+two_stream_ee_em
+{
+
+This is the classic electron/electron two-stream instability, with counter-propagating electron beams
+having velocities much larger than their thermal velocity.
+
+
+We work in pseudo-1D geometry.  It's 2D Cartesian geometry, but the y-direction is only
+2 cells across with periodic BC's.  The x-direction is long.
+
+The field solve is electromagnetic.  If the electrons are non-relativistic (as is the case here), then 
+it is faster to use the electrostatic approximation.  See input file  "two_stream_ee_es.inp".
+
+For the theory, see Sections 5-6 and 5-7 of the classic reference
+  C.K. Birdsall and A.B. Langdon
+  Plasma Physics via Computer Simulation
+  McGraw-Hill, 1985
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMassMKS = 9.1094e-31 
+  electronCharge  = -1.6022e-19
+  speedLight      = 2.9979e8
+
+  electronDensityMKS = 0.5e+24
+  plasmaFrequency    = 2.*PI*9000.*sqrt(2.e-06*electronDensityMKS)
+  ds                 = 0.005 * speedLight / plasmaFrequency
+
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+  Nx = 256
+  Ny =   2
+  dx =  ds
+  dy =  dx
+  Lx =  Nx * dx
+  Ly =  Ny * dy
+
+  simulationVolume = Lx * Ly
+  numCells         = Nx * Ny
+
+//
+// streaming electrons
+//
+  totalNumElectrons    = electronDensityMKS * simulationVolume
+  numElectronsPerCell  = 4
+  numElectronPtcls     = numElectronsPerCell * numCells
+  electronNumRatio     = totalNumElectrons / numElectronPtcls
+  rmsElectronSpeedMKS  = 3.e+04
+  electronVelocityMKS  = 1.e+07
+  peakCurrentElectrons = electronCharge * electronDensityMKS * Ly * electronVelocityMKS
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.9 * d / speedLight
+}
+
+Region
+{
+
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx 
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+
+  Geometry = 1         // 2D (x-y) slab geometry
+  PeriodicFlagX1 = 1   // periodic in x1 (x)
+  PeriodicFlagX2 = 1   // periodic in x2 (y)
+}
+
+Control
+{
+  dt = timeStep
+
+// Turn off the initial Poisson solve
+  initPoissonSolve = 0
+}
+
+Species
+{
+  name = electrons
+  m = electronMassMKS
+  q = electronCharge 
+}
+
+// Load the right-going plasma electrons over the entire simulation region
+Load
+{
+  speciesName = electrons
+  density = electronDensityMKS
+  x1MinMKS = 0.0
+  x1MaxMKS = Lx
+  x2MinMKS = 0.0
+  x2MaxMKS = Ly
+  np2c = electronNumRatio
+
+// specify MKS units for all velocities
+  units = MKS
+  v1drift   = electronVelocityMKS
+  v1thermal = rmsElectronSpeedMKS
+  v2thermal = 0.
+  v3thermal = 0.
+}
+
+// Load the left-going plasma electrons over the entire simulation region
+Load
+{
+  speciesName = electrons
+  density = electronDensityMKS
+  x1MinMKS = 0.0
+  x1MaxMKS = Lx
+  x2MinMKS = 0.0
+  x2MaxMKS = Ly
+  np2c = electronNumRatio
+
+// specify MKS units for all velocities
+  units = MKS
+  v1drift   = -electronVelocityMKS
+  v1thermal = rmsElectronSpeedMKS
+  v2thermal = 0.
+  v3thermal = 0.
+}
+
+}
+

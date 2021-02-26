@@ -1,0 +1,129 @@
+walsh
+{
+	Cerenkov Maser
+}
+Variables 
+{
+ rmax=0.00625
+ rdiel= 0.00425
+ zmax=0.20
+ Jmax=175
+ beam_dumpj1=175
+ beam_dumpj2=175
+ JmaxDrift=175
+ KbeamMin=1
+ KbeamMax=16
+ Kmax=25
+ DielMin=rdiel/rmax * Kmax
+ J1Loop=10
+ J2Loop=14
+ K1Loop=15
+ K2Loop=19
+ VBEAM=1.75e8
+ ILOOP=0
+}
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = zmax
+	n1 = 1.0
+	K = Kmax
+	x2s = 0.0
+	x2f = rmax
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 3e-13
+	B01 = .1
+}
+Iloop
+{
+	j1 = J1Loop
+	j2 = J2Loop
+	k1 = K1Loop
+	k2 = K2Loop
+	Current = ILOOP
+	frequency = 2.3745e10
+	C = 0
+	A = 1
+}
+VarWeightBeamEmitter
+{
+	j1 = 0
+	k1 = KbeamMin
+	j2 = 0
+	k2 = KbeamMax
+	normal = 1
+	speciesName = electrons
+	thetadot = 0.0
+	I = 7.5
+	numberparticlesinmacro = 1.0E7
+	vzdrift = VBEAM
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = KbeamMax
+	j2 = 0
+	k2 = Kmax
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KbeamMin
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = Kmax
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+ExitPort
+{
+	j1 = Jmax
+	j2 = Jmax
+	k1 = 0
+	k2 = Kmax
+	normal = -1
+	EFFlag = 1
+	name = Right Hand side exit port
+	C = 0
+}
+DielectricRegion
+{
+	er = 4.2
+	j1 = 0
+	k1 = DielMin
+	j2 = JmaxDrift
+	k2 = Kmax
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = Jmax
+	k2 = 0
+	normal = 1
+}

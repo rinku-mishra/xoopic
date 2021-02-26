@@ -1,0 +1,92 @@
+.SUFFIXES: .cpp .C
+##
+##	Xoopic Makefile 
+##
+FILE_EXT = 
+##
+EXEC = xo
+##
+##
+C++ = g++
+CC = gcc
+LD = g++
+##
+CFLAGS= $(DEFINES) -DUNIX 
+
+##
+C++FLAGS= -g -O2 $(DEFINES) -DUNIX
+#C++FLAGS= -O2  $(DEFINES) -DUNIX  
+##
+LDFLAGS= -static
+##
+
+#LIBDIRS = -L/usr/lib/xgrafix -L/usr/local/lib -L/usr/lib/Xlib -L../physics -L../advisor
+#for COLOS:
+#LIBDIRS = -L../xgrafix -L/usr/lib -L../../lib -L../physics -L../advisor
+
+#LIBDIRS = -L../xgrafix -L/usr/local/lib -L/usr/lib/X11 -L../physics -L../advisor
+LIBDIRS = -L../xgrafix -L/usr/lib -L/usr/lib/X11 -L/usr/lib/Xlib -L../physics -L../advisor
+
+
+LIBS = -lXGC20 -lXpm -ltk -ltcl -lX11 -ladv -lpic -lm
+
+
+INCLUDES = -I../physics -I../advisor -I../xg -I. -I../xgrafix -I ../../include
+
+XGOBJ= physics.o diagn.o initwin.o main.o dump.o xgmain.o fft.o debug_utils.o
+
+OBJ= $(XGOBJ)
+
+all:	.non-fft.stamp $(EXEC) $(OBJ) 
+
+.C.o: 
+	-rm -f $@
+	$(C++) -c $(INCLUDES) $(C++FLAGS) $*.C
+.cpp.o: 
+	-rm -f $@
+	$(C++) -c $(INCLUDES) $(C++FLAGS) $*.cpp
+.c.o:
+	-rm -f $@
+	$(CC) -c $(INCLUDES) $(CFLAGS) $*.c
+
+.non-fft.stamp:
+	-touch .non-fft.stamp && ls .fftversion.stamp && /bin/rm -f initwin.o diagn.o dump.o physics.o .fftversion.stamp &&  make
+
+
+$(EXEC):	$(OBJ) ../advisor/libadv.a ../physics/libpic.a
+	-rm -f $@
+	$(LD) $(LDFLAGS) $(C++FLAGS) -o $(EXEC) $(OBJ) $(LIBDIRS) $(LIBS)
+	-chmod g+rw $(OBJ)
+	-chmod g+rwx $(EXEC)
+	echo ""
+
+FFT:
+	-ls .non-fft.stamp && /bin/rm -f .non-fft.stamp initwin.o diagn.o dump.o physics.o
+	-touch .fftversion.stamp
+	make all EXEC=xfft DEFINES="-DUNIX -DFFTVERSION"
+
+fft:	
+	make all EXEC=xfft DEFINES="-DUNIX -DFFTVERSION"
+
+RCS:
+	mkdir RCS
+	chmod g+rwx RCS
+	chmod g+rwx .
+	chmod -R g+r RCS
+	csh makeRCS.csh
+
+permission:
+	-chmod -R g+rX *
+	-chmod g+rw *.o *.a
+	-chmod g+rw RCS .
+
+utils:
+	g++ half.C -o half $(INCLUDES) $(LIBDIRS) $(LIBS) 
+
+clean:
+	@/bin/rm -f *.o *~
+
+depend:
+	makedepend -I. -I../xg -I../advisor -I../physics *.C *.h *.cpp *.c
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.

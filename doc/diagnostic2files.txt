@@ -1,0 +1,168 @@
+Writing diagnostics to files
+============================
+
+Content:
+ - TO-DO
+ - intro about diagnostic2files
+ - predefined diagnostics
+ - custom diagnostics
+ - derivative diagnostics
+
+Author: Janez Krek, Avgust 2013, MSU
+
+TO-DO (not yet implemented)
+===========================
+
+ - disabling diagnostics, but keeping diagnostic block in input file
+ - limiting the diagnostic write to single species; now all species are written to file
+ 
+
+
+
+Intro about diagnostic2files
+============================
+
+As of August 2013, xoopic offers possibility to write simulation data into text files
+automatically - according to parameters in input file. Writing is done in X and non-X 
+mode (running xoopic with -nox switch). 
+
+All data is defined in input files and computation speed is only effected if diagnostics blocks
+are present in input file. All diagnostics, except derivative diagnostics (see section 
+Derivative diagnostics for more info), work in a same way as drawing data on screen - 
+only pointer to data is saved during diagnostics initialization.
+
+Currently following diagnostics are supported for writing to file:
+ - predefined diagnostics
+ - custom diagnostics
+ - derivative diagnostics
+ 
+
+Diagnostics block in input file can take following parameters:
+
+-- start --
+Diagnostic 
+{
+	//
+	// mandatory parameters for writing to work
+	//
+	// directory name into which save file(s); name can be absolute or relative to current directory
+	directory = output
+
+	// file name for writing data; name is printf format string - %d is replaced with current simulation step;
+	// phi_%04d.dat -- means that for first step, file name will be phi_0001.dat, for 100-th phi_0100.dat, etc.
+	// when appending data to file, just write filename without format string.
+	file = phase_space_%08d.dat
+
+	// variable which value to write to file; variable also defines number of columns in file and format of data in file
+	// format of data in file for each variable is predefined application and cannot be changed in input file
+	// Variable names include predefined (defined in xoopic inside Diagnostics window), custom variables and derivative "variables"
+	VarName = phase space for electrons
+
+	//
+	// optional parameters
+	//
+	// open diagnostics windows when application starts (open=1) or not (open=0)
+	// default value is 0 -- do not open diagnostics window
+	open = 0
+
+	// should the data be appended to same file (append=1) or new file is created with each write to file (append=0); default value is 0
+	// note: filename (explained above) should be defined accordingly (for appending, there is no need for current comp. step in file name)
+	// appending is useful for writing time depended values to be easily display them later.
+	append = 1
+
+	// writing defined by computational steps
+	// computational step when to write diagnostics to file -- one time only (no repeating!); default is 0 -- no writing
+	n = 0
+	// computational step to start writing; default value is 0 (beginning of simulation)
+	n_start = 0
+	// number of computer steps between writing data to file; 10 means write data every 10-th step.
+	// default value is 1 (write every step)
+	n_step = 1
+	// computational step to stop (end) writing; default value 0 (when simulation stops...)
+	n_end = 0
+	// when writing derivative diagnostics, this defined width over derivative is computed; see Derivative diagnostics for explanation
+	// value cannot be bigger than n_step; if it is, it is automatically changed to n_step.
+	n_width = 1
+
+	// writing defined by simulation time	
+	// simulation time when to write diagnostics to file -- one time only (no repeating!); default is 0 -- no writing
+	t = 0
+	// simulation time to start writing; default value is 0 (beginning of simulation)
+	t_start = 0
+	// simulation time between writing data to file; 1E-5 means that writing will be done approx. every 1E-5 time difference
+	// there is no define value;
+	t_step = 0
+	// simulation time to stop (end) writing; default value 0 (when simulation stops...)
+	t_end = 0
+
+}
+-- end --
+
+
+
+Predefined diagnostics
+======================
+
+Predefined diagnostics are diagnostics already defined in xoopic (fields, currents on boundaries, 
+densities, etc). To write diagnostics into file, name of diagnostics have to ve ..... with keyword "predef".
+
+Example, to display magnetic field:
+
+Diagnostic
+{
+	VarName = predef B
+	// .. all other variables are the same....
+}
+
+
+
+Custom diagnostics
+==================
+
+Custom diagnostics are handled specially inside xoopic and can be written to file. Currently (at date of writing the document)
+following diagnstics are defined/handled:
+ - LaserSpotDiagnostic
+ - WaveDirDiag
+ - GridProbes
+ - ProbeRegion
+
+Diagnostics are defined in input file with diagnostics block and all other diagnostics parameters can be added to 
+existing block in input file. 
+
+NOTE: writing of values to files have been added to this diagnostics, but never tested. Use carefully. 
+
+
+
+Derivative diagnostics
+======================
+
+Derivative diagnostics enables writing time derivatives into output files. Computing is done on-the-fly, just
+before data is saved into file.
+
+For derivative diagnostics to work, one have to define parameter "n_width" in input file. Parameter specifies 
+time between computational steps, expressed in computational steps, when values are taken and derivative is 
+computed. All other parameters are the same as for other diagnostics.
+
+Currently (Avgust 2013) only linear derivative is implemented (as shown in example below).
+
+Example:
+ - dt = 1E-13		// simulation time step
+ - n_width = 100	// time difference t=1E-10
+ 
+         E2 - E1
+ dE/dt = ------- 
+         t2 - t1
+
+  where: 
+   - E2 - value of E(t2)
+   - E1 - value of E(t1)
+   - t1 = t2 - (n_width * dt)
+
+
+Currently (Avgust 2013) following derivative diagnostics are available:
+ - dE/dt, dE1/dt, dE2/dt, dE3/dt : write derivation f electric field, either in total value (dE/dt) or each component (dE1/dt)...
+ - dE/dt, dE1/dt, dE2/dt, dE3/dt : write current -- electric field derivation multiplied by EPS_0
+ 
+
+
+ 

@@ -1,0 +1,113 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 13
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 13
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = 1e18
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 0
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = 1.6e-19
+}
+Species
+{
+        ID = 1
+        m = 9.11E-20
+        q = 1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 13
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 13
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
+Conductor
+{
+	j1 = 13
+	k1 = 13
+	j2 = 13
+	k2 = 0
+	normal = -1
+}
+Equipotential
+{	
+	Vdc = 1
+	Vac = 0.0
+	frequency = 6.28E9
+	phase = 1.571
+	trise = 1e-10
+	tpulse = 1e-10
+	tfall = 1e-10
+	a1 = 60
+	a0 = 10
+	j1 = 0
+	k1 = 0
+	j2 = 13
+	k2 = 0
+	normal = 1
+}

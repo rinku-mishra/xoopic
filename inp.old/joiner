@@ -1,0 +1,8 @@
+#!/bin/csh
+set name = "foo"
+@ index = 1
+while ( name != "" )
+  set name = $<
+  montage -tile 2x1 -borderwidth 5 -geometry 250x250 $name out"$index".gif
+  @ index++
+end

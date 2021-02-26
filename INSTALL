@@ -1,0 +1,119 @@
+*********************************************************
+Instructions for building and testing XOOPIC
+
+
+NOTE:  You may need to use GNU's make, instead of the make
+       utility provided by a commercial operating system.
+       If you're using Linux, then you already have GNU's
+       make.  If you don't have GNU's make, you can find
+       it at   http://www.gnu.org/software/make/make.html
+
+
+*****************************************************
+*** NOTE: A PATCH is REQUIRED for use of AUTOMAKE ***
+*****************************************************
+
+If you don't have automake installed on your system, then
+XOOPIC should build just fine.  However, if you add
+new source or header files, or your own executables, etc.,
+then you must modify the Makefile.in files appropriately 
+and rerun the configure script (you can ignore all the
+Makefile.am files).
+
+If automake IS installed on your system -- guaranteed to be
+true for Linux -- then
+                         !! PLEASE READ THE FOLLOWING !!
+very carefully:
+ 
+If automake is installed on your system, then it is likely
+that the configure script will invoke automake the first
+time you use it.
+
+In order to get automake/configure to work correctly on
+all systems (IRIX was the culprit here), we had to patch
+automake.
+
+You can apply the Tech-X automake patch as follows (as root):
+
+  ABSAM=`whence automake`
+  AMBASEDIR1=`dirname $ABSAM`
+  AMBASEDIR=`dirname $AMBASEDIR1`
+  CURDIR=`pwd`
+  cd $AMBASEDIR
+  patch -p0 <$CURDIR/config/automake.diff
+
+This patch separates AR and ARFLAGS as needed for instantiated
+templates in some systems.  (Irix requires CC -ar -o, rather
+than ar cru, e.g.)  This patch should not affect the use of
+automake otherwise.  Also, you should make certain that you
+have up-to-date versions of autoconf and m4, if have automake.
+
+This issue has been discussed on the automake mailing list:
+http://sourceware.cygnus.com/ml/automake/1999-05/msg00010.html
+
+A fix is in the present CVS snapshot of automake, but has not
+made it into a release version.  Tech-X has submitted the
+above patch to the maintainers of automake at Cygnus.
+
+If you choose to run automake after adding a new Makefile.am
+(or editing an existing Makefile.am), then you must make sure
+to run it as
+   "automake --include-deps --foreign"
+to prevent intereference with the "make depend" targets.  This
+minor complication is necessary to get dependencies correct
+for non-GNU compilers.
+
+**************************************************
+*** END of NOTE regarding a PATCH for AUTOMAKE ***
+**************************************************
+
+
+**********************************************
+Instructions for specific operating systems --
+
+********
+IRIX6.5:
+********
+
+  -fsquangle
+    The script attempts to guess whether you built gcc with the
+    -fsquangle flag, which does a compression of the methods names
+    in libstdc++.a.*.  You may have to set this by hand if you
+    get an unsatisfied external.  We have found -fsquangle to be
+    needed on IRIX6.5.
+
+  The m4 on many IRIX systems is archaic.  For these system, you should
+    build m4 (version 1.4 or later), and autoconf.  You will have to
+    remove or move aside /usr/sbin/m4 and /usr/bin/m4 to prevent these
+    from being used.
+
+
+********************
+OSF1 V4.0 (Tru64):
+********************
+
+  -fsquangle:
+    The IRIX6.5 notes apply here also.
+
+
+********************
+linux-ix86 with KAI's KCC compiler:
+********************
+
+  Use the following configure flags:
+    prompt> configure --with-CXX=KCC --with-CC=gcc
+
+********************
+CRAY-UNICOS
+********************
+  To build on CRAY systems use the following configure flags:
+    (assuming the XGRAFIX is built in $HOME)
+    prompt> ./configure  --with-CC=cc  --with-CXX=CC --with-XGmini
+
+  To build on CRAY systems with MPI use the following configure flags:
+    prompt> ./configure  --with-CC=cc  --with-CXX=CC --enable-MPI --with-XGmini
+
+  The CRAY MPI compiler defaults to CC and cannot be changed with a configure option. 
+
+
+

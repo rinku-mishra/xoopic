@@ -1,0 +1,186 @@
+default
+{
+caviton2
+}
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.08
+	n1 = 1.0
+	K = 25
+	x2s = 0.0
+	x2f = 0.04
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 2e-8
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 1
+	BoltzmannDensity = 1e12
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1.5
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = .2
+}
+Species
+{
+        name = ion
+        m = 9.11E-28
+        q = 1.6e-19
+}
+Load
+{
+	zMinMKS = .027
+	zMaxMKS = .08
+	rMinMKS = .0
+	rMaxMKS = .04
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 1.26e4
+	density = 1e15
+	np2c = 1.5e7
+	speciesName = ion
+}
+Load
+{
+	zMinMKS = .016
+	zMaxMKS = .027
+	rMinMKS = .024
+	rMaxMKS = .04
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 1.26e4
+	density = 1e15
+	np2c = 1.5e7
+	speciesName = ion
+}
+Load
+{
+	zMinMKS = .00
+	zMaxMKS = .016
+	rMinMKS = .0
+	rMaxMKS = .04
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 1.26e4
+	density = 1e15
+	np2c = 1.5e7
+	speciesName = ion
+}
+Load
+{
+	zMinMKS = .016
+	zMaxMKS = .027
+	rMinMKS = .0
+	rMaxMKS = .016
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 1.26e4
+	density = 1e15
+	np2c = 1.5e7
+	speciesName = ion
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 25
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 25
+	j2 = 50
+	k2 = 25
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 25
+	j2 = 50
+	k2 = 0
+	normal = -1
+}
+Equipotential
+{
+	C = 2.5
+	A = 0.5
+	frequency = 5e7
+	phase = 0
+	j1 = 15
+	k1 = 15
+	j2 = 15
+	k2 = 10
+	normal = 1
+}
+Equipotential
+{
+	C = 2.5
+	A = 0.5
+	frequency = 5e7
+	phase = 0
+	j1 = 15
+	k1 = 10
+	j2 = 10
+	k2 = 10
+	normal = -1
+}
+Equipotential
+{
+	C = 2.5
+	A = 0.5
+	frequency = 5e7
+	phase = 0
+	j1 = 10
+	k1 = 15
+	j2 = 10
+	k2 = 10
+	normal = 1
+}
+Equipotential
+{
+	C = 2.5
+	A = 0.5
+	frequency = 5e7
+	phase = 0
+	j1 = 10
+	k1 = 15
+	j2 = 15
+	k2 = 15
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}

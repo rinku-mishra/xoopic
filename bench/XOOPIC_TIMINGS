@@ -1,0 +1,119 @@
+/bin/time xoopic -i bench1.inp -s 200 -nox
+
+Platform, compiler		time	spec	flags	version
+Opteron 275, gcc3.4, SLAMD64     63             -03     cvs 10/27/2005, double precision
+Opteron 244, gcc3.3, gentoo      68             -03     cvs 9/15/2004, double precision
+Athlon 2200+ XP, gcc3.2		106		-03	cvs 4/3/03
+Centrino 140MHz                 110             -O3     cvs 11/20/04
+Athlon 1800+ XP, slackgcc2.95.3 115             -O3     cvs 11/20/02
+Athlon 1800+ XP, gcc2.96rh	129		-O3 -mcpu=athlon -march=athlon, CVS 9/19/02
+21264 DS20E/linux, DEC CXX 6.3	142		L	beta 1/17/01
+1.4GHz AMD Athlon MP		155		-g -O3	1/23/02 CVS
+21264, model # unknown:		209		E	beta 11/25/98
+1.7GHz P4 g++2.96		247		-g -O2	8/27/01 CVS
+DEC PWS600, DEC CXX 6.0		249		E	beta 1/21/98	
+866MHz PIII, g++2.95.2		289		-O3	snapshot 4/19/01
+DEC PWS600, DEC CXX 5.6		293		D	beta 1/21/98	
+933MHz PIII, g++2.96		298		-g -O3	8/29/01 CVS
+AMD K7-650MHz, egcs-2.91	301.7           -O3	beta 12/5/99
+PIII 796MHz, g++2.96RH          305             -O3     beta 9/5/2002
+Microway500, DEC CXX 6.0	310		H	beta 1/30/98	
+DEC PWS600, gcc-2.95		355		A+	beta 7/31/99	
+DEC PWS600, g++2.8.0		365		C	beta 1/14/98
+IBM SP3 375MHz			374		-O2	beta 12/08/01
+DEC PWS600, egcs-1.1.1		378		C	beta 12/5/98
+Cray T3E 450MHz Cray CC -O3	422			beta 1/10/00
+Microway500, g++2.7.2		476		A	beta 12/3/97
+Microway500, egcs-1.0		488		A+	beta 12/3/97
+1.7GHz P4 ICC 5.0.1		521	        -O1 -tpp7 -axMKW 11/10/01
+P-III-450, g++2.7.2.1		563		B	2.51
+P-II-400, egcs-1.0.3		585.4           A	beta 1/8/99
+Xeon-400, egcs-1.0.2		597		A	2.51
+P-II-400, egcs-1.0.3		607             B	beta 7/9/99
+P-II-400, pgCC			729		J	beta 7/9/99
+DEC 255/4/300, DEC CXX 6.0	794		H	beta 1/30/98
+Dell 3200 266MHz P-II, egcs	906		A	beta 6/25/98
+UltraSPARC 200MHz, Sun CC4.2	942		G	beta 1/28/98
+P-II-400, KCC			1076		K	beta 7/9/99
+P-II-400, FCC			1200		I	beta 7/9/99
+PPro200, Linux, g++2.7.2	1235		B	beta 1/30/98
+PPro200, Solaris, g++2.7.2	1251		B	beta 12/3/97
+DEC 200/4/233, DEC CXX 6.0	1271		H	beta 1/30/98
+UltraSPARC 167MHz, g++		1478		B	beta 7/12/99
+IBM SP2 66MHz Power2, g++2.8.0	2022		B	2.51
+------------------------------------------------------------------------
+/bin/time xoopic -i bench1a.inp -s 200 -nox
+
+Platform, compiler		time	spec	flags	version
+Opteron 275, gcc3.4, SLAMD64     71             -03     cvs 10/27/2005, double precision
+Opteron 244, gcc3.3, gentoo      79             -03     cvs 9/15/2004, double precision
+Centrino 140MHz                 121             -O3     cvs 11/20/04
+Athlon 1800+ XP, gcc2.96rh      144             -03 -mcpu=athlon -march=athlon, CVS 9/19/02
+DEC PWS600, DEC CXX 6.0		270		E	beta 1/21/98	
+DEC PWS600, DEC CXX 5.6		346		D	beta 1/21/98	
+DEC PWS600, g++2.8.0		404		C	beta 1/14/98	
+P-II-400, egcs-1.0.3		676.3		A	beta 1/8/99
+DEC 255/4/300, DEC CXX 6.0	843		H	beta 1/30/98
+UltraSPARC 200MHz, Sun CC4.2	1025		G	beta 1/28/98
+DEC 200/4/233, DEC CXX 6.0	1072		H	beta 1/30/98
+PPro200, Solaris, g++2.7.2	1237		B	beta 12/3/97
+PPro200, Linux, g++2.7.2	1386		B	beta 1/30/98
+------------------------------------------------------------------------
+/bin/time xoopic -i bench2.inp -s 100000 -nox
+
+Platform, compiler		time	spec	flags	version
+Opteron 275, gcc3.4, SLAMD64    16             -03     cvs 10/27/2005, double precision
+Opteron 244, gcc3.3, gentoo     20             -03     cvs 9/15/2004, double precision
+Athlon 1800+ XP, gcc2.96rh      30             -03 -mcpu=athlon -march=athlon, CVS 9/19/02
+DEC PWS600, DEC CXX 6.0		99		F	beta 1/21/98
+DEC PWS600, DEC CXX 5.6		111		D	beta 1/21/98	
+DEC PWS600, g++2.8.0		146		C	beta 1/14/98	
+Microway500, g++2.7.2		183.49		A	beta 12/3/97
+P-II-400, egcs-1.0.3		186.3		A	beta 1/8/99
+DEC 255/4/300, DEC CXX 6.0	256		H	beta 1/30/98
+DEC 200/4/233, DEC CXX 6.0	333		H	beta 1/30/98
+UltraSPARC 200MHz, Sun CC4.2	355		G	beta 1/28/98
+PPro200, Solaris, g++2.7.2	365		B	beta 12/3/97
+PPro200, Linux, g++2.7.2	368		B	beta 1/30/98
+------------------------------------------------------------------------
+/bin/time xoopic -i bench3.inp -s 500 -nox
+
+Platform, compiler		time	spec	flags	version
+Opteron 275, gcc3.4, SLAMD64    37             -03     cvs 10/27/2005, double
+Opteron 244, gcc3.3, gentoo     28             -03     cvs 9/15/2004, double precision
+Athlon 1800+ XP, gcc2.96rh      58             -03 -mcpu=athlon -march=athlon, CVS 9/19/02
+DEC PWS600, DEC CXX 6.0		225		F	beta 1/21/98
+DEC PWS600, DEC CXX 5.6		243		D	beta 1/21/98	
+P-II-400, egcs-1.0.3		287.69		A	beta 1/8/99
+DEC PWS600, g++2.8.0		289		C	beta 1/14/98	
+Microway500, g++2.7.2		384		A	beta 12/3/97
+DEC 255/4/300, DEC CXX 6.0	606		H	beta 1/30/98
+PPro200, Solaris, g++2.7.2	632		B	beta 12/3/97
+PPro200, Linux, g++2.7.2	684		B	beta 12/6/97
+UltraSPARC 200MHz, Sun CC4.2	601.5		G	beta 1/28/98
+PPro200, Linux, g++2.7.2	728		B	beta 12/6/97
+DEC 200/4/233, DEC CXX 6.0	800		H	beta 1/30/98
+Notes:
+A -O9 -fexpensive-optimizations -finline-functions -funroll-loops 
+	-funroll-all-loops -fomit-frame-pointer -fstrength-reduce
+
+A+ -O9 -fexpensive-optimizations -finline-functions -funroll-loops 
+	-funroll-all-loops -fomit-frame-pointer -fstrength-reduce -fno-exceptions
+
+B -O3
+
+C -O3 -finline-functions -funroll-loops -funroll-all-loops 
+-fomit-frame-pointer -fstrength-reduce -fexpensive-optimizations 
+-fno-exceptions -ffast-math -mcpu=ev56
+on Digital UNIX 4.0C
+
+D DEC CXX with -O5 -tune ev5 -om
+E DEC CXX -arch ev56 -O5 -tune ev5  -no_misalign -nortti -assume nopointers_to_globals -om 
+F DEC CXX -arch ev56 -O3 -tune ev5  (higher optimization failed)
+G Sun C++ 4.2      -fast -xtarget=native
+H DEC CXX -arch ev56 -O3 -tune ev5, compiled statically on a Digital UNIX 4.0 box
+I Fujitsu FCC -O -K fast -K PENTIUM_PRO
+J Portland Group C++ -O3 -fast
+K KCC +K3 --no_abstract_float --no_abstract_pointer --backend -O3 --no_exceptions
+
+L Linux/Alpha 2.2.17 kernel, Dual-CPU 667MHz DS20E, -O3, -tune ev6, -arch ev6

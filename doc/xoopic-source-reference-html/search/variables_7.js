@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['g',['g',['../structpixel.html#ade1a7e5fcb9d3e9756669a559f654958',1,'pixel::g()'],['../class_load_params.html#a56dd774cbbb37135698ebdf53bae1822',1,'LoadParams::G()'],['../class_m_c_c_package.html#a018504740f884d87a0c8fa299069c685',1,'MCCPackage::G()']]],
+  ['gam_5fx1',['gam_x1',['../class_dadi.html#af097bc38bffa0bfa2476f1a043ea9efb',1,'Dadi']]],
+  ['gam_5fx2',['gam_x2',['../class_dadi.html#aa9f91257bdfbac824a3d877103857f9e',1,'Dadi']]],
+  ['gamma0',['gamma0',['../class_maxwellian.html#a266c54aa01d4a0f086ae3ec31ccfed04',1,'Maxwellian::gamma0()'],['../class_port_t_m.html#a391dc426f904df83675fa4768a9df5bc',1,'PortTM::gamma0()']]],
+  ['gamma1',['gamma1',['../class_port_sum_t_e.html#ac489129f2f6d376f53050a25dbfafcd6',1,'PortSumTE::gamma1()'],['../class_port_t_e.html#ab2b08c8d311fdb21012eca6426918a1f',1,'PortTE::gamma1()']]],
+  ['gas',['gas',['../class_m_c_c_params.html#a7e0fc4f72311f92543d2c1b3d3aa80e3',1,'MCCParams']]],
+  ['gasdensity',['gasDensity',['../class_base_m_c_package.html#a71fcabf6ae9c4fec7306a6b185329df3',1,'BaseMCPackage']]],
+  ['gasdistribution',['gasDistribution',['../class_m_c_c_package.html#a53ae260d3548e8c7fd0b495080f867d8',1,'MCCPackage']]],
+  ['gasofftime',['gasOffTime',['../class_control_params.html#a4fae46051687b56f39356b2816da3a27',1,'ControlParams::gasOffTime()'],['../class_spatial_region.html#ad07bc6752a343028bf0aa709d282573e',1,'SpatialRegion::gasOffTime()']]],
+  ['gastype',['gasType',['../class_n_g_d.html#a97134395df585743bb8a08196244555d',1,'NGD']]],
+  ['gastypestring',['gasTypeString',['../class_base_m_c_package.html#ae69b092f6e7a160023c0e637120baee6',1,'BaseMCPackage']]],
+  ['geometry',['Geometry',['../class_grid_params.html#af9ae20d4f7d218aa407af7b5fbda726a',1,'GridParams']]],
+  ['geometryflag',['geometryFlag',['../class_grid.html#a5f1ca559883f21df9eb0593f0199f4e0',1,'Grid']]],
+  ['gp',['GP',['../class_boundary_params.html#a29183d0504c13bd2ebb8a3005aeb0147',1,'BoundaryParams::GP()'],['../class_diag_params.html#a2223d49fd6ebc249851ecccf73d377bb',1,'DiagParams::GP()'],['../class_diagnostic_params.html#af1e492505e35118ac8626e6c0a09de60',1,'DiagnosticParams::GP()'],['../class_spatial_region_group.html#af78c26e6a5630e35867965d11db091a5',1,'SpatialRegionGroup::GP()']]],
+  ['grayshade',['GrayShade',['../xgrafixext_8h.html#a09ded81b853b554da7785241608086e0',1,'GrayShade():&#160;xgrafixint.h'],['../xgrafixint_8h.html#a09ded81b853b554da7785241608086e0',1,'GrayShade():&#160;xgrafixint.h']]],
+  ['greencolor',['GreenColor',['../xgrafixext_8h.html#a83ad52fed600fe2bf6b5df6572f74f51',1,'GreenColor():&#160;xgrafixint.h'],['../xgrafixint_8h.html#a83ad52fed600fe2bf6b5df6572f74f51',1,'GreenColor():&#160;xgrafixint.h']]],
+  ['grid',['grid',['../class_grid_probes.html#a1d2b54784dd695133a566bac1f563e99',1,'GridProbes::grid()'],['../class_laser_spot_diagnostic.html#aaa4c205d7ae00717015fa3664f5c5eb4',1,'LaserSpotDiagnostic::grid()'],['../class_predef_diagnostic.html#a02288d56a6467c466a95329596f23b40',1,'PredefDiagnostic::grid()'],['../class_wave_dir_diag.html#ae7d4edc0541cb8fb02fdaafdbd49c9c8',1,'WaveDirDiag::grid()'],['../class_boltzmann.html#a7172bf0204cf4082e233f5a16cf84e4e',1,'Boltzmann::grid()'],['../class_coulomb.html#a48295bb3e9a8d1ff1ed67e49d6458fad',1,'Coulomb::grid()'],['../class_domain.html#a595bc4ceb9104947654b149cd32a53c6',1,'Domain::grid()'],['../class_exit_port.html#a49fb0d17efd042461a36f72c284d3ed5',1,'ExitPort::grid()'],['../class_field_emitter.html#aa59b250142741922dba0b18f7c638fec',1,'FieldEmitter::grid()'],['../class_field_emitter2.html#aef66dfcfda110473b1f662954954dd36',1,'FieldEmitter2::grid()'],['../class_fields.html#afec9a1e01e550db41d12bec58a181f0d',1,'Fields::grid()'],['../class_gap.html#a2f660fd5daa114142e67f7c8ac665284',1,'Gap::grid()'],['../class_current_region.html#a1b982e339430c2e82ea950d63af8c2e3',1,'CurrentRegion::grid()'],['../class_load.html#a1904a83266a6292a6f5318cad6ba452d',1,'Load::grid()'],['../class_base_m_c_package.html#a063d067d3cf9be6abc4547b8a2322d57',1,'BaseMCPackage::grid()'],['../class_parallel_poisson.html#ad09e517866c080f7aedd82b5fb06578d',1,'ParallelPoisson::grid()'],['../class_port_gauss.html#a28271ed9a3daab88340270602c9a01e7',1,'PortGauss::grid()'],['../class_port_sum_t_e.html#a0bea046c033a11ba0619d9d5c63cfd9c',1,'PortSumTE::grid()'],['../class_port_t_e.html#a3b939d6e7ef7ee911f7717b99bc5a997',1,'PortTE::grid()'],['../class_port_t_m.html#ac8bf82e56224b5d86c6e375c231a10af',1,'PortTM::grid()'],['../class_back_load.html#af34a7460216ad572ae6694168526f50f',1,'BackLoad::grid()'],['../class_spatial_region.html#ac82dcb202c7450657b114931b3b481da',1,'SpatialRegion::grid()']]],
+  ['grid_5fpoint_5findex',['grid_point_index',['../class_domain.html#a3007b1b15e1fbd1039df12d122ec21fd',1,'Domain']]],
+  ['grid_5fpoint_5ftype',['grid_point_type',['../class_domain.html#af2fad326f1aa5fcba043f6143071c7d8',1,'Domain']]],
+  ['gridded_5fdensity',['gridded_density',['../class_load.html#aa84a1a565f63ba5f1dd1865ce35e10f6',1,'Load']]],
+  ['grided_5fcurrent',['grided_current',['../class_current_region.html#a213fcf549ded696d7338aaac50e6d908',1,'CurrentRegion']]],
+  ['gsrbcoeff',['GSRBCoeff',['../class_multigrid.html#a8b34e57a44e0f709dea313144f6675a5',1,'Multigrid']]],
+  ['guiptclcount',['guiPtclCount',['../class_plasma_device.html#a372f5cb9b37a69c673bb25a5d800afb5',1,'PlasmaDevice']]]
+];

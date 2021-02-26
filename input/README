@@ -1,0 +1,1 @@
+Note: the mass of Argon (Ar) has been changed by a factor of .01 (6.68e-28 from 6.68e-26) in ambipolar.inp and gas.inp.  This is to speed up the physics of the simulation for demo purposes; similar effects will be seen, but the model will run faster.  Be aware of this difference if using these input files as a base for production or research models.

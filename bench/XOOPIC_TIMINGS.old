@@ -1,0 +1,95 @@
+/bin/time xoopic -i bench1.inp -s 200 -nox
+
+Platform, compiler		time		expected time (from SPEC)
+
+Microway500, g++2.7.2		209.6		235 (note E for flags, config)
+DEC2100/5/250, g++2.7.2		423		384
+DEC200/4/233, KCC 2.01		513.1		(reference)
+Intel P-II-266/g++2.7.2, sol	496
+IntelPP200, g++2.7.2		559		538
+HP J210, g++2.7.2		594		461
+SSUltra/143MHz,g++2.7.2		617		411
+IntelPP, g++2.7.2/Solaris	621		538 (see note F)
+DEC200/4/233, g++2.7.2:		678		(reference)
+DEC200/4/233, g++2.7.0:		686		(reference)
+SS20/75MHz, g++2.7.2		959		1025 (see note D)
+SS10/55MHz, SunSoft CC4.1	1000.13		~1705 (see note C)			
+IntelP133, g++2.7.2p:		1071		1069 (see note A for config)
+K6-200, g++2.7.2		1272
+DEC200/4/233, DEC CXX 5.1	1437		(reference) (see note B for flags)
+SS10/55MHz, g++2.7.0		1683.47		~1705 (see note C)
+------------------------------------------------------------------------
+/bin/time xoopic -i bench1a.inp -s 200 -nox
+
+Platform, compiler		time		expected time (from SPEC)
+
+Microway500, g++2.7.2		248.5		239 (see note E)
+DEC2100/5/250, g++2.7.2		508		456
+DEC200/4/233, KCC 2.01		569.9		(reference)
+IntelPP, g++2.7.2/Solaris	621		640 (see note F)
+IntelPP200, g++2.7.2		637.8		640
+DEC200/4/233, g++2.7.0:		769.0		(reference)
+DEC200/4/233, g++2.7.2:		805		(reference)
+SS20/75MHz, g++2.7.2		1105		1216 (see note D)
+IntelP133, g++2.7.2p:		1248		1351 (see note A for config)
+HP J210, g++2.7.2		1302		547
+
+------------------------------------------------------------------------
+/bin/time xoopic -i bench2.inp -s 50000 -nox
+
+Platform, compiler		time		expected time (from SPEC)
+
+Microway500, g++2.7.2		53.9		36.4
+DEC200/4/233, KCC 2.01:		97.1		(reference)
+DEC2100/5/250, g++2.7.2		100.6		95
+IntelPP200, g++2.7.2		119		133.8
+SSUltra/143MHz,g++2.7.2		135		102
+HP J210, g++2.7.2		164		115
+DEC200/4/233, g++2.7.0:		168.4		(reference)
+IntelPP, g++2.7.2/Solaris	188		102 (see note F)
+SS20/75MHz, g++2.7.2		283		253 (see note D)
+IntelP133, g++2.7.2p:		327		282 (see note A for config)
+DEC200/4/233, DEC CXX 5.1	628		(reference) (see note B for flags)
+SS10/55MHz, SunSoft CC4.1	645		~417 (see note C)
+SS10/55MHz, g++2.7.0		659		~417 (see note C)
+
+
+------------------------------------------------------------------------
+/bin/time xoopic -i bench3.inp -s 500 -nox
+
+Platform, compiler		time		expected time (from SPEC)
+
+Microway500, g++2.7.2		55.0		37 (see note E)
+DEC2100/5/250, g++2.7.2		92.5		95
+IntelPP200, g++2.7.2		98.7		134
+DEC200/4/233, KCC 2.01:		116.8		(reference)
+SSUltra/143MHz,g++2.7.2		128		102
+DEC200/4/233, g++2.7.0:		168.9		(reference)
+HP J210, g++2.7.2		184		115
+SS20/75MHz, g++2.7.2		212		254 (see note D)
+IntelPP, g++2.7.2/Solaris	219		134 (see note F)
+IntelP133, g++2.7.2p:		268		282 (see note A for config)
+SS10/55MHz, g++2.7.0		1754		~410 (see note C)
+SS10/55MHz, SunSoft CC4.1	1922		~410 (see note C)
+
+Notes:
+g++ -O9 -fexpensive-optimizations -finline-functions -funroll-loops 
+	-funroll-all-loops -fomit-frame-pointer -fstrength-reduce
+KCC +K3 -O3 -migrate -tlocal
+
+A) IntelP133:
+g++ -O3, hardware: 133MHz Pentium, ASUS motherboard, 16M EDO 60ns RAM
+256k PB Sync. cache
+
+B) -migrate -O2 were given as optimization, to DEC CXX 5.1
+
+C) Contributed by Mike Bettenhausen of Wisconsin, on his Sparc 10
+with 55MHz hyperSPARC's.
+
+D) g++ -O9 -fexpensive-optimizations ... (as above)
+
+E) Microway 500MHz 21164A machine, 2M cache, g++ used as in D) except for
+diagnostics, compiled -O2.  Expected times were vs. actual times
+on Intel P6/200.
+
+F) -O3, g++ on Solaris x86

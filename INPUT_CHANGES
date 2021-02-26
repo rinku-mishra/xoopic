@@ -1,0 +1,93 @@
+Version 1.1 to Version 2.0 input file changes
+
+
+Incompatible changes:
+
+Control:
+	eCollisional no exists (use Species::collisionModel - see input.txt)
+	iCollisional no exists (use Species::collisionModel - see input.txt)
+
+
+Load: vzdrift changed to v1drift
+      vrdrift changed to v2drift
+      vthdrift changed to v3drift
+      zMinMKS changed to x1MinMKS
+      zMaxMKS changed to x1MaxMKS
+      rMinMKS changed to x2MinMKS
+      rMaxMKS changed to x2MaxMKS
+
+PlasmaSource: 
+      vzdrift changed to v1drift
+      vrdrift changed to v2drift
+      vthdrift changed to v3drift
+      vzthermal changd to v1thermal      
+      vrthermal changd to v2thermal      
+      vththermal changd to v3thermal      
+      vzcutoff changed to v1cutoff
+      vrcutoff changed to v2cutoff
+      vthcutoff changed to v3cutoff
+      vzthermal2 changd to v1thermal2
+      vrthermal2 changd to v2thermal2     
+      vththermal2 changd to v3thermal2      
+      vzcutoff2 changed to v1cutoff2
+      vrcutoff2 changed to v2cutoff2
+      vthcutoff2 changed to v3cutoff2
+
+Species:  selection of ion and electron species allowed in input file
+	SpeciesSub changed to subcycle
+
+Generic Emitter Parameters:
+	Name changes as in Load and PlasmaSource
+	
+BeamEmitter
+	Name changes as in Load and PlasmaSource
+	numberparticlesinmacro changed to np2c	
+
+Version 2.0 to version 3.0?
+
+Multiple spatial regions added:
+all groups must be surrounded by
+Region
+{
+other groups
+}
+except Variables and the description
+
+________________________________________________________________
+Feature-added changes:
+
+Variables group added.  User may define variables at the
+top of an input file which may be used throughout the input file.
+
+Grid: User-given functional modulation of grid spacing added.
+
+Control:  User-given functional distribution of static magnetic
+field in space added.
+
+Species:  supercycle of particles allowed
+	particleLimit added, max # of particles by species
+
+Load:  units added, input in either MKS or eV supported
+	analyticF added, user-given function distribution of particles
+	Thermal cutoffs and velocities added
+
+Generic Boundary Parameters:
+	Lines do not necessarily have to be horizontal in some cases
+	Specification of boundary endpoints in MKS units allowed
+	F added for user-given functional time dependence on boundary
+	reflection added
+	refMaxE added
+
+CurrentRegion group added
+
+	
+Generic Emitter Parameters:
+	most thermal velocities set here now
+	np2c added
+
+
+Version 2.0 to version 3.0?
+
+Boundaries all can take Segment subgroup to describe their
+endpoints, and some of them (Equipotential, Conductor,
+Foil, Polar) can take multiple Segments.

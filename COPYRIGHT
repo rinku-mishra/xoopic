@@ -1,0 +1,29 @@
+Copyright (C) 1994-2008 The Regents of the University of California
+(Regents).
+
+XOOPIC is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, 
+or any later version.
+
+XOOPIC is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with XOOPIC as LICENSE.txt.  If not, see <http://www.gnu.org/licenses/gpl2.txt>.
+
+
+For a license permitting for-profit distribution of the 
+Software or its derivatives, contact The Office of Technology Licensing, 
+UC Berkeley, 2150 Shattuck Avenue, Suite 510, Berkeley, CA 94720-1620,
+(510) 643-7201.
+
+For custom modification and support of the Software, contact
+Prof. J. P. Verboncoeur (johnv@eecs.berkeley.edu).  If you use the
+Software for publication or other form of communication, as a
+courtesy, please use the following or similar citation:
+
+J. P. Verboncoeur, A. B. Langdon and N. T. Gladd, Comp. Phys. Comm. 87, 
+199 (1995). Code available via http://ptsg.eecs.berkeley.edu.

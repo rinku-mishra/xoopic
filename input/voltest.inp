@@ -1,0 +1,92 @@
+voltest
+{
+  Particles at low current are dropped through a voltage.
+  Diagnostics of how much energy they have on arrive at the
+  far wall are kept.
+
+  In this case, the particles should arrive with an energy
+  of 100v.
+}
+Region
+{
+Grid
+{
+	// number of grids in x
+	J = 20
+	x1s = 0.0
+	x1f = 1.0
+	n1 = 1.0
+	// number of grids in y
+	K = 20
+	x2s = 0.0
+	x2f = 1.0
+	n2 = 1.0
+	Geometry = 1
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+//  the time step
+	dt = 1e-9
+	ElectrostaticFlag = 1
+}
+Dielectric
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 20
+}
+EmitPort
+{
+	j1 = 9
+	j2 = 11
+	k1 = 20 
+	k2 = 20 
+	speciesName = electrons
+	normal = -1
+	// number of particles 
+	np2c = 4e3
+	// current
+	I = 0.000005
+	v2drift = 0.01
+}
+Dielectric
+{
+	QuseFlag = 0
+	j1 = 20
+	j2 = 20
+	k1 = 0
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	name = collector
+	IdiagFlag = 1
+	nxbins = 10
+	j1 = 0
+	j2 = 20
+	k1 = 0
+	k2 = 0
+	// resolution of the energy diagnostic
+	nenergybins = 400
+	energy_min = 95
+	energy_max = 105
+}
+Equipotential
+{
+	j1 = 0
+	j2 = 20
+	k1 = 20
+	k2 = 20
+	normal = -1
+	// the voltage
+	C = -100
+}
+}

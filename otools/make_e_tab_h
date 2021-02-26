@@ -1,0 +1,35 @@
+#!/bin/sh
+######################################################################
+#
+# File:         make_e_tab_h
+#
+# Purpose:      Shell file to create evalutor.tab.h from evaluator.tab.c
+#               This file is used for both Unix and Windows.
+#               Cygwin bison must be installed on Windows.
+#
+# Version:      $Id: make_e_tab_h 1855 2002-04-24 18:56:40Z kgl $
+#
+######################################################################
+
+# Test if GREP needs to be defined,
+#  if not, just use 'grep'
+if test -n "$1" ;then
+GREP="$1"
+else
+GREP="grep"
+fi
+
+# Remove the previous version of evaluator.tab.h
+rm -f evaluator.tab.h
+
+# Create a new version to ouput data
+touch evaluator.tab.h
+
+# Grep the needed values to evaluator.tab.h
+# Grep for both # and define since there may be spaces between
+# Remove YY_DECL from VAR (for Bison 1.35)
+#
+$GREP NUM  evaluator.tab.c | $GREP '#' | $GREP define >> evaluator.tab.h
+$GREP FNCT evaluator.tab.c | $GREP '#' | $GREP define >> evaluator.tab.h
+$GREP IVAR evaluator.tab.c | $GREP '#' | $GREP define >> evaluator.tab.h
+$GREP VAR  evaluator.tab.c | $GREP -v YY_DECL | $GREP '#' |$GREP define >> evaluator.tab.h

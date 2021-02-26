@@ -1,0 +1,185 @@
+WeibelTest.inp
+{
+Adapted from "pwfa.inp" in the standard input deck.
+Modified 04/28/03 (S. C. Wilks, University of California, LLNL)
+This tests the growth rate of the Weibel instability. This 
+instability arises from an initially anisotropic velocity distribution.
+The temperature in the z direction (out of the plane of motion of the
+particles) Tz = 16 * Tx, and Tx=Ty = 150 eV.  The growth rate is
+predicted to be 2.4e11 sec-1, and is measured to be ~ 2.5e11 sec-1
+
+Interesting features:
+
+1. A large magnetic field, with spatial wavenumber in agreement with prediction
+is seen to develop in the plane of particle motion. Look at By and Bx.
+
+2. This mode will also be reflected in the transvers current, which can be
+inferred from uz vs x plots.
+
+3. Look at the plot of TE, KE, Efield, and Bfield to see the energy that goes
+into the B field actually comes from the particle energy.
+
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverM = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum *20.0
+  HeMassNum = 4.0026
+  HeMass = unitMassMKS * HeMassNum * 10.0
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+//   Here, we specify a zero plasma density, because we launch the laser
+//   pulse into a vacuum region.  Down below, we define the parameters
+//   used for loading the initial electron plasma into the simulation.
+  elecPlasmaDensity =  0.0 
+  elecPlasmaFreq = sqrt(electronCharge*qOverM*elecPlasmaDensity/permit)
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+// We must resolve the laser wavelength
+  Nx = 150
+  Ny = 40
+
+  Lx = 300.0e-06
+  Ly = 80.0e-06
+
+  dx = Lx / Nx
+  dy = Ly / Ny
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.7 * d / speedLight
+
+// **********************************************************************
+// More Plasma parameters
+// **********************************************************************
+  plasmaDensityMKS = 5.0e22
+  simulationVolume = 1.0 * Lx * Ly * 0.5
+  totalNumPlasma = plasmaDensityMKS * simulationVolume
+  numPtclsPerCell = 100
+  numCells = Nx * Ny * 0.5
+  numPlasmaPtcls = numPtclsPerCell * numCells
+  plasmaNumRatio = totalNumPlasma / numPlasmaPtcls
+}
+
+Region
+{
+Grid
+{
+  J = Nx
+  x1s = 0.0
+  x1f = Lx
+  n1 = 1.0
+  K = Ny
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+}
+
+Control
+{
+  dt = timeStep
+// Turn on damping for the high-frequency EM fields
+  emdamping = 0.05
+  CurrentWeighting = 1
+// Ignoring Divergence problems seems OK (?)
+//  DivergenceCleanFlag = 1
+}
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+  particleLimit = 2.5e+06 // prevents out-of-control growth in # of ptcls
+}
+Species
+{
+  name = ions
+  m = hydrogenMass
+  q = ionCharge
+  particleLimit = 2.5e+06 // prevents out-of-control growth in # of ptcls
+}
+Load
+{
+  speciesName = electrons
+  density = plasmaDensityMKS
+  x1MinMKS = 45e-6
+  x1MaxMKS = Lx-(45e-6)
+  x2MinMKS = 25e-6
+  x2MaxMKS = Ly-(25e-6)
+  np2c = plasmaNumRatio
+  v1thermal = 5e6   // Tx = 150 eV
+  v2thermal = 5e6   // Ty = Tx
+  v3thermal = 20e6  // Tz = 16 * Tx
+}
+// Load the plasma ions over the entire simulation region.
+Load
+{
+  speciesName = ions
+  // There's one ion for every electron
+  density = plasmaDensityMKS
+  x1MinMKS = 45e-6
+  x1MaxMKS = Lx-(45e-6)
+  x2MinMKS = 25e-6
+  x2MaxMKS = Ly - (25e-6)
+  np2c = plasmaNumRatio
+}
+
+Conductor
+{
+  j1 = 0
+  k1 = Ny 
+  j2 = Nx 
+  k2 = Ny 
+  normal = -1
+  reflection = 1.0
+}
+
+Conductor
+{
+  j1 = 0
+  k1 = 0 
+  j2 = 0
+  k2 = Ny 
+  normal = 1
+}
+
+Conductor
+{
+  j1 = 0
+  k1 = 0 
+  j2 = Nx 
+  k2 = 0 
+  normal = 1
+  reflection = 1.0
+}
+
+Conductor
+{
+  j1 = Nx
+  k1 = 0
+  j2 = Nx
+  k2 = Ny
+  normal = -1
+  reflection = 1.0
+}
+}

@@ -1,0 +1,25 @@
+Equipotentials
+
+These are boundaries which set the potential as a function of time.
+They only produce time-varying behavior in electrostatic simulations.
+
+In electromagnetic simulations they only serve to set up the
+initial electric fields.
+
+Equipotentials are implemented by means of superposition--
+Laplace's equation is solved to get a potential profile for
+each equipotential boundary at t=0, with all the other boundaries
+held to zero.
+
+At t=T, poisson's equation is solved with all boundaries set to 
+zero.  Then, a scaled profile for each equipotential is added
+to the solution for potential.
+
+Because of the way the solve works:
+
+1)  DO NOT PUT TWO EQUIPOTENTIAL BOUNDARIES IN THE SAME PLACE.
+    This will cause very strange behavior.
+
+2)  DO NOT USE TOO MANY EQUIPOTENTIAL BOUNDARIES.
+    Each equipotential boundary requires an array and
+    an array-addition per timestep.

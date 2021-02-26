@@ -1,0 +1,82 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 5
+	x1s = 0.0
+	x1f = 01
+	n1 = 1.0
+	K = 5
+	x2s = 0.0
+	x2f = 01
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-10
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = .5e13
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = .5
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = 1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 5
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 5
+	k2 = 5
+	normal = -1
+}
+Conductor
+{
+	j1 = 5
+	k1 = 5
+	j2 = 5
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+}

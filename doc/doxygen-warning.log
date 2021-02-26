@@ -1,0 +1,146 @@
+/Users/janez/git-repo/xoopic/xoopic/physics/lindman.cpp:185: warning: documented symbol `void Lindman::PassivesSource' was not declared or defined.
+/Users/janez/git-repo/xoopic/xoopic/physics/lookback.cpp:319: warning: no uniquely matching class member found for 
+  ParticleList & Lookback::emit(Scalar t, Scalar dt)
+
+/Users/janez/git-repo/xoopic/xoopic/physics/rhbck.cpp:24: warning: documented symbol `BackLoad::BakcLoad' was not declared or defined.
+/Users/janez/git-repo/xoopic/xoopic/advisor/abswag.cpp:13: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/bemitg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/boundg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/cursrcg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitprtg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitterg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/eqpotg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/femitg.cpp:7: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/laserplasmasrcg.cpp:21: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/lnchwag.cpp:14: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/loadpwg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/obemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/plsmsrcg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/pmlportg.cpp:11: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/spemitg.cpp:4: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/varloadg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/vbemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/boundg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/boundg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/boundg.cpp:12: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/diags.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/abswag.cpp:13: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/abswag.cpp:13: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/abswag.cpp:15: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:510: warning: explicit link request to 'ifndef' could not be resolved
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:513: warning: Unsupported xml/html tag <SpatialRegionBoundary> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:520: warning: Unsupported xml/html tag <SpatialRegionGroup> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:523: warning: Unsupported xml/html tag <SpatialRegionBoundary> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:550: warning: explicit link request to 'else' could not be resolved
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:553: warning: Unsupported xml/html tag <SpatialRegionBoundary> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:572: warning: Unsupported xml/html tag <SRBdat> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:648: warning: Unsupported xml/html tag <SpatialRegionBoundary> found
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:663: warning: explicit link request to 'ifdef' could not be resolved
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:665: warning: explicit link request to 'endif' could not be resolved
+/Users/janez/git-repo/xoopic/xoopic/advisor/advisman.cpp:668: warning: explicit link request to 'endif' could not be resolved
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/bemitg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/bemitg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/bemitg.cpp:10: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/Attic/qtg/ButtonList.cpp:90: warning: unable to resolve link to `QBoxLayout' for \link command
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/cursrcg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/cursrcg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/cursrcg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/Attic/qtg/DiagnosticList.cpp:90: warning: unable to resolve link to `QBoxLayout' for \link command
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/otools/dumpHDF5.h:32: warning: argument 'baseName' of command @param is not found in the argument list of dumpHDF5::dumpHDF5()
+/Users/janez/git-repo/xoopic/xoopic/otools/dumpHDF5.h:32: warning: argument 'seqNumber' of command @param is not found in the argument list of dumpHDF5::dumpHDF5()
+/Users/janez/git-repo/xoopic/xoopic/otools/dumpHDF5.h:32: warning: argument 'rank' of command @param is not found in the argument list of dumpHDF5::dumpHDF5()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitprtg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitprtg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitprtg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitterg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitterg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/emitterg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/eqpotg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/eqpotg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/eqpotg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/femitg.cpp:7: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/femitg.cpp:7: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/femitg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/fields.h:342: warning: The following parameters of Fields::recvShiftedFields(int direction, Boundary *bPtr, Scalar t, Scalar dt) are not documented:
+  parameter 't'
+  parameter 'dt'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/Attic/qtg/Information.cpp:102: warning: unable to resolve link to `QBoxLayout' for \link command
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/laserplasmasrcg.cpp:21: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/laserplasmasrcg.cpp:21: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/laserplasmasrcg.cpp:24: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/lnchwag.cpp:14: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/lnchwag.cpp:14: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/lnchwag.cpp:17: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/load.cpp:45: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/load.cpp:47: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/loadpwg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/loadpwg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/loadpwg.cpp:7: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/obemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/obemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/obemitg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/plsmsrcg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/plsmsrcg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/plsmsrcg.cpp:8: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/pmlportg.cpp:11: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/pmlportg.cpp:11: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/pmlportg.cpp:13: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/spemitg.cpp:4: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/spemitg.cpp:4: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/spemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/physics/spbound.cpp:750: warning: argument 'dir' of command @param is not found in the argument list of SpatialRegionBoundary::recvShiftedParticles()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/physics/boundary.h:246: warning: argument 'dir' of command @param is not found in the argument list of Boundary::askStripe()
+/Users/janez/git-repo/xoopic/xoopic/advisor/vbemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/vbemitg.cpp:6: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/vbemitg.cpp:9: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/varloadg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/varloadg.cpp:5: warning: Found unknown command `\dad'
+/Users/janez/git-repo/xoopic/xoopic/advisor/varloadg.cpp:7: warning: Found unknown command `\dad'

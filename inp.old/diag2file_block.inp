@@ -1,0 +1,94 @@
+<<<<<<< HEAD
+dring
+{
+	File only have diagnostics block that writes values to file (el. field, phi).
+=======
+diag2file.inp
+{
+	File only have diagnostics block that writes values to file (el. field, phi).
+	INPUT FILE IS INCOMPLETE and serves only as an example of diag2file blocks in input files.
+>>>>>>> derivated_diags_on_screen
+}
+
+
+Diagnostic
+{
+	// write el. field to files every 100 steps from dtep 100.000 till 120.000
+	 VarName = predef E
+	 title = E
+	 // writing to file
+	 directory = output
+	 file = E_%08d.dat
+	 n_start = 100000
+	 n_step = 100
+	 n_end = 120000
+}
+
+
+Diagnostic 
+{
+	//
+	// mandatory parameters for writing to work
+	//
+	// directory name into which save file(s); name can be absolute or relative to current directory
+	directory = output
+
+	// file name for writing data; name is printf format string - %d is replaced with current simulation step;
+	// phi_%04d.dat -- means that for first step, file name will be phi_0001.dat, for 100-th phi_0100.dat, etc.
+	// when appending data to file, just write filename without format string.
+	file = phase_space_%08d.dat
+
+	// variable which value to write to file; variable also defines number of columns in file and format of data in file
+<<<<<<< HEAD
+	// format of data in file for each variable is predefined application and cannot be changed in input file
+=======
+	// format of data in file for each variable is predefined in application and cannot be changed in input file
+>>>>>>> derivated_diags_on_screen
+	// Variable names include predefined (defined in xoopic inside Diagnostics window), custom variables and derivative "variables"
+	VarName = phase space for electrons
+
+	//
+	// optional parameters
+	//
+	// open diagnostics windows when application starts (open=1) or not (open=0)
+	// default value is 0 -- do not open diagnostics window
+	open = 0
+
+	// should the data be appended to same file (append=1) or new file is created with each write to file (append=0); default value is 0
+	// note: filename (explained above) should be defined accordingly (for appending, there is no need for current comp. step in file name)
+	// appending is useful for writing time depended values to be easily display them later.
+	append = 1
+
+	// writing defined by computational steps
+	// computational step when to write diagnostics to file -- one time only (no repeating!); default is 0 -- no writing
+	n = 0
+	// computational step to start writing; default value is 0 (beginning of simulation)
+	n_start = 0
+	// number of computer steps between writing data to file; 10 means write data every 10-th step.
+	// default value is 1 (write every step)
+	n_step = 1
+	// computational step to stop (end) writing; default value 0 (when simulation stops...)
+	n_end = 0
+<<<<<<< HEAD
+	// when writing derivative diagnostics, this defined width over derivative is computed; see Derivative diagnostics for explanation
+=======
+	// when writing derivative diagnostics, this defines width over which the derivative is computed; see Derivative diagnostics for explanation
+>>>>>>> derivated_diags_on_screen
+	// value cannot be bigger than n_step; if it is, it is automatically changed to n_step.
+	n_width = 1
+
+	// writing defined by simulation time	
+	// simulation time when to write diagnostics to file -- one time only (no repeating!); default is 0 -- no writing
+	t = 0
+	// simulation time to start writing; default value is 0 (beginning of simulation)
+	t_start = 0
+	// simulation time between writing data to file; 1E-5 means that writing will be done approx. every 1E-5 time difference
+	// there is no define value;
+	t_step = 0
+	// simulation time to stop (end) writing; default value 0 (when simulation stops...)
+	t_end = 0
+
+}
+
+			 	 
+}

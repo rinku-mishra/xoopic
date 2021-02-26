@@ -1,0 +1,126 @@
+walsh
+{
+	Cerenkov Maser
+}
+Grid
+{
+	J = 200
+	x1s = 0.0
+	x1f = 0.15
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.00625
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 3e-13
+	B01 = .1
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 2
+	j2 = 0
+	k2 = 13
+	normal = 1
+	speciesName = electrons
+	thetadot = 0.0
+	I = 7.5
+	numberparticlesinmacro = 5.0E6
+	vzdrift = 2.1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 13
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 2
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 25
+	k2 = 20
+	normal = -1
+}
+Gap
+{
+	j1 = 25
+	k1 = 20
+	j2 = 35
+	k2 = 20
+	normal = -1
+	frequency = 1.46e11
+	phase = 0
+	A = 0
+	C = 0
+}
+Conductor
+{
+	j1 = 35
+	j2 = 200
+	k1 = 20
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 200
+	k1 = 14
+	j2 = 200
+	k2 = 0
+	normal = -1
+}
+ExitPort
+{
+	j1 = 200
+	j2 = 200
+	k1 = 14
+	k2 = 20
+	normal = -1
+	EFFlag = 1
+	name = Right Hand side exit port
+	C = 0
+}
+DielectricRegion
+{
+	er = 4.2
+	j1 = 0
+	k1 = 14
+	j2 = 200
+	k2 = 20
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 200
+	k2 = 0
+	normal = 1
+}

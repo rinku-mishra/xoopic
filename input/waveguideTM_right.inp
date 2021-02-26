@@ -1,0 +1,72 @@
+WaveguideTM
+{
+waveguide
+}
+Region
+{
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.01
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.0025
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 2e-13
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+PortTM
+{
+	j1 = 50
+	k1 = 0
+	j2 = 50
+	k2 = 10
+	normal = -1
+	frequency = 1e11
+	A = 1
+	C = 0
+	EFFlag = 1
+	name = PortTM
+}
+Conductor
+{
+	name = TheTopWall
+	j1 = 0
+	k1 = 10
+	j2 = 50
+	k2 = 10
+	normal = -1
+}
+PMLPort
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 0
+	normal = 1
+	name = PMLPort
+	sigma = 100
+	thickness = 4
+}
+Conductor
+{
+	name = TheBottomWall
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}
+}

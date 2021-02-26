@@ -1,0 +1,25 @@
+var structdata =
+[
+    [ "color", "structdata.html#a57d4df19bbc17d47028c9dd6e8c197a0", null ],
+    [ "mpoints", "structdata.html#aa98ae4574fe056bede5db0849f8f40c5", null ],
+    [ "next", "structdata.html#a873db2dc414fc6a840dc6a20a8b3f15e", null ],
+    [ "npoints", "structdata.html#a11475f3d1ada62e005d46f593448614c", null ],
+    [ "state", "structdata.html#af9f50a2630812e88487c6ab8bc727b95", null ],
+    [ "w", "structdata.html#a2b2b7dc2215ff1ed7628ad61c35f0513", null ],
+    [ "wArrayOffset", "structdata.html#abc07bbdb6c08fda79ce51fc5c54027b3", null ],
+    [ "wArraySize", "structdata.html#ad0cd061ed1f5e4cf17db160d1c19baa6", null ],
+    [ "x", "structdata.html#a7ba0e2e9c5f47b326b03f2ebbaae770d", null ],
+    [ "x_irr", "structdata.html#aba4560c01101796e11d8aab7ee1bd972", null ],
+    [ "xArrayOffset", "structdata.html#a1d5c00ac315044592d06530cdd2008f9", null ],
+    [ "xArraySize", "structdata.html#a6be8c11facaa250b2fd9d3331cc78198", null ],
+    [ "xCoord", "structdata.html#a088b59dc491076aeaffb71098de86210", null ],
+    [ "y", "structdata.html#a79cc44d16bb50cefacff176976ef0825", null ],
+    [ "y_irr", "structdata.html#a710d53f3b122b6b83356953cb6ac063b", null ],
+    [ "yArrayOffset", "structdata.html#a684d5b0afc018f69e8894feeb9056201", null ],
+    [ "yArraySize", "structdata.html#a524445aa7bfe1d8482c4f4e9a1dcb642", null ],
+    [ "yCoord", "structdata.html#a8fe985910eac03240a99616c8a2a680d", null ],
+    [ "z", "structdata.html#a113c71761bf15f0b9810f20b65b2cc47", null ],
+    [ "zArrayOffset", "structdata.html#ab1a553cb5ee5fb2bdbcad8c2f3270e99", null ],
+    [ "zArraySize", "structdata.html#a2ef7920ffac20d960c17c36536548e2d", null ],
+    [ "zscat", "structdata.html#adbe61b42695aa2ed87fc8e2e86eb24a3", null ]
+];

@@ -1,0 +1,141 @@
+photoelectron
+{
+Photoelectron emission from a plate
+Andrew Poppe
+Univ. of Colorado
+}
+Variables
+{
+  zmax = .002
+  rmax = .1
+  Jmax = 50
+  Kmax = 50
+ k=1.381E-23
+ m=9.11E-31
+ d=6
+}
+Region
+{
+Grid
+{
+  J = Jmax
+  x1s = 0.0
+  x1f = zmax
+  n1 = 1.0
+  K = Kmax
+  x2s = 0.0
+  x2f = rmax
+  n2 = 1.0
+  Geometry = 0
+}
+Species
+{
+ name = electrons
+ m = 9.11E-31
+ q = -1.6e-19
+}
+
+Species
+{
+ name = neutralize
+ m = 9.11E-31
+ q = 1.6e-19
+}
+Control
+{
+ dt = 1.0E-14
+ ElectrostaticFlag = 0
+}
+
+CylindricalAxis
+{
+j1=0
+j2=Jmax
+k1=0
+k2=0
+normal=1
+}
+
+
+BeamEmitter
+{
+ j1 = 0
+ k1 = 0
+ j2 = 0
+ k2 = 2*Kmax/5
+ normal = 1
+ speciesName = electrons
+ thetadot = 0.0
+ I = 3000.0
+ np2c = 1.0E7
+units=EV
+ v1drift = 10.0
+ v2drift = 0
+ v3drift = 0
+ //v1thermal = 2.2
+ //v2thermal = 0
+ //v3thermal = 0
+ 
+ temperature=2.2
+//v1Lcutoff = 0.5
+ //v1Ucutoff=7.6
+}
+
+BeamEmitter
+{
+ j1 = 0
+ k1 = 0
+ j2 = 0
+ k2 = 2*Kmax/5
+ normal = 1
+ speciesName = neutralize
+ thetadot = 0.0
+ I = 3000.0
+ np2c = 1.0E7
+units=EV
+ v1drift = 10.0
+ v2drift = 0
+ v3drift = 0
+ //v1thermal = 2.2
+ //v2thermal = 0
+ //v3thermal = 0
+ 
+ temperature=2.2
+ //v1Lcutoff = 0.5
+ //v1Ucutoff=7.6
+
+}
+
+Conductor //left boundary
+{
+ er = 1
+ j1 = 0
+ k1 = 2*Kmax/5
+ j2 = 0
+ k2 = Kmax
+ normal = 1
+}
+Conductor //right boundary
+{
+ er = 1
+ j1 = 0
+ k1 = Kmax
+ j2 = Jmax
+ k2 = Kmax
+ normal = -1
+}
+Conductor // top boundary
+{
+ er = 1
+ j1 = Jmax
+ k1 = 0
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+}
+
+
+
+
+

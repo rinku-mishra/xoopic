@@ -1,0 +1,49 @@
+
+Parallel version of XOOPIC
+
+
+XOOPIC uses the MPI libraries to implement parallel computation.
+
+You must compile and install the MPI libraries before you can 
+compile and install a parallel version of XOOPIC.
+
+1)  To compile XOOPIC with MPI:
+
+    Read the file README.INSTALL.  You will need to run
+    configure with special options indicating that you are
+    using MPI:  in addition to all the other options, you
+    will have give options like:
+    ./configure --enable-MPI 
+
+    If the configure script cannot find mpiCC, then you must specify
+    the location of your MPI compiler, for example if mpiCC is in
+    /usr/local/mympi-location/bin/ then use:
+    ./configure --enable-MPI --with-MPICXX=/usr/local/mympi-location/bin/mpiCC
+
+    This will tell XOOPIC that it is to compile with parallel
+    computation support, and where to find the mpi compiler.
+
+2)  After you've successfully run configure, compile xoopic.
+
+3)  Run xoopic using mpirun: (for example:)
+    mpirun -np 2 xoopic -i input/default.inp
+
+
+
+Notes and gotcha's of parallel XOOPIC.
+
+1)  Use only uniform meshes.  
+2)  It's safer to define boundaries in terms of physical coordinates
+    (A1,A2,B1,B2) rather than grid coordinates.  
+3)  Electrostatic will NOT work!  No parallel poisson solve has been done.
+4)  Particles will see a discontinuity in B3 (3rd component of magnetic field)
+    when they cross from one spatial region into another.
+5)  Divergence cleaning and Marder correction will NOT work. 
+6)  Boltzmann electrons will NOT work.
+7)  There's no dynamic load balancing.  Scalability is therefore limited,
+    except on problems which naturally parallelize well.
+8)  Performance will also suffer if each partition is too small--if 
+    computation inside a partition takes less time than communication 
+    between partitions, your performance will go down instead of up with
+    number of CPU's.
+9)  Periodic boundaries will NOT work.

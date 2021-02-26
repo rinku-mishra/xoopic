@@ -1,0 +1,170 @@
+temp.inp
+{
+
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverM = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+// We must resolve the laser wavelength
+  Nx = 16
+  Ny = 16
+  dx = 1.
+  dy = 1.
+  Lx = Nx * dx
+  Ly = Ny * dy
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.99 * d / speedLight
+
+// **********************************************************************
+// Define gas density, pressure and other MCC parameters
+// **********************************************************************
+  gasTempEV       = 1.0e-06  // make gas cold (cannot set temperature to zero)
+  gasDensityMKS   = 2.e25
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+
+  numZeroCells = 4
+  numFlatCells = Nx
+  numRampCells = 4
+  zeroEnd = (numZeroCells + .5) * dx
+  rampEnd = (numZeroCells + numRampCells + .5) * dx
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = 5.*timeStep
+  NGDSwitchOffTime  = 10.*timeStep
+}
+
+Region
+{
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx 
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+}
+
+Control
+{
+  dt = timeStep
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+  gasOffTime = NGDSwitchOffTime
+}
+
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+//  collisionModel = 1
+  particleLimit = 2.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+Species
+{
+  name = ions
+  m = hydrogenMass
+  q = ionCharge
+// -- you can't subcycle the ions, because they are moved by the high-frequency
+//    oscillations of the laser pulse
+//  subcycle = 20
+  particleLimit = 2.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas                         = H
+  pressure                    = gasPressureTorr
+  temperature                 = gasTempEV
+  eSpecies                    = electrons
+  iSpecies                    = ions
+
+  analyticF = gasDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd) )
+
+  // turn OFF electron/ion collisions, including impact ionization
+  collisionFlag = 0
+
+  // turn on tunneling ionization in linearly polarized alternating field
+  tunnelingIonizationFlag     = 1       
+  // specify static field / circular polarization
+  ETIPolarizationFlag         = 1
+  // fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = 20
+}
+Conductor
+{
+  j1 = 0 
+  k1 = 0 
+  j2 = 0 
+  k2 = Ny 
+  normal = 1
+}
+
+
+ExitPort
+{
+  j1 = 0
+  k1 = Ny 
+  j2 = Nx 
+  k2 = Ny 
+  normal = -1
+  EFFlag = 0 
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+ExitPort
+{
+  j1 = 0
+  k1 = 0 
+  j2 = Nx 
+  k2 = 0 
+  normal = 1
+  EFFlag = 0 
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+Conductor
+{
+  j1 = Nx
+  k1 = 0
+  j2 = Nx
+  k2 = Ny
+  normal = -1
+}
+
+}

@@ -1,0 +1,120 @@
+default
+{
+DC discharge
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6E-19
+}
+Species
+{
+        ID = 1
+        m = 6.67e-26
+        q = 1.6E-19
+}
+Grid
+{
+	J = 100
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.01
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = .5e14
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 1
+	gasPressure = 0.1
+	eCollisionalFlag = 1
+}
+Conductor
+{
+	j1 = 100
+	k1 = 0
+	j2 = 100
+	k2 = 10
+	normal = -1
+	secondary = 0.2
+	secSpeciesID = 0
+	iSpeciesID = 1
+}
+Equipotential
+{
+	C = 100
+	frequency = 6.28E5
+	phase = 0
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 10
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 0
+	j2 = 100
+	k1 = 10
+	k2 = 10
+	normal = -1
+	QuseFlag = 1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 100
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	zMinMKS = 0.000
+	zMaxMKS = 0.1
+	rMinMKS = 0.000
+	rMaxMKS = 0.01
+	speciesID = 0
+	density = 1.0e16
+	np2c = 2E7
+	temperature = 5.93e5
+}
+Load
+{
+	zMinMKS = 0.00
+	zMaxMKS = 0.1
+	rMinMKS = 0.000
+	rMaxMKS = 0.01
+	speciesID = 1
+	density = 1.0e16
+	np2c = 2E7
+	temperature = 353
+}

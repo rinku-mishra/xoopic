@@ -1,0 +1,127 @@
+
+SHELL = /bin/sh
+
+srcdir = .
+top_srcdir = ..
+
+AR = ar cr
+AR_FLAGS =  
+CC = icc
+CPP = icc -E
+CXXCOMP = icc
+CXXCPP = icc -E
+DEFINE_NOX = 
+LN_S = ln -s
+MPICC = 
+MPICXX = 
+RANLIB = ranlib
+
+EXTRA_DIST = evaluator.y
+
+##########
+#
+#
+##########
+DEFINE_MPI = 
+DEFINE_SCALAR = 
+DEFINES = -DUNIX    
+
+##########
+#
+#
+##########
+CXX = icc
+CXXFLAGS =   $(DEFINES)  -O1 
+
+##########
+#
+# 
+##########
+
+libdir = 
+lib_LIBRARIES = libphysics.a
+
+libphysics_a_SOURCES =  secondary.cpp gpdist.cpp absorbwa.cpp beamemit.cpp boundary.cpp conducto.cpp cylindri.cpp dadi.cpp dadirz.cpp dadixy.cpp emitter.cpp exitport.cpp fieldemi.cpp fields.cpp gap.cpp grid.cpp launchwa.cpp vmaxwelln.cpp maxwelln.cpp port.cpp portte.cpp portsumte.cpp porttm.cpp ptclgrp.cpp sptlrgn.cpp vbmemit.cpp plsmadev.cpp eqpot.cpp dielectr.cpp load.cpp varload.cpp boltzman.cpp mcc.cpp misc.cpp foil.cpp ptclgpes.cpp polar.cpp ptclgpnr.cpp ptclgpib.cpp psolve.cpp iloop.cpp iregion.cpp plsmasrc.cpp spbound.cpp multigrid.cpp mg_utils.cpp spblink.cpp periodic.cpp dadixyp.cpp electrostatic_operator.cpp cg.cpp gmres.cpp domain.cpp parpoi.cpp ptclgpsr.cpp portgauss.cpp laserplasmasrc.cpp ngd.cpp porttemmw.cpp loadpw.cpp mapNGDs.cpp HeMCTI.cpp LiMCTI.cpp
+
+libphysics_a_LIBADD = 
+
+##########
+#
+#
+##########
+
+MPI_INCLUDE = 
+XGRAFIX_INCLUDE = -I/usr/local/include
+XOOPIC_INCLUDES = -I$(top_srcdir)/advisor -I$(top_srcdir)/physics -I$(top_srcdir)/otools -I$(top_srcdir)
+FFTW_INCLUDE = 
+X11_INCLUDE = @X11_INCLUDE@
+INCLUDES = $(XOOPIC_INCLUDES) $(MPI_INCLUDE) $(XGRAFIX_INCLUDE) $(X11_INCLDE) $(FFTW_INCLUDE)
+
+abs_top_builddir = /home/pmlocal/oopic/oopic
+# include .depend
+INCLUDES = $(XOOPIC_INCLUDES) $(XGRAFIX_INCLUDE) $(X11_INCLDE)
+
+include_HEADERS =  HeMCTI.h                        gmres.h                         port.h LiMCTI.h                        gpdist.h                        portgauss.h N_vector.h                      grid.h                          portsumte.h absorbwa.h                      iloop.h                         portte.h beamemit.h                      inverter.h                      porttemmw.h boltzman.h                      iregion.h                       porttm.h boundary.h                      laserplasmasrc.h                precision.h cg.h                            launchwa.h                      psolve.h complex.h                       lindman.h                       ptclgpes.h conducto.h                      load.h                          ptclgpib.h cylindri.h                      loadpw.h                        ptclgpnr.h dadi.h                          lookback.h                      ptclgpsr.h dadirz.h                        mapNGDs.h                       ptclgrp.h dadixy.h                        maxwelln.h                      rhbck.h dadixyp.h                       mcc.h                           secondary.h debug.h                         mcmcld.h                        spacetimefunc.h define.h                        mg_utils.h                      spblink.h dielectr.h                      misc.h                          spbound.h domain.h                        multigrid.h                     species.h electrostatic_operator.h        ngd.h                           spemit.h emitport.h                      operators.h                     sptlrgn.h emitter.h                       ovector.h                       symmetry.h eqpot.h                         parpoi.h                        timefunc.h exitport.h                      particle.h                      varload.h fieldemi.h                      periodic.h                      vbmemit.h fields.h                        plsmadev.h                      vmaxwelln.h foil.h                          plsmasrc.h gap.h                           polar.h
+
+SRCS = $(libphysics_a_SOURCES)
+
+LIBRARIES =  $(lib_LIBRARIES)
+
+
+DEFS =  -I. -I$(srcdir) -I../.
+CPPFLAGS = 
+LDFLAGS =  
+LIBS = 
+libphysics_a_LIBADD = 
+libphysics_a_OBJECTS = secondary.o gpdist.o absorbwa.o beamemit.o boundary.o conducto.o cylindri.o dadi.o dadirz.o dadixy.o emitter.o exitport.o fieldemi.o fields.o gap.o grid.o launchwa.o vmaxwelln.o maxwelln.o port.o portte.o portsumte.o porttm.o ptclgrp.o sptlrgn.o vbmemit.o plsmadev.o eqpot.o dielectr.o load.o varload.o boltzman.o mcc.o misc.o foil.o ptclgpes.o polar.o ptclgpnr.o ptclgpib.o psolve.o iloop.o iregion.o plsmasrc.o spbound.o multigrid.o mg_utils.o spblink.o periodic.o dadixyp.o electrostatic_operator.o cg.o gmres.o domain.o parpoi.o ptclgpsr.o portgauss.o laserplasmasrc.o ngd.o porttemmw.o loadpw.o mapNGDs.o HeMCTI.o LiMCTI.o 
+
+#libphysics_a_OBJECTS = `echo *.cpp | sed s/.cpp/.o/g`
+
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES)  $(CPPFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = -Wall -Wno-unused  -g
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+HEADERS =  $(include_HEADERS)
+
+
+
+DISTFILES =  $(SOURCES) $(HEADERS) 
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(libphysics_a_SOURCES)
+OBJECTS = $(libphysics_a_OBJECTS)
+
+
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+libphysics.a: $(libphysics_a_OBJECTS) $(libphysics_a_DEPENDENCIES)
+	-rm -f libphysics.a
+	$(AR) libphysics.a $(AR_FLAGS) $(libphysics_a_OBJECTS) $(libphysics_a_LIBADD)
+	$(RANLIB) libphysics.a
+.cpp.o:
+	$(CXXCOMPILE) -c $<
+
+
+subdir = physics
+
+lib: $(lib_LIBRARIES)
+	$(AR) ../lib/$(lib_LIBRARIES) $(libphysics_a_OBJECTS)
+
+clean:
+	rm -f *.bak core *.prev *.o
+	rm -rf ii_files cxx_repository exec_repository so_locations ti_files
+	rm -rf SunWS_cache
+	rm -f evaluator.tab.h evaluator.tab.c
+

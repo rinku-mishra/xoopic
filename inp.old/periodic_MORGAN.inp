@@ -1,0 +1,104 @@
+test
+{
+	 test
+}
+Variables
+{
+	 x1max = 1
+	 x2max = 1
+	 Jmax = 32
+	 Kmax = 32
+	PI = 3.1415926536
+	iMU0 = 1/(4E-7*PI)
+	SPEED_OF_LIGHT = 3E8
+	iEPS0 = SPEED_OF_LIGHT*SPEED_OF_LIGHT/iMU0
+}
+Region
+{
+	 Grid
+	 {
+		  J = Jmax
+		  x1s = 0.0
+		  x1f = x1max
+		  n1 = 1.0
+		  K = Kmax
+		  x2s = 0.0
+		  x2f = x2max
+		  n2 = 1.0
+		  Geometry = 1
+		  PeriodicFlagX1 = 1
+	 }
+	 Species
+	 {
+		  name = electrons
+		  m = 9.11E-31
+//		  q = -1.6e-19
+		  q = iEPS0*1.6e-19
+	 }
+	 Load
+	 {
+		  speciesName = electrons
+		  density = 1.e16
+//		  analyticF = 1e14*cos(2*PI*x1)*cos(2*PI*x2)
+	analyticF = 1e9*cos(2*PI*x1)*cos(2*PI*x2)
+        x1MinMKS = 0
+        x1MaxMKS = x1max
+        x2MinMKS = 0
+        x2MaxMKS = x2max/2
+		  temperature = 0
+		  np2c = 0
+	 }
+	 Control
+	 {
+		  dt = 1.0E-11
+		  ElectrostaticFlag = 2
+// GMRES tolerance
+//		  presidue = 1e-8
+// tolerances for DADI,CG,MULTIGRID
+		  presidue = 1e-3
+	 }
+//	 Conductor
+	Equipotential
+	 {
+//		  er = 1
+		  C  = 1e-10
+		  j1 = 0
+		  k1 = 0
+		  j2 = 0
+		  k2 = Kmax
+		  normal = 1
+	 }
+	 Conductor
+//	Equipotential
+	 {
+		  er = 1
+//		  C = 2e-10
+		  j1 = 0
+		  k1 = Kmax
+		  j2 = Jmax
+		  k2 = Kmax
+		  normal = -1
+	 }
+	 Equipotential
+	 {
+//		  C  = 1
+	          C  = 1e-10
+		  j1 = Jmax
+		  k1 = Kmax
+		  j2 = Jmax
+		  k2 = 0
+		  normal = -1
+	 }
+	 Conductor
+	 {
+		  er = 1
+		  j1 = 0
+		  k1 = 0
+		  j2 = Jmax
+		  k2 = 0
+		  normal = 1
+	 }
+}
+
+
+

@@ -1,0 +1,100 @@
+Boundaries can exhibit time dependent behavior.
+Which boundary exhibits what behavior depends on the
+boundary, but it is usually pretty clear.
+
+Equipotentials have a time dependent voltage,
+beam emitters have time dependent currents.
+
+
+The time dependency is a function of the form
+
+Envelope(t) * Sinusoid(t)
+
+when time_function_flag = 0 (xtFlag = 0 in inputfile)
+
+See "String Time Functions" below for time_function_flag = 1 (xtFlag = 1)
+
+The envelope function looks like this:
+
+  magnitude
+   |
+   |
+a1 |                **********
+   |               *          *
+   |              *            *
+   |             *              *
+   |            *                *
+   |           *                  *
+a0 | **********                    ********
+   |
+   |----------+-----+--------+-----+------------    t
+   0
+    --------->|      	              tdelay
+              |<--->|	              trise
+                    |<------>|        tpulse
+                             |<--->|  tfall
+
+So the parameters controlling the envelope function are:
+a0 a1 tdelay trise tpulse and tfall.
+
+The sinusoid is parameterized by:
+
+Sinusoid(t) = A*sin(2*pi*frequency*t + phase) + C
+
+The parameters of the sinusoid are:
+
+phase
+frequency
+A
+C
+
+
+You can modify the behavior of the timefunction
+yourself if these parameters aren't sufficient for your
+purposes.
+
+The file is physics/timefunc.h
+
+
+
+String Time Functions
+
+A facility has been added which will allow you to put in
+more flexible functions of time which you may need, which
+doesn't fit in the Sinusoid * Envelope template provided
+above.
+
+To do this, you add:
+time_function_flag = 1 (enabled by xtFlag = 1 in inputfile)
+F = <your function here>
+
+to the boundary you want to control.
+
+Most of the usual mathematical functions are understood:
+as of now the variables you can use are:
+
+"t":  the current simulation time
+
+F = sin(t)
+
+F = sin(t) * cos(t)
+
+F = sin(t)^2
+
+F = 10e9* (t%1e-9)
+ (an explanation of this last:  the % operator means "divide and take
+  the remainder" so that (t%1e-9) takes the values of 0 to 1e-9 in
+  a periodic fashion of period 1e-9.  Using this operator you can make
+  an arbitrary function periodic:)
+
+F = exp( t%1e-10)
+
+In addition, these special functions are added, to make pulse
+functions:
+
+pulse(t,tdelay,trise,tpulse,tfall)   :  like the envelope function above
+step(x)	:  returns 0 if x < 0 and returns 1 otherwise
+ramp(x) :  returns 0 if x < 0 and returns x otherwise
+
+See evaluator.txt for additional information.
+

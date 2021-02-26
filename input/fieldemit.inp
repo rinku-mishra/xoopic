@@ -1,0 +1,123 @@
+field_emitter
+{
+  This input file is used to demonstrate the FieldEmitter2 field
+  emission model implemented in OOPIC.
+
+  A DC potential difference is generated across a gap in Cartesian
+  geometry.
+
+  Diagnostics of how much energy they have upon arrival at the
+  far wall are kept.
+
+  An electrostatic field solve is used.
+}
+
+Variables
+{
+  numCellsX = 100        // # of cells along horizontal axis
+  numCellsY =  20        // # of cells along vertical   axis
+
+  xMaxMKS = 0.1          // length of horizontal axis in meters
+  yMaxMKS = 0.02          // length of vertical   axis in meters
+
+  numEmitterCells = 10   // # of cells along the emitting surface
+}
+
+Region
+{
+
+Grid
+{
+  J   = numCellsX       // number of grids in x
+  x1s = 0.0
+  x1f = xMaxMKS
+  n1  = 1.0
+
+  K   = numCellsY       // number of grids in y
+  x2s = 0.0
+  x2f = yMaxMKS
+  n2  = 1.0
+
+  Geometry = 1          // specify Cartesian geometry
+}
+Species
+{
+  name = electrons      // name is used below for emitter
+  m = 9.11E-31          // electron mass in KG
+  q = -1.6e-19          // electron charge in C
+}
+
+Control
+{
+  dt = 1e-11              // the time step in s
+  ElectrostaticFlag = 1  // specify use of the electrostatic field solve
+}
+
+// The top boundary is an equipotential surface.
+Equipotential
+{
+  name = collector
+  j1 = 0
+  j2 = numCellsX
+  k1 = numCellsY
+  k2 = numCellsY
+  normal = -1
+  C = 2.e3              // specified potential in V
+  IdiagFlag = 1          // Turn on energy and current diagnostics
+  nxbins = 2.*numCellsX  // resolution of position diagnostic
+  nenergybins = 40       // resolution of the energy diagnostic
+  energy_min  = 82000    // in eV
+  energy_max  = 102000   // in eV
+}
+
+// The middle portion of the top boundary is also specified to be a
+//   surface that emits electrons via the Fowler-Nordheim field
+//   emission model.
+//
+// Below, we specify all of the Fowler-Nordheim parameters that are
+//   specific to this type of particle emitter, even though most of
+//   them are given the default value.
+//
+FieldEmitter2
+{
+  j1 = (numCellsX - numEmitterCells) / 2
+  j2 = (numCellsX + numEmitterCells) / 2
+  k1 = 0
+  k2 = 0
+  normal = 1
+
+  speciesName = electrons  // name from species group above
+  np2c = 1e+8             // numerical weight of emitted particles
+  threshold = 0   	// emission threshold field
+}
+
+// The bottom boundary is a perfect conductor.
+Conductor
+{
+  name = collector
+  j1 = 0
+  j2 = numCellsX
+  k1 = 0
+  k2 = 0
+}
+
+// The left boundary is a simple dielectric
+Dielectric
+{
+  j1 = 0
+  j2 = 0
+  k1 = 0
+  k2 = numCellsY
+}
+
+// The right boundary is a simple dielectric
+Dielectric
+{
+  j1 = numCellsX
+  j2 = numCellsX
+  k1 = 0
+  k2 = numCellsY
+  normal = -1
+}
+}
+

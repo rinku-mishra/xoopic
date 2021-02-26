@@ -1,0 +1,76 @@
+cavity
+{
+	Cavity modes in cartesian box excited by a current loop
+}
+Region
+{
+Grid
+{
+	J = 20
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 1E-11
+}
+Species
+{
+	name = positrons
+	m = 9.11E-31
+	q = 1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 20
+	k1 = 20
+	j2 = 20
+	k2 = 0
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 20
+	k2 = 0
+	normal = 1
+}
+Iloop
+{
+	j1 = 0
+   j2 = 20
+   k1 = 0
+   k2 = 10
+   Current = 1
+   frequency = 1.5e9
+   C = 0
+   A = 1
+	tpulse = 3.33e-10
+	a0 = 0
+	trise = 0
+	tfall = 0
+}
+}

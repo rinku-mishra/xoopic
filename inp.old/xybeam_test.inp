@@ -1,0 +1,89 @@
+xybeam
+{
+	A beam spreading experiment in x-y geometry.  Two of the
+walls are metal while two of them are neumann zero boundary conditions;
+dielectrics on the wall have that behavior in OOPIC.
+ 	This simulation is electrostatic.
+}
+Variables
+{
+	v1rms = 1.0e+2
+	v2rms = 2.0e+2
+	v3rms = 3.0e+2
+}
+Region
+{
+Grid
+{
+	J = 20
+	x1s = 0.0
+	x1f = 1.0
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 1.0
+	n2 = 1.0
+	Geometry = 1
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+	rmsDiagnosticsFlag = 1
+}
+Control
+{
+	dt = 5e-9
+	ElectrostaticFlag = 1
+}
+Dielectric
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 20
+}
+EmitPort
+{
+	j1 = 0
+	j2 = 0
+	k1 = 6
+	k2 = 14
+	speciesName = electrons
+	normal = 1
+//	np2c = 4e3
+//	I = 0.000005
+	np2c = 4e-7
+	I = 5.0e-16
+	v1drift = 1e6
+
+	v1thermal = v1rms
+	v2thermal = v2rms
+	v3thermal = v3rms
+}
+Dielectric
+{
+	QuseFlag = 0
+	j1 = 20
+	j2 = 20
+	k1 = 0
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	j2 = 20
+	k1 = 0
+	k2 = 0
+}
+Conductor
+{
+	j1 = 0
+	j2 = 20
+	k1 = 20
+	k2 = 20
+	normal = -1
+}
+}

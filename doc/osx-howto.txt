@@ -1,0 +1,695 @@
+Some comments on "Getting OOPIC working on Mac OS X":
+
+1). Xoopic works fine with gcc 3.3 on Linux these days. There should
+not be too much trouble when using gcc 3.3 on OS X.
+
+2). XGrafix used not to work with Tcl/Tk 8.4 due to a problem in the
+Tcl scripts that come with it. This has since been fixed, so you can
+safely use Tcl 8.4 if it is already on your system. No need to go
+through the trouble of instaling Tcl/Tk 8.3. (Note that Tcl/Tk 8.3
+and earlier also still work.)
+
+3). The problem with the "single capital letter variables" may have
+more to do with the dummy arguments used in many constructors and
+accessors than with the variable name itself. (Thanks to Brad Shadwick,
+who dug this out.) For example, many accessors look like this:
+void setA(Scalar _A) {A = _A;}
+The symbol "_A" is reserved for the implementation, as all symbols
+starting with an underscore are. On Mac OS X, <ctype.h> uses the
+symbols "_A" and "_B", which clashes with the "illegal" use of these
+symbols in Xoopic. Fortunately, a lot of such cases seem to have been
+dealt with by now.
+
+4). Building XGrafix used to generate lots of warnings. A recent
+code clean-up took care of most of them. The remaining ones are
+probably pretty harmless. (Only xgprintgif.h might need some changes
+some day.)
+
+Raoul Trines, Feb. 16, 2005
+
+--------------
+
+A brief howto on getting oopic working on
+Mac OS X (thanks go to Scott Kovaleski):
+
+1).  Install X11R6/XDarwin (can obtain most up to date version from 
+Fink)
+
+2).  Use "sudo gcc_select 3.1", to switch to the gcc3.1 compilers.  I 
+don' t know if gcc3.3 will work or not.
+
+3).  Download and install Tcl/Tk 8.3.5 (the Unix version, NOT the Mac 
+version).  I had to do this from source...  Fink distributes 8.4.5, 
+which didn't work.  I recommend doing this from a directory hung off of 
+"/" (like "/Download", for instance) especially if you have multiple 
+partitions (as I do).  The use of spaces in path names (which Mac 
+allows) can cause some infuriating problems in the configure and make 
+steps.
+
+4).  Fink has some of the other optional packages, like FFTW and HDF5, 
+if you want that capability.
+
+5).  Get and unpack xgrafix and xoopic.
+
+6).  Configure, make, and install xgrafix.  You will probably need to 
+use all of the "--with-XXX" flags for the newly installed Tcl and Tk.  
+You should get warnings but no errors.
+
+7).  Configure xoopic.  Use the "--with-XXX" flags again for Tcl and Tk.
+
+8).  In order to "make", some minor surgery must be done to a few of 
+the source files.  Basically, the compiler doesn't like variables with 
+a single, capital letter (e.g. Scalar Q).  It will return an error if 
+these are found.  I edited the source and header files, and changed 
+those single capital letter variables to something else (e.g. "Scalar 
+Q" and other occurrences of Q become "Scalar Q1".  The errors are thus 
+eliminated.  I have included what I think is a complete list of the 
+files I changed.  Look for variables in them like "A", "B", "Q", "R", 
+"L", "C", "I".  If an error comes up, look in the offending source file 
+for a single capital letter and add a one to it (or something else).  
+(You can just run make, as I did, and the compiler will tell you which 
+files are a problem and the line number of the problem).
+
+9).  After making those changes, make and make install should run 
+without incident... and you are ready to go.
+
+List of source files to modify:
+=====================
+
+In oopic/physics
+
+boundary.cpp
+conducto.cpp
+dielectr.cpp
+dielectr.h
+eqpot.cpp
+exitport.cpp
+exitport.h
+iloop.cpp
+iloop.h
+ovector.h
+polar.cpp
+spacetimefunc.h
+spbound.cpp
+
+In oopic/advisor
+
+boundg.cpp
+dielecg.cpp
+
+
+A discussion related to getting oopic working on OSX:
+On Mar 7, 2004, at 7:51 PM, Jim McKinnon wrote:
+
+> Scott,
+> I am also interested in getting XOOPIC on Mac OSX.  If you could share 
+> the
+> procedure you followed, I am sure other OSX users will very much 
+> appreciate
+> it.
+>
+> Regards,
+> Jim
+>
+> On 3/5/04 9:46 AM, "Scott Kovaleski" <kovaleskis@missouri.edu> wrote:
+>
+>> All,
+>>
+>> To anyone interested, I managed to get XOOPIC and XGRAFIX to work on
+>> Mac OSX, running XDarwin.  As I had said in previous posts, XOOPIC
+>> appeared to work, but XGRAFIX was having trouble.  I installed Tcl/Tk
+>> 8.3.5 from source (the package available from Fink is 8.4.5), and the
+>> XGRAFIX problems disappeared, everything appears to work flawlessly.
+>>
+>> Scott
+>>
+>>
+>> On Mar 3, 2004, at 8:49 AM, Scott Kovaleski wrote:
+>>
+>>> All,
+>>>
+>>> Did a little more digging.  Apparently the gui problem below is an
+>>> issue with xgrafix and Tcl.  The error occurs in xginitc.c, function
+>>> XGInitTclTk at the line
+>>>
+>>> 450  if(Tcl_Eval(interp,TclCommand)!=TCL_OK) {
+>>>
+>>> I have TclTk 8.4.1.  Is that version OK to run with xgrafix?
+>>>
+>>> Scott
+>>>
+>>> On Feb 27, 2004, at 9:35 AM, Scott Kovaleski wrote:
+>>>
+>>>> All,
+>>>>
+>>>> Firstly, I got xoopic to install on Mac OS X, 10.3 (Panther).  I 
+>>>> have
+>>>> XDarwin (Xfree86) 4.3.99.16-2, and Tcl/Tk 8.4.1-12, both installed
+>>>> from Fink.  I compiled the code with gcc3.1.  Some minor surgery was
+>>>> required on the source files.  It appears that the Apple versions of
+>>>> gcc don't like variables with single capital letter names.  For
+>>>> instance, in spacetimefunc.h, SpaceTimeFunction uses A and C, for 
+>>>> the
+>>>> AC and DC amplitudes of a time dependent variable (at least I think
+>>>> that is right).  So I got a parse error in that file during make.  I
+>>>> changed the names to A1 and C1 (and made similar changes in other
+>>>> files), and no problems.  I have run xoopic with the -nox flag, and
+>>>> it appears to run properly (at least without errors, and it will
+>>>> write dump files).
+>>>>
+>>>> Secondly, is there anyway (a post processor or something) to look at
+>>>> the xoopic output if xoopic is run in batch mode (with the -nox
+>>>> flag)?
+>>>>
+>>>> Thirdly,  I am having problems with xgrafix.  When I try to run
+>>>> xoopic with the gui, I get the following error, and it quits:
+>>>> **********************************************
+>>>>      Starting XOOPIC version 2.51b(c) Copyright 1995-2002 The 
+>>>> Regents
+>>>> of the University of California.Plasma Theory and Simulation
+>>>> GroupUniversity of California at
+>>>> Berkeleyhttp://ptsg.eecs.berkeley.edu
+>>>>      Starting program. Reading input file.
+>>>>      Input file is 'deposition.inp'
+>>>>
+>>>>      XGrafix version 2.60
+>>>>      (c) Copyright 1991-2002 The Regents of the University of
+>>>> California
+>>>>
+>>>>      XGrafix is running on The XFree86 Project, Inc version 40399016
+>>>> of the X Window System, X11 R0
+>>>>      Display name .............. :0.0
+>>>>      Display width ............. 1680
+>>>>      Display height ............ 1029
+>>>>      Color plane depth ......... 24
+>>>>
+>>>>      Error in initialization
+>>>>      can't import command "mc": already exists
+>>>> *************************************************
+>>>>
+>>>> I think this must be a problem with xgrafix, since i can run xoopic
+>>>> -nox without error.  Any thoughts on what might be causing this
+>>>> problem?  I got lots of warnings, but no errors when I ran make, and
+>>>> I have included the output at the end of this file if that helps.
+>>>>
+>>>> Any help on the last couple of problems would be great.
+>>>>
+>>>> Regards,
+>>>>
+>>>> Scott Kovaleski
+>>>>
+>>>> Assistant Professor
+>>>> Electrical and Computer Engineering Department
+>>>> The University of Missouri-Columbia
+>>>> 227 Engineering Building West
+>>>> Columbia, MO  65211
+>>>>
+>>>> Phone: (573) 882-8377
+>>>> Fax:      (573) 882-0397
+>>>> E-mail: kovaleskis@missouri.edu
+>>>>
+>>>> Output when making xgrafix:
+>>>>
+>>>> [mu-020235:~/Downloads/xgrafix] kovalesk% make
+>>>> make  all-recursive
+>>>> Making all in config
+>>>> make[2]: Nothing to be done for `all'.
+>>>> Making all in src
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgpaint2d.c || echo
+>>>> './'`xgpaint2d.c
+>>>> xgpaint2d.c: In function `Paint_Window':
+>>>> xgpaint2d.c:217: warning: implicit declaration of function `malloc'
+>>>> xgpaint2d.c:250: warning: implicit declaration of function `free'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgprint.c || echo
+>>>> './'`xgprint.c
+>>>> xgprint.c: In function `PostScriptOpenWindow':
+>>>> xgprint.c:273: warning: implicit declaration of function `malloc'
+>>>> xgprint.c:313: warning: implicit declaration of function `free'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgsetup.c || echo
+>>>> './'`xgsetup.c
+>>>> xgsetup.c: In function `XGSetupWindow':
+>>>> xgsetup.c:48: warning: implicit declaration of function `malloc'
+>>>> xgsetup.c:89: warning: assignment from incompatible pointer type
+>>>> xgsetup.c:90: warning: assignment from incompatible pointer type
+>>>> xgsetup.c:105: warning: assignment from incompatible pointer type
+>>>> xgsetup.c:106: warning: assignment from incompatible pointer type
+>>>> xgsetup.c:112: warning: assignment from incompatible pointer type
+>>>> xgsetup.c:113: warning: assignment from incompatible pointer type
+>>>> xgsetup.c: In function `C_CreateWindowProc':
+>>>> xgsetup.c:157: warning: implicit declaration of function `atoi'
+>>>> xgsetup.c: In function `ReallocateWindows':
+>>>> xgsetup.c:203: warning: implicit declaration of function `realloc'
+>>>> xgsetup.c:208: warning: implicit declaration of function `exit'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgcommands.c || echo
+>>>> './'`xgcommands.c
+>>>> xgcommands.c:349: illegal expression, found `->'
+>>>> xgcommands.c:351: illegal expression, found `->'
+>>>> xgcommands.c:353: illegal expression, found `->'
+>>>> xgcommands.c:355: illegal expression, found `->'
+>>>> xgcommands.c:361: illegal expression, found `->'
+>>>> xgcommands.c:363: illegal expression, found `->'
+>>>> xgcommands.c:365: illegal expression, found `->'
+>>>> xgcommands.c:367: illegal expression, found `->'
+>>>> xgcommands.c:376: illegal expression, found `->'
+>>>> xgcommands.c:382: illegal expression, found `->'
+>>>> xgcommands.c:385: illegal expression, found `->'
+>>>> xgcommands.c:387: illegal expression, found `->'
+>>>> xgcommands.c:389: illegal expression, found `->'
+>>>> xgcommands.c:505: illegal expression, found `->'
+>>>> xgcommands.c:507: illegal expression, found `->'
+>>>> xgcommands.c:510: illegal expression, found `->'
+>>>> xgcommands.c:512: illegal expression, found `->'
+>>>> xgcommands.c:515: illegal expression, found `->'
+>>>> xgcommands.c:517: illegal expression, found `->'
+>>>> cpp-precomp: warning: errors during smart preprocessing, retrying in
+>>>> basic mode
+>>>> xgcommands.c: In function `DoMain':
+>>>> xgcommands.c:109: warning: implicit declaration of function 
+>>>> `findlen'
+>>>> xgcommands.c: In function `InitTclCommands':
+>>>> xgcommands.c:704: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:706: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:712: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:714: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:716: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:718: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:720: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:722: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:724: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:726: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:729: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:731: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:733: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:735: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:737: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:739: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:741: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:743: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:745: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:747: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:749: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> xgcommands.c:751: warning: passing arg 3 of `Tcl_CreateCommand' from
+>>>> incompatible pointer type
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xginitvar.c || echo
+>>>> './'`xginitvar.c
+>>>> xginitvar.c: In function `ReallocateSpecials':
+>>>> xginitvar.c:13: warning: implicit declaration of function `malloc'
+>>>> xginitvar.c:15: warning: implicit declaration of function `realloc'
+>>>> xginitvar.c:18: warning: implicit declaration of function `exit'
+>>>> xginitvar.c: In function `SetUpNewVar':
+>>>> xginitvar.c:42: warning: implicit declaration of function `free'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgpaint3d.c || echo
+>>>> './'`xgpaint3d.c
+>>>> xgpaint3d.c: In function `CheckHiddenCrosshair':
+>>>> xgpaint3d.c:26: warning: implicit declaration of function `malloc'
+>>>> xgpaint3d.c: In function `Paint_ThreeD_Window':
+>>>> xgpaint3d.c:424: warning: implicit declaration of function `free'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgprintgif.c || echo
+>>>> './'`xgprintgif.c
+>>>> xgprintgif.c: In function `my_malloc':
+>>>> xgprintgif.c:146: warning: implicit declaration of function `malloc'
+>>>> xgprintgif.c: In function `my_realloc':
+>>>> xgprintgif.c:155: warning: implicit declaration of function 
+>>>> `realloc'
+>>>> xgprintgif.c: In function `ppm_freecolorhist':
+>>>> xgprintgif.c:164: warning: implicit declaration of function `free'
+>>>> xgprintgif.c: In function `ppm_parsecolor':
+>>>> xgprintgif.c:458: warning: array subscript has type `char'
+>>>> xgprintgif.c:459: warning: array subscript has type `char'
+>>>> xgprintgif.c:460: warning: array subscript has type `char'
+>>>> xgprintgif.c:467: warning: array subscript has type `char'
+>>>> xgprintgif.c:467: warning: array subscript has type `char'
+>>>> xgprintgif.c:468: warning: array subscript has type `char'
+>>>> xgprintgif.c:468: warning: array subscript has type `char'
+>>>> xgprintgif.c:469: warning: array subscript has type `char'
+>>>> xgprintgif.c:469: warning: array subscript has type `char'
+>>>> xgprintgif.c:476: warning: array subscript has type `char'
+>>>> xgprintgif.c:476: warning: array subscript has type `char'
+>>>> xgprintgif.c:477: warning: array subscript has type `char'
+>>>> xgprintgif.c:478: warning: array subscript has type `char'
+>>>> xgprintgif.c:478: warning: array subscript has type `char'
+>>>> xgprintgif.c:479: warning: array subscript has type `char'
+>>>> xgprintgif.c:480: warning: array subscript has type `char'
+>>>> xgprintgif.c:480: warning: array subscript has type `char'
+>>>> xgprintgif.c:481: warning: array subscript has type `char'
+>>>> xgprintgif.c:488: warning: array subscript has type `char'
+>>>> xgprintgif.c:488: warning: array subscript has type `char'
+>>>> xgprintgif.c:489: warning: array subscript has type `char'
+>>>> xgprintgif.c:489: warning: array subscript has type `char'
+>>>> xgprintgif.c:490: warning: array subscript has type `char'
+>>>> xgprintgif.c:490: warning: array subscript has type `char'
+>>>> xgprintgif.c:491: warning: array subscript has type `char'
+>>>> xgprintgif.c:491: warning: array subscript has type `char'
+>>>> xgprintgif.c:492: warning: array subscript has type `char'
+>>>> xgprintgif.c:492: warning: array subscript has type `char'
+>>>> xgprintgif.c:493: warning: array subscript has type `char'
+>>>> xgprintgif.c:493: warning: array subscript has type `char'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgcrosshair.c || echo
+>>>> './'`xgcrosshair.c
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgmovie.c || echo
+>>>> './'`xgmovie.c
+>>>> xgmovie.c: In function `BXG_Write_2D':
+>>>> xgmovie.c:64: warning: implicit declaration of function `XGWrite'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgpaintvec.c || echo
+>>>> './'`xgpaintvec.c
+>>>> xgpaintvec.c: In function `Paint_Vector_Window':
+>>>> xgpaintvec.c:169: warning: implicit declaration of function `malloc'
+>>>> xgpaintvec.c:202: warning: implicit declaration of function `free'
+>>>> xgpaintvec.c:15: warning: `w1' might be used uninitialized in this
+>>>> function
+>>>> xgpaintvec.c:15: warning: `w2' might be used uninitialized in this
+>>>> function
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgreadrit.c || echo
+>>>> './'`xgreadrit.c
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xginitc.c || echo
+>>>> './'`xginitc.c
+>>>> /usr/include/gcc/darwin/3.1/varargs.h:71: warning: redefinition of
+>>>> macro va_start
+>>>> /usr/include/gcc/darwin/3.1/stdarg.h:59: warning: this is the
+>>>> location of the previous definition
+>>>> xginitc.c: In function `XGInit':
+>>>> xginitc.c:222: warning: implicit declaration of function `findlen'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgnox.c || echo 
+>>>> './'`xgnox.c
+>>>> xgnox.c: In function `XGInit':
+>>>> xgnox.c:86: warning: implicit declaration of function `exit'
+>>>> xgnox.c:114: warning: implicit declaration of function `atoi'
+>>>> xgnox.c:225: warning: implicit declaration of function `findlen'
+>>>> xgnox.c: In function `XGStart':
+>>>> xgnox.c:261: warning: implicit declaration of function `XGMainLoop'
+>>>> xgnox.c:265: warning: implicit declaration of function `Dump'
+>>>> xgnox.c:277: warning: implicit declaration of function `Quit'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgpixmap.c || echo
+>>>> './'`xgpixmap.c
+>>>> xgpixmap.c: In function `XG_Setup_Pixmap':
+>>>> xgpixmap.c:26: warning: implicit declaration of function `exit'
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xgrescale.c || echo
+>>>> './'`xgrescale.c
+>>>> rm -f libXGC250.a
+>>>> ar cru libXGC250.a xgpaint2d.o xgprint.o xgsetup.o xgcommands.o
+>>>> xginitvar.o xgpaint3d.o xgprintgif.o xgcrosshair.o xgmovie.o
+>>>> xgpaintvec.o xgreadrit.o xginitc.o xgnox.o xgpixmap.o xgrescale.o
+>>>> ranlib libXGC250.a
+>>>> ranlib: same symbol defined in more than one member in: libXGC250.a
+>>>> (table of contents will not be sorted)
+>>>> ranlib: file: libXGC250.a(xginitc.o) defines symbol: _PrintNoArg
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: _PrintNoArg
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: 
+>>>> _PrintUnknownOption
+>>>> ranlib: file: libXGC250.a(xginitc.o) defines symbol:
+>>>> _PrintUnknownOption
+>>>> ranlib: file: libXGC250.a(xginitc.o) defines symbol: _PrintUsage
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: _PrintUsage
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: _XGInit
+>>>> ranlib: file: libXGC250.a(xginitc.o) defines symbol: _XGInit
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: _XGStart
+>>>> ranlib: file: libXGC250.a(xgcommands.o) defines symbol: _XGStart
+>>>> ranlib: file: libXGC250.a(xginitc.o) defines symbol: _findlen
+>>>> ranlib: file: libXGC250.a(xgnox.o) defines symbol: _findlen
+>>>> rm -f libXGC250mini.a
+>>>> ar cru libXGC250mini.a xgmovie.o xgreadrit.o xgnox.o
+>>>> ranlib libXGC250mini.a
+>>>> /sw/bin/g77   -c -o xgfinterface.o `test -f xgfinterface.f || echo
+>>>> './'`xgfinterface.f
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f xginitf.c || echo
+>>>> './'`xginitf.c
+>>>> /usr/include/gcc/darwin/3.1/varargs.h:71: warning: redefinition of
+>>>> macro va_start
+>>>> /usr/include/gcc/darwin/3.1/stdarg.h:59: warning: this is the
+>>>> location of the previous definition
+>>>> xginitf.c:37: warning: return type defaults to `int'
+>>>> xginitf.c: In function `initxg_':
+>>>> xginitf.c:67: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:84: warning: return type defaults to `int'
+>>>> xginitf.c: In function `startxg_':
+>>>> xginitf.c:86: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:108: warning: return type defaults to `int'
+>>>> xginitf.c: In function `setvecxg_':
+>>>> xginitf.c:151: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:173: warning: return type defaults to `int'
+>>>> xginitf.c: In function `setvecxgflag_':
+>>>> xginitf.c:219: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:240: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set2dxg_':
+>>>> xginitf.c:280: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:300: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set2dxgflag_':
+>>>> xginitf.c:342: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:366: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set2dcxg_':
+>>>> xginitf.c:423: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:448: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set2dcxgflag_':
+>>>> xginitf.c:507: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:531: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set3dxg_':
+>>>> xginitf.c:589: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:613: warning: return type defaults to `int'
+>>>> xginitf.c: In function `set3dxgflag_':
+>>>> xginitf.c:673: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:690: warning: return type defaults to `int'
+>>>> xginitf.c: In function `curvexg_':
+>>>> xginitf.c:706: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:721: warning: return type defaults to `int'
+>>>> xginitf.c: In function `scat2dxg_':
+>>>> xginitf.c:738: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:755: warning: return type defaults to `int'
+>>>> xginitf.c: In function `scat3dxg_':
+>>>> xginitf.c:775: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:792: warning: return type defaults to `int'
+>>>> xginitf.c: In function `vectorxg_':
+>>>> xginitf.c:831: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:848: warning: return type defaults to `int'
+>>>> xginitf.c: In function `surfxg_':
+>>>> xginitf.c:879: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:895: warning: return type defaults to `int'
+>>>> xginitf.c: In function `contxg_':
+>>>> xginitf.c:929: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:946: warning: return type defaults to `int'
+>>>> xginitf.c: In function `irsurfxg_':
+>>>> xginitf.c:986: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:1002: warning: return type defaults to `int'
+>>>> xginitf.c: In function `structurexgarray_':
+>>>> xginitf.c:1026: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:1042: warning: return type defaults to `int'
+>>>> xginitf.c: In function `newintsetup_':
+>>>> xginitf.c:1046: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:1062: warning: return type defaults to `int'
+>>>> xginitf.c: In function `newrealsetup_':
+>>>> xginitf.c:1066: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:1082: warning: return type defaults to `int'
+>>>> xginitf.c: In function `newdoublesetup_':
+>>>> xginitf.c:1086: warning: control reaches end of non-void function
+>>>> xginitf.c: At top level:
+>>>> xginitf.c:1101: warning: return type defaults to `int'
+>>>> xginitf.c: In function `newcharsetup_':
+>>>> xginitf.c:1105: warning: control reaches end of non-void function
+>>>> rm -f libXGF250.a
+>>>> ar cru libXGF250.a xgfinterface.o xginitf.o
+>>>> ranlib libXGF250.a
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -DXGTCL=\"/usr/local/lib\" -I/usr/X11R6/include    -Wall -Wno-unused
+>>>> -g -DXPMENABLED -DTcl75_Tk41 -c `test -f ps6to1.c || echo
+>>>> './'`ps6to1.c
+>>>> ps6to1.c:11: warning: return type of `main' is not `int'
+>>>> ps6to1.c: In function `main':
+>>>> ps6to1.c:37: warning: implicit declaration of function `exit'
+>>>> gcc  -Wall -Wno-unused  -g -DXPMENABLED -DTcl75_Tk41   -o ps6to1
+>>>> ps6to1.o
+>>>> rm -f libXGC.a
+>>>> ln -s libXGC250.a libXGC.a
+>>>> rm -f libXGCmini.a
+>>>> ln -s libXGC250mini.a libXGCmini.a
+>>>> rm -f libXGF.a
+>>>> ln -s libXGF250.a libXGF.a
+>>>> Making all in ctest
+>>>> gcc -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I/sw/include
+>>>> -I../src    -Wall -Wno-unused  -g -DXPMENABLED -DTcl75_Tk41 -c 
+>>>> test.c
+>>>> test.c: In function `Setup':
+>>>> test.c:62: warning: implicit declaration of function `malloc'
+>>>> test.c: At top level:
+>>>> test.c:176: warning: return type of `main' is not `int'
+>>>> test.c: In function `main':
+>>>> test.c:177: warning: implicit declaration of function `putenv'
+>>>> gcc  -Wall -Wno-unused  -g -DXPMENABLED -DTcl75_Tk41  -o xtest
+>>>> test.o -L../src -lXGC -L/sw/lib -ltk8.4 -L/sw/lib -ltcl8.4
+>>>> -L/usr/X11R6/lib -lX11 -L/usr/X11R6/lib -lXpm  -ldl -lm
+>>>> ld: warning table of contents of library: ../src/libXGC.a not sorted
+>>>> slower link editing will result (use the ranlib(1) -s option)
+>>>> ld: warning multiple definitions of symbol _tclPlatStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclPlatStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclPlatStubsPtr
+>>>> ld: warning multiple definitions of symbol _tclIntStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclIntStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclIntStubsPtr
+>>>> ld: warning multiple definitions of symbol _Tcl_InitStubs
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _Tcl_InitStubs
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _Tcl_InitStubs
+>>>> ld: warning multiple definitions of symbol _tclIntPlatStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of
+>>>> _tclIntPlatStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of 
+>>>> _tclIntPlatStubsPtr
+>>>> ld: warning multiple definitions of symbol _tclStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclStubsPtr
+>>>> ld: warning suggest use of -bind_at_load, as lazy binding may result
+>>>> in errors or different symbols being used
+>>>> symbol _Tcl_InitStubs used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclIntPlatStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclIntStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclPlatStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> Making all in xgmovie
+>>>> g++ -DHAVE_CONFIG_H -I. -I. -I../. -I/sw/include -I../src
+>>>> -I/usr/X11R6/include    -Wall -Wno-unused  -c -o xgmovie.o `test -f
+>>>> xgmovie.cpp || echo './'`xgmovie.cpp
+>>>> In file included from xgmovie.cpp:7:
+>>>> xgmovie.h:18: warning: `class plot' has virtual functions but
+>>>> non-virtual
+>>>>    destructor
+>>>> xgmovie.h:42: warning: `class One_D_plot' has virtual functions but
+>>>> non-virtual
+>>>>    destructor
+>>>> xgmovie.h:53: warning: `class ScatterPlot' has virtual functions but
+>>>>    non-virtual destructor
+>>>> xgmovie.h:58: warning: `class LinePlot' has virtual functions but
+>>>> non-virtual
+>>>>    destructor
+>>>> xgmovie.h:71: warning: `class SurfacePlot' has virtual functions but
+>>>>    non-virtual destructor
+>>>> xgmovie.h:90: warning: `class VectorPlot' has virtual functions but
+>>>> non-virtual
+>>>>    destructor
+>>>> xgmovie.cpp: In function `int openFile(FILE**, char*, int)':
+>>>> xgmovie.cpp:131: warning: too many arguments for format
+>>>> xgmovie.cpp: At global scope:
+>>>> xgmovie.cpp:437: warning: ISO C++ forbids declaration of `main' with
+>>>> no type
+>>>> xgmovie.cpp: In function `int main(int, char**)':
+>>>> xgmovie.cpp:454: warning: float format, double arg (arg 3)
+>>>> g++  -Wall -Wno-unused    -o xgmovie  xgmovie.o -L../src -lXGC
+>>>> -L/sw/lib -ltk8.4 -L/sw/lib -ltcl8.4 -L/usr/X11R6/lib -lX11
+>>>> -L/usr/X11R6/lib -lXpm  -ldl -lm
+>>>> ld: warning table of contents of library: ../src/libXGC.a not sorted
+>>>> slower link editing will result (use the ranlib(1) -s option)
+>>>> ld: warning multiple definitions of symbol _tclPlatStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclPlatStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclPlatStubsPtr
+>>>> ld: warning multiple definitions of symbol _tclIntStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclIntStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclIntStubsPtr
+>>>> ld: warning multiple definitions of symbol _Tcl_InitStubs
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _Tcl_InitStubs
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _Tcl_InitStubs
+>>>> ld: warning multiple definitions of symbol _tclIntPlatStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of
+>>>> _tclIntPlatStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of 
+>>>> _tclIntPlatStubsPtr
+>>>> ld: warning multiple definitions of symbol _tclStubsPtr
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) definition of _tclStubsPtr
+>>>> /sw/lib/libtk8.4.dylib(tclStubLib.o) definition of _tclStubsPtr
+>>>> ld: warning suggest use of -bind_at_load, as lazy binding may result
+>>>> in errors or different symbols being used
+>>>> symbol _Tcl_InitStubs used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclIntPlatStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclIntStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclPlatStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> symbol _tclStubsPtr used from dynamic library
+>>>> /sw/lib/libtcl8.4.dylib(tclStubLib.o) not from earlier dynamic
+>>>> library /sw/lib/libtk8.4.dylib(tclStubLib.o)
+>>>> make[2]: Nothing to be done for `all-am'.
+>>>>

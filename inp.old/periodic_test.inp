@@ -1,0 +1,66 @@
+xybeam
+{
+	A beam spreading experiment in x-y geometry.  Two of the
+walls are metal while two of them are neumann zero boundary conditions;
+dielectrics on the wall have that behavior in OOPIC.
+ 	This simulation is electrostatic.
+}
+Region
+{
+Grid
+{
+	J = 32
+	x1s = 0.0
+	x1f = 1.0
+	n1 = 1.0
+	K = 32
+	x2s = 0.0
+	x2f = 1.0
+	n2 = 1.0
+	Geometry = 1
+	PeriodicFlagX1 = 1
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 5e-9
+	ElectrostaticFlag = 4
+// GMRES tolerance 
+//        presidue = 1e-7
+// tolerances for DADI,CG,MULTIGRID
+	presidue = 1e-3
+}
+EmitPort
+{
+	j1 = 16
+	j2 = 16
+	k1 = 10
+	k2 = 20
+	speciesName = electrons
+	normal = 1
+	np2c = 4e2
+	I = 0.0000025
+	v1drift = 1e6
+}
+Conductor
+{
+	j1 = 0
+	j2 = 32
+	k1 = 0
+	k2 = 0
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	j2 = 32
+	k1 = 32
+	k2 = 32
+	normal = -1
+}
+}

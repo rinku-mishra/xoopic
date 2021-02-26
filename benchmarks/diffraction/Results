@@ -1,0 +1,187 @@
+
+
+gauss_1.inp:
+beam waist measurements
+
+Raw data
+z               waist
+1e-6            5.74e-7
+5e-6            8.525e-7
+6.666e-6        1.105e-6
+1e-5            1.625e-6
+13.3333e-6      2.19e-6
+15e-6           2.49e-6
+
+
+gauss_1p.inp:  notes:  measured these when it seemed stable
+z               waist
+dx              5e-7
+2.25e-6         9e-7
+3.33e-6         1.08e-6
+5e-6            1.54e-6
+6.66e-6         2.02e-6
+7.5e-6          2.2e-6
+
+
+gauss_1.inp:  shifted data
+
+0               5.74e-7      
+4e-6            8.525e-7     
+5.66e-6         1.105e-6     
+9e-6            1.625e-6     
+12.3333         2.19e-6      
+14              2.49e-6      
+
+gauss_1p.inp:  shifted data, diff is only 1%, didn't actually do a shift. (new method)
+
+0               5.03e-7
+2.25e-6         7.89e-7
+3.33e-6         9.65e-7
+5e-6            1.36e-6
+6.66e-6         1.83e-6
+7.5e-6          2.08e-6
+
+
+
+gauss_1pr.inp:  like gauss_1p except a random load.
+
+2.25e-6         8.84e-7
+3.33e-6         1.065e-6
+5e-6            1.49e-6
+6.66e-6         1.97e-6
+7.5e-6          2.18e-6
+
+gauss_1pf.inp:  2x finer grid, #part/cell same, same amplitude
+
+2.25e-6         1.04e-6
+3.33e-6         1.13e-6
+5e-6            1.33e-6
+6.66e-6         1.96e-6
+7.5e-6          2.23e-6
+
+gauss_1pa.inp:  increased magnitude of laser beam 10x
+
+0               5.21e-7
+2.25e-6         7.8e-7
+3.33e-6         9.05e-7
+5e-6            1.21e-6
+6.66e-6         1.535e-6
+7.5e-6          1.66e-6
+
+gauss_1pa.inp:  increased magnitude of laser beam 10x  (new method)
+
+0               5.05e-7
+2.25e-6         6.9e-7
+3.33e-6         8.08e-7
+5e-6            1.1e-6
+6.66e-6         1.42e-6
+7.5e-6          1.53e-6
+
+gauss_1paf.inp:  increased magnitude laser beam, 2x finer grid
+
+0               5.13e-7
+2.25e-6         7.9e-7
+3.33e-6         9.3e-6
+5e-6            1.22e-6
+6.66e-6         1.55e-6
+
+gauss_1paf.inp (second run)
+0               5.44e-7
+2.25e-6         8.15e-7
+3.33e-6         9.4e-7
+5e-6            1.21e-6
+6.66e-6         1.55e-6
+7.5e-6          1.68e-6
+
+gauss_1pam.inp:  more resolution close to the focus
+0               5.23e-7
+1e-6            5.92e-7
+1.5e-6          6.48e-7
+2e-6            7.1e-7
+3.33e-6         9.02e-7
+5e-6            1.21e-6
+6.66e-6         1.53e-6
+7.5e-6         1.68e-6
+
+gauss_1pas.inp:  smooth beam-ramp
+<inconclusive>
+
+gauss_1paa.inp:  increased magnitude of laser beam 100x
+
+0               5.2e-7
+2.25e-6         7.8e-7
+3.33e-6         9.04e-7
+5e-6            1.21e-6
+6.66e-6         1.53e-6
+7.5e-6          1.66e-6
+
+gauss_1pb.inp:  10x more particles than 1p
+
+0               5.2e-7
+2.25e-6         9.03e-7
+3.33e-6         1.09e-6
+5e-6            1.56e-6
+6.66e-6         2.03e-6
+7.5e-6          2.25e-6
+
+gauss1pw.inp:   waist quadrupled
+
+0               2.0e-6
+5e-6            2.14e-6
+6.66e-6         2.21e-6
+1e-5            2.23e-6
+1.333e-5        2.36e-6
+1.5e-5         2.4e-6
+
+
+gauss1pwa.inp:   waist quadrupled, amplitude 100x over 1pw
+
+0               2.03e-6
+5e-6            2.14e-6
+6.66e-6         2.14e-6
+1e-5            2.24e-6
+1.333e-5        2.31e-6
+1.5e-5         2.34e-6
+
+gauss_1pah:  wp = w/2.5
+
+0               5.0e-7
+2.25e-6         7.75e-7
+3.33e-6         8.85e-7
+5e-6            1.16e-6
+6.66e-6         1.45e-6
+7.5e-6          1.57e-6
+
+gauss_1padw:  like gauss_1pa, but system double-wide.
+
+0               5e-7
+2.25e-6         7.93e-7
+3.33e-6         9.23e-7
+5e-6            1.23e-6
+6.66e-6         1.56e-6
+7.5e-6          1.7e-6
+
+EE:  
+0               1e-6
+5e-6            1.28e-6
+6.66e-6         1.37e-6
+1e-5            1.56e-6
+1.333e-5        1.77e-6
+1.5e-5          1.91e-6
+
+
+EE:   (new method)
+0               .996e-6
+5e-6            1.10e-6
+6.66e-6         1.18e-6
+1e-5            1.30e-6
+1.333e-5        1.58e-6
+1.5e-5          1.68e-6
+
+EE2:  (new method)
+0               1.003-e6
+5e-6            1.106e-6
+6.66e-6         1.184e-6
+1e-5            1.37e-6
+1.333e-5        1.591e-6
+1.5e-5          1.72e-6

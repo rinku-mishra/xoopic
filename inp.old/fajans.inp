@@ -1,0 +1,116 @@
+default
+{
+fajans input 
+}
+Grid
+{
+	J = 70
+	x1s = 0.0
+	x1f = 0.34
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.01905
+	n2 = 1.0
+}
+Control
+{
+	dt = .5e-9
+	ElectrostaticFlag = 1
+	InfiniteBFlag = 1
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+Load
+{
+	speciesName = electrons
+	zMinMKS = 0
+	zMaxMKS = .34
+	rMinMKS = 0
+	rMaxMKS = .01905
+	temperature = 1e6 
+	density = 1.38e14
+	np2c = 1e6
+}
+Equipotential
+{
+        C = 220
+        j1 = 0
+        k1 = 0
+        j2 = 0
+        k2 = 10
+        normal = 1
+}
+Equipotential
+{
+        C = 220
+        j1 = 0
+        k1 = 10
+        j2 = 8
+        k2 = 10
+        normal = -1
+}
+Conductor
+{
+        j1 = 8
+        k1 = 10
+        j2 = 28
+        k2 = 10
+        normal = -1
+}
+Equipotential
+{
+        a0 = 0
+	a1 = 0
+	trise = 1e-7
+	tfall = 1
+	tpulse = 1e-7
+        j1 = 28
+        k1 = 10
+        j2 = 41
+        k2 = 10
+        normal = -1
+}
+Equipotential
+{
+        a0 = 0
+	a1 = -20
+	trise = 1e-8
+	tfall = 1
+	tpulse = 1e-7
+        j1 = 41
+        k1 = 10
+        j2 = 61
+        k2 = 10
+        normal = -1
+}
+Equipotential
+{
+	C= 220
+        j1 = 61
+        k1 = 10
+        j2 = 70
+        k2 = 10
+        normal = -1
+}
+Equipotential
+{
+	C= 220
+        j1 = 70
+        k1 = 10
+        j2 = 70
+        k2 = 0
+        normal = 1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 70
+	k2 = 0
+	normal = 1
+}

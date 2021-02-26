@@ -1,0 +1,124 @@
+test
+{
+	 test
+}
+Variables
+{
+	 x1max = .01
+	 x2max = .01
+	 Jmax = 8
+	 Kmax = 8
+}
+Region
+{
+	 Grid
+	 {
+		  J = Jmax
+		  x1s = 0.0
+		  x1f = x1max
+		  n1 = 1.0
+		  K = Kmax
+		  x2s = 0.0
+		  x2f = x2max
+		  n2 = 1.0
+		  Geometry = 1
+		  PeriodicFlagX1 = 1
+		  PeriodicFlagX2 = 0
+	 }
+	 Species
+	 {
+		  name = boltzmann electrons
+		  m = 9.11E-31
+		  q = -1.6e-19
+		  collisionModel = boltzmann
+	 }
+	 Species
+	 {
+		  name = ions
+		  m = 9.11E-29
+		  q = 1.6e-19
+		  collisionModel = ion
+	 }
+	 Load
+	 {
+        x1MinMKS = 0
+        x1MaxMKS = x1max
+        x2MinMKS = 0
+        x2MaxMKS = x2max
+        speciesName = ions
+        temperature = 0
+        density = 1e14
+        np2c = 1e6
+	 }
+	 Control
+	 {
+		  dt = 1.0E-9
+		  ElectrostaticFlag = 4
+		  BoltzmannFlag = 1
+		  BoltzmannTemp = 1
+		  BoltzSpecies = boltzmann electrons
+		  presidue = 1e-4
+	 }
+	 DielectricRegion
+	 {
+		  er = 7.0
+		  j1 = 3*Jmax/13
+		  k1 = 3*Kmax/13
+		  j2 = 10*Jmax/13
+		  k2 = 10*Kmax/13
+		  QuseFlag = 1
+	 }
+	 //	 Dielectric
+	 Conductor
+	 { 
+		  //	  QuseFlag = 0
+		  er = 1
+		  j1 = 0
+		  k1 = 0
+		  j2 = 0
+		  k2 = Kmax
+		  normal = 1
+	 }
+	 Conductor
+	 {
+		  C =  0  
+		  er = 1
+		  j1 = 0
+		  k1 = Kmax
+		  j2 = Jmax
+		  k2 = Kmax
+		  normal = -1
+	 }
+	 Conductor
+	 {
+		  er = 1
+		  j1 = Jmax
+		  k1 = Kmax
+		  j2 = Jmax
+		  k2 = 0
+		  normal = -1
+	 }
+	 Conductor
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = Jmax
+		  k2 = 0
+		  normal = 1
+	 }
+	 Diagnostic
+	 {
+        HistMax = 64
+        save = 1
+		  Comb = 2
+		  Ave = 0
+		  A1 = 0
+        A2 = 0
+        B1 = 0
+        B2 = x2max
+		  VarName = Q
+		  title = Charge at edge of Dielectric
+		  x1_Label = x
+		  x2_Label = time
+	 }
+}

@@ -1,0 +1,100 @@
+Emitter test
+{
+A test of cutoff capability of the beam emitter
+}
+Region
+{
+Grid
+{
+	Geometry = 0
+	J = 5
+	x1s = 0.0
+	x1f = 0.001
+	K = 5
+	x2s = 0.0
+	x2f = 0.010
+}
+Control
+{
+	dt = 2.0E-11
+	ElectrostaticFlag = 1
+}
+Species
+{
+	name = argon
+        m = 6.68e-26 
+        q = 1.6e-19
+	subcycle = 1 // 100
+	collisionModel = 0
+}
+BeamEmitter
+{
+	units = EV // MKS
+	speciesName = argon
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 4
+	normal = 1
+	np2c = 100
+	I = 1e-8
+
+	//thetadot = 0.0
+	v1drift = 500
+	v2drift = 1e-6
+	v3drift = -1.0e-6
+	//temperature = 10
+	//Lcutoff = -20
+	//Ucutoff = 20
+	v1thermal = 1.0e-1 // 1e-5
+	v2thermal = 1e-10
+	v3thermal = 1e-10
+	//v1Lcutoff = -20
+	//v2Lcutoff = -20
+	//v3Lcutoff = -20
+	//v1Ucutoff = 20
+	//v2Ucutoff = 20
+	//v3Ucutoff = 20
+}
+Conductor
+{
+	j1 = 0
+	k1 = 4
+	j2 = 0
+	k2 = 5
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 5
+	k2 = 5
+	normal = -1
+}
+Conductor
+{
+name = collector
+	j1 = 5
+	k1 = 5
+	j2 = 5
+	k2 = 0
+	normal = -1
+	IdiagFlag = 1
+	Ihist_avg = 512
+	Ihist_len = 2048
+	nxbins=20
+	nenergybins = 200
+	nthetabins = 90
+	energy_min = 0
+	energy_max = 1000
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+}
+}

@@ -1,0 +1,122 @@
+default
+{
+klystron
+}
+Grid
+{
+	J = 40
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.01
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-12
+	B01 = 1.0
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 17
+	j2 = 0
+	k2 = 19
+	normal = 1
+	speciesID = 0
+	numberparticlesinmacro = 100000
+	I = -0.001
+	thetadot = 0.0
+	vzdrift = 1e7
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 19
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 17
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 3
+	k2 = 20
+	normal = -1
+}
+Gap
+{
+	j1 = 3
+	k1 = 20
+	j2 = 7
+	k2 = 20
+	normal = -1
+	amplitude = 10
+	frequency = 1.0E9
+	phase = 0.0
+}
+Conductor
+{
+	j1 = 7
+	k1 = 20
+	j2 = 33
+	k2 = 20
+	normal = -1
+}
+ExitPort
+{
+	j1 = 33
+	k1 = 20
+	j2 = 37
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 37
+	k1 = 20
+	j2 = 40
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 40
+	k1 = 20
+	j2 = 40
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 40
+	k2 = 0
+	normal = 1
+}

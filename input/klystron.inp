@@ -1,0 +1,225 @@
+default
+{
+Two Cavity Klystron.  First cavity driven with an ExitPort.
+Second cavity has power taken out through an ExitPort.
+}
+Region
+{
+Grid
+{
+	n2 = 1.000e+00
+	x2f = 1.090e-01
+	x2s = 0.000e+00
+	K = 36
+	n1 = 1.000e+00
+	x1f = 3.720e-01
+	x1s = 0.000e+00
+	J = 74
+	Rule
+	{
+	Limit
+	 n1 < 2.500e-01
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+}
+Control
+{
+	B01 = 6.000e-1
+	dt = 5.000e-12
+	Rule
+	{
+	Limit
+	 dt <= 0.000e+00
+	 Fatal -- time step must be positive
+	}
+}
+CylindricalAxis
+{
+	normal = 1
+	k2 = 0
+	j2 = 74
+	k1 = 0
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 0
+	j2 = 0
+	k1 = 22
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 22
+	j2 = 0
+	k1 = 36
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 36
+	j2 = 74
+	k1 = 36
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 22
+	j2 = 74
+	k1 = 36
+	j1 = 74
+}
+Species
+{
+	name = electrons
+	m = 9.11e-31
+	q = -1.6e-19
+}
+BeamEmitter
+{
+	np2c = 3.000e+10
+	I = 1.2e4
+	speciesName = electrons
+	v1drift = 2.480e+08
+	normal = 1
+	k2 = 22
+	j2 = 0
+	k1 = 24
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 25
+	j2 = 0
+	k1 = 24
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 20
+	k1 = 25
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 28
+	j2 = 20	
+	k1 = 25
+	j1 = 20
+}
+Conductor
+{
+	normal = 1
+	k2 = 28
+	j2 = 18
+	k1 = 28
+	j1 = 20
+}
+Conductor
+{
+	normal = 1
+	k2 = 36
+	j2 = 18
+	k1 = 28
+	j1 = 18
+}
+ExitPort
+{
+	EFFlag = 1
+	name = Input Gap
+	normal = -1
+	k2 = 36
+	j2 = 24
+	k1 = 36
+	j1 = 18
+	A = 30
+	R = 47
+	Rin = 275
+	C = 0
+	frequency = 1.21e9
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 24
+	k1 = 36
+	j1 = 24
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 51
+	k1 = 25
+	j1 = 24
+}
+Conductor
+{
+	normal = 1
+	k2 = 28
+	j2 = 51
+	k1 = 25
+	j1 = 51
+}
+Conductor
+{
+	normal = 1
+	k2 = 28
+	j2 = 49
+	k1 = 28
+	j1 = 51
+}
+Conductor
+{
+	normal = 1
+	k2 = 36
+	j2 = 49
+	k1 = 28
+	j1 = 49
+}
+ExitPort
+{
+	normal = -1
+	k2 = 36
+	j2 = 55
+	k1 = 36
+	j1 = 49
+	EFFlag = 1
+	name = Output Cavity
+	R = 47.124
+	C = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 55
+	k1 = 36
+	j1 = 55
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 74
+	k1 = 25
+	j1 = 55
+}
+Conductor
+{
+	normal = -1
+	k2 = 0
+	j2 = 74
+	k1 = 25
+	j1 = 74
+}
+}

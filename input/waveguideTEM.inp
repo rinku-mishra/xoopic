@@ -1,0 +1,81 @@
+WaveguideTEM
+{
+	infinite stripline waveguide with TEM wave launched at 377 ohms
+}
+Variables
+{
+	L = 0.1
+	r1 = 0.0
+	r2 = 0.01
+	Jmax = 100
+	Kmax = 100
+	dt = 1E-13
+}
+Region
+{
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = L
+	n1 = 1.0
+	K = Kmax
+	x2s = r1
+	x2f = r2
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = dt
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+ExitPort
+{
+	A1 = 0
+	A2 = r1
+	B1 = 0
+	B2 = r2
+	normal = 1
+	frequency = 1E10
+	A = 2
+	C = 0
+	EFFlag = 1
+	name = Input
+}
+ExitPort
+{
+	A1 = L
+	A2 = r1
+	B1 = L
+	B2 = r2
+	normal = -1
+	frequency = 0
+	A = 0
+	C = 0
+	EFFlag = 1
+	name = Output
+}
+Conductor
+{
+	A1 = 0
+	A2 = r1
+	B1 = L
+	B2 = r1
+	normal = 1
+}
+Conductor
+{
+	A1 = 0
+	A2 = r2
+	B1 = L
+	B2 = r2
+	normal = -1
+}
+}

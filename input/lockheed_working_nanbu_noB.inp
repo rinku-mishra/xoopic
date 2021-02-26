@@ -1,0 +1,122 @@
+lesdefault
+{
+Finite axial applied uniform magnetic field.
+}
+Region
+{
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.15
+	K = 50
+	x2s = 0.0
+	x2f = 0.02
+
+}
+Control
+{
+	dt = 1.0E-11
+	B01 = 0.0
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+ElectrostaticFlag=1
+}
+Species
+{
+        name = protons
+        m = 1.67E-27
+        q = 1.6e-19
+	coulomb = protons2
+}
+Species
+{
+        name = protons2
+        m = 1.67E-27
+        q = 1.6e-19
+	nanbu = 1
+}
+BeamEmitter
+{
+units = EV
+	speciesName = protons
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 25
+	normal = 1
+	np2c = 1e4
+	I = 0.001
+a1 = 1
+a0 = 0
+tdelay =0
+trise = 10e-9
+tpulse = 100e-9
+tfall = 0
+
+	temperature = 0
+	thetadot = 0.0
+	v1drift = 50000
+	v2drift = 0
+	v3drift = 0
+}
+BeamEmitter
+{
+units = EV
+	speciesName = protons2
+	j1 = 50
+	k1 = 0
+	j2 = 50
+	k2 = 25
+	normal = -1
+	np2c = 1e4
+	I = 0.001
+a1 = 1
+a0 = 0
+tdelay =0
+trise = 10e-9
+tpulse = 100e-9
+tfall = 0
+	temperature = 0
+	thetadot = 0.0
+	v1drift = 5e4
+	v2drift = 0
+	v3drift = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 25
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 50
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 50
+	j2 = 50
+	k2 = 25
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}
+}

@@ -1,0 +1,98 @@
+default
+{
+	Beam in right circular cylinder.  This is useful for obtaining beam
+	spreading curves, for example, by adjusting the injection current
+	and the magnetic field.
+}
+Grid
+{
+	J = 20
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-12
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+Species
+{
+		  name = positrons
+		  m = 9.11E-31
+		  q = 1.6e-19
+}
+BeamEmitter
+{
+	j1 = 20
+	k1 = 0
+	j2 = 20
+	k2 = 10
+	speciesName = positrons
+	normal = -1
+	numberparticlesinmacro = 10000
+	I = 0.01
+	thetadot = 0.0
+	vzdrift = -1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 20
+	k1 = 20
+	j2 = 20
+	k2 = 10
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 20
+	k2 = 0
+	normal = 1
+}

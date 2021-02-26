@@ -1,0 +1,124 @@
+squareV
+{
+	Inputfile demonstrates a multi-segment
+	equipotential, which has a time-dependent sine wave on it.
+}
+Variables
+{
+  J = 13
+  K = 13
+  x1f = 0.1
+  x2f = 0.02
+}
+Region 
+{
+Grid
+{
+	J = 13
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 13
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 1.0E-11
+	ElectrostaticFlag = 1
+	presidue = 1e-4
+}
+Conductor
+{
+	name = theEmitter
+	Segment
+	{
+		j1 = 0
+		k1 = 0
+		j2 = 0
+		k2 = 10
+		normal = 1
+	}
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 13
+	normal = 1
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 13
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = 13
+	k1 = 13
+	j2 = 13
+	k2 = 0
+	normal = -1
+}
+Equipotential
+{
+	name=funky equipotential
+	Segment 
+	{
+		j1 = 3
+		k1 = 3
+		j2 = 3
+		k2 = 10
+		normal = 1
+	}
+	Segment 
+	{
+		j1 = 3
+		k1 = 3
+		j2 = 10
+		k2 = 3
+		normal = 1
+	}
+	Segment 
+	{
+		j1 = 10
+		k1 = 10
+		j2 = 10
+		k2 = 3
+		normal = 1
+	}
+	Segment 
+	{
+		j1 = 10
+		k1 = 10
+		j2 = 3
+		k2 = 10
+		normal = 1
+	}
+	C = 1
+	A = 1
+	frequency = 5e9
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 13
+	k2 = 0
+	normal = 1
+}
+}

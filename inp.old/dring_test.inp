@@ -1,0 +1,136 @@
+dring
+{
+	A dielectric ring is hit by a beam
+
+	This has been modified from the original input/dring.inp
+	in order to test RMS size/velocity calculations.
+}
+Variables
+{
+	x1max = .1
+	x2max = .02
+	Jmax = 16
+	Kmax = 16
+
+// Specify initial RMS velocity spreads
+	v1rms = 1.0e+2
+	v2rms = 2.0e+2
+	v3rms = 3.0e+2
+}
+Region
+{
+Grid
+{
+	 J = Jmax
+	 x1s = 0.0
+	 x1f = x1max
+	 n1 = 1.0
+	 K = Kmax
+	 x2s = 0.0
+	 x2f = x2max
+	 n2 = 1.0
+	 Geometry = 0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+	rmsDiagnosticsFlag = 1
+}
+Control
+{
+	dt = 1.0E-11
+	ElectrostaticFlag = 1
+}
+VarWeightBeamEmitter
+{
+// Beam is emitted with a uniform distribution in
+//   radius, from r=0 to r(k2=10*Kmax/13)
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10*Kmax/13
+	normal = 1
+	speciesName = electrons
+
+//	I = 10
+//	np2c = 1.0E7	
+// Here we set current to negligible value
+//  and modify np2c to keep same number of
+//  macro-particles.
+	I = 1.e-5
+	np2c = 1.
+
+	v1drift = 1e8
+	v1thermal = v1rms
+	v2thermal = v2rms
+	v3thermal = v3rms
+}
+Conductor
+{
+	er = 1
+	 Segment
+	 {
+		  j1 = 0
+		  k1 = 10*Kmax/13
+		  j2 = 0
+		  k2 = Kmax
+		  normal = 1
+	 }
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = Kmax
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = Jmax
+	k1 = Kmax
+	j2 = Jmax
+	k2 = 0
+	normal = -1
+}
+Diagnostic
+{
+	 HistMax = 512
+	 Comb = 2
+	 Ave = 0
+	 j1 = 3*Jmax/13
+	 k1 = 3*Kmax/13
+	 j2 = 3*Jmax/13
+	 k2 = 10*Kmax/13
+	 VarName = phi
+	 title = phi at edge of ring
+	 x1_Label = radius
+	 x2_Label = time
+}
+Diagnostic
+{
+	 HistMax = 512
+	 Comb = 2
+	 Ave = 0
+	 j1 = 3*Jmax/13
+	 k1 = 0
+	 j2 = 3*Jmax/13
+	 k2 = Kmax
+	 VarName = Q
+	 title = Charge at edge of ring
+	 x1_Label = radius
+	 x2_Label = time
+}		 	 
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = Jmax
+	k2 = 0
+	normal = 1
+}
+}

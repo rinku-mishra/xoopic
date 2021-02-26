@@ -1,0 +1,140 @@
+
+SHELL = /bin/sh
+
+srcdir = .
+top_srcdir = ..
+
+AR = ar cr
+AR_FLAGS =  
+CC = icc
+CPP =  icc -E
+CXXCOMP = icc
+CXXCPP = icc -E
+DEFINE_NOX = 
+LN_S = ln -s
+MPICXX = 
+RANLIB = ranlib
+
+EXTRA_DIST = evaluator.y
+
+##########
+#
+#
+##########
+DEFINE_MPI = 
+DEFINE_SCALAR = 
+DEFINES = -DUNIX    
+
+##########
+#
+#
+##########
+CXX = icc
+CXXFLAGS =    $(DEFINES) -O1
+
+##########
+#
+# 
+##########
+
+libdir = 
+
+lib_LIBRARIES = libotools.a
+
+libotools_a_SOURCES =  	physics.cpp 	diagn.cpp 	dump.cpp 	fft.c 	c_utils.c 	history.cpp 	newdiag.cpp 	gridprob.cpp 	probergn.cpp 	evaluator.tab.c 	laserspotdiag.cpp 	wavesplitdiag.cpp 	wrapFFTW.cpp 	powerspectrum1d.cpp 	psdFieldDiag1d.cpp 	psdFieldDiag2d.cpp diag2file.cpp predefDiag.cpp derivDiag.cpp 
+
+
+##########
+#
+#
+##########
+
+MPI_INCLUDE = 
+XGRAFIX_INCLUDE = -I/usr/local/include
+XOOPIC_INCLUDES = -I$(top_srcdir)/advisor -I$(top_srcdir)/physics
+FFTW_INCLUDE = 
+X11_INCLUDE = @X11_INCLUDE@
+INCLUDES = $(XOOPIC_INCLUDES) $(MPI_INCLUDE) $(XGRAFIX_INCLUDE) $(X11_INCLDE) $(FFTW_INCLUDE)
+
+include_HEADERS =  	diagn.h  evaluator.h      globalvars.h  laserspotdiag.h  oopiclist.h  wavesplitdiag.h 	dump.h   evaluator.tab.h  gridprob.h    newdiag.h        ostring.h    xgdefs.h 	eval.h   fft.h            history.h     numbers.h        probergn.h baseFFT.h 	wrapFFTW.h	powerspectrum1d.h	baseWindow.h	blackmanWindow.h 	hammingWindow.h	welchWindow.h	bartlettWindow.h	hannWindow.h		psdFieldDiag1d.h	psdFieldDiag2d.h diag2file.h predefDiag.h derivDiag.h
+
+abs_top_builddir = /home/pmlocal/oopic/oopic
+# include .depend
+
+SRCS = $(libotools_a_SOURCES)
+
+LIBRARIES =  $(lib_LIBRARIES)
+
+
+DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../.
+CPPFLAGS = 
+LDFLAGS =  
+LIBS = 
+libotools_a_LIBADD = 
+libotools_a_OBJECTS =  physics.o diagn.o dump.o fft.o c_utils.o \
+history.o newdiag.o gridprob.o probergn.o evaluator.tab.o \
+laserspotdiag.o wavesplitdiag.o wrapFFTW.o powerspectrum1d.o \
+psdFieldDiag1d.o psdFieldDiag2d.o diag2file.o predefDiag.o derivDiag.o
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES)  $(CPPFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = -Wall -Wno-unused  -g
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+HEADERS =  $(include_HEADERS)
+
+
+
+DISTFILES =  $(SOURCES) $(HEADERS) 
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(libotools_a_SOURCES)
+OBJECTS = $(libotools_a_OBJECTS)
+
+
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+
+libotools.a: $(libotools_a_OBJECTS) $(libotools_a_DEPENDENCIES)
+	-rm -f libotools.a
+	$(AR) libotools.a $(AR_FLAGS) $(libotools_a_OBJECTS) $(libotools_a_LIBADD)
+	$(RANLIB) libotools.a
+.cpp.o:
+	$(CXXCOMPILE) -c $<
+
+subdir = otools
+
+lib: $(lib_LIBRARIES)
+	$(AR) ../lib/$(lib_LIBRARIES) $(libotools_a_OBJECTS)
+
+##########
+# Bison objects
+##########
+
+evaluator.tab.c: evaluator.y
+	rm -f evaluator.tab.c
+	bison $(top_srcdir)/otools/evaluator.y
+	if test ! -f evaluator.tab.c; then \
+	        mv $(top_srcdir)/otools/evaluator.tab.c .; fi
+
+evaluator.tab.h: evaluator.tab.c
+	$(top_srcdir)/otools/make_e_tab_h
+
+physics.o: evaluator.tab.h
+
+clean:
+	rm -f *.bak core *.prev *.o
+	rm -rf ii_files cxx_repository exec_repository so_locations ti_files
+	rm -rf SunWS_cache
+	rm -f evaluator.tab.h evaluator.tab.c
+

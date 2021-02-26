@@ -1,0 +1,149 @@
+default
+{
+Original input file for SWP simulation.
+}
+Grid
+{
+	J = 25
+	x1s = 0.0
+	x1f = 0.10
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.20
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt = 6e-12
+	ElectrostaticFlag = 0
+	gasPressure = 0.01
+        eCollisionalFlag = 1
+        iCollisionalFlag = 1
+	FieldSubFlag = 25
+	emdamping = 0.0
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+        name = ions
+        m = 6.626e-26
+        q = 1.6e-19
+	SpeciesSub = 25
+}
+Load
+{
+        speciesName = electrons
+        zMinMKS = .020
+        zMaxMKS = .1
+        rMinMKS = .0
+        rMaxMKS = .20
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 4.2e5
+        cutoff = 0
+        density = 1e14
+        np2c = 1e7
+}
+Load
+{
+        speciesName = ions
+        zMinMKS = .020
+        zMaxMKS = .1
+        rMinMKS = .0
+        rMaxMKS = .20
+        vrdrift = 0
+        vzdrift = 0
+        vthdrift = 0
+        temperature = 2.5e2
+        cutoff = 0
+        density = 1e14
+        np2c = 1e7
+}
+Diagnostic
+{
+        Comb = 1
+	Ave = -1
+	HistMax = -1
+        title = JdotE
+        j1 = 1
+        k1 = 1
+        j2 = 24
+        k2 = 49
+        VarName = JdotE
+	x1_Label = X
+        x2_Label = Y
+        x3_Label = JdotE
+}
+Gap
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+	frequency = 2.45e9
+	A = 9e3
+	C = 0
+	EFFlag = 1
+	name = Gap
+}
+DielectricRegion
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 50
+	er = 2.5
+}
+Conductor
+{
+	j1 = 5
+	k1 = 0
+	j2 = 25
+	k2 = 0
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 25
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 25
+	k1 = 0
+	j2 = 25
+	k2 = 50
+	normal = -1
+}

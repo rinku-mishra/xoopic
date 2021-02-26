@@ -1,0 +1,130 @@
+default
+{
+	 Testing Load
+}
+Variables
+{
+	 J=4
+	 K=4
+}
+Region
+{
+	 Grid
+	 {
+		  Geometry = 1
+		  J = J
+		  x1s = 0.0
+		  x1f = .1
+		  n1 = 1.0
+		  K = K
+		  x2s = .0
+		  x2f = .1
+		  n2 = 1.0
+		  Rule
+		  {
+				Limit
+				n1 < 0.25
+				Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+		  }
+		  Rule
+		  {
+				Algebra
+				J * K > 10000
+				Warning -- J*K >= 10000 may mean memory problems!
+		  }
+	 }
+	 Control
+	 {
+		  dt = 1.0E-25
+		  Rule
+		  {
+				Limit
+				dt <= 0.0
+				Fatal -- time step must be positive
+		  }
+		  ElectrostaticFlag = 0
+		  BoltzmannFlag = 0
+	 }
+	 Species
+	 {
+		  name = ions
+		  m = 9.11E-31
+		  q = 1.6e-19
+	 }
+	 Species
+	 {
+		  name = electrons
+		  m = 9.11E-31
+		  q = -1.6e-19
+	 }
+	 Load
+	 {
+		  x1MinMKS = .025
+		  x1MaxMKS = .1
+		  x2MinMKS = .025
+		  x2MaxMKS = .1
+		  units = EV
+//		  analyticF = 1e12*x1
+//		  analyticF = 1e11
+		  temperature = 1
+		  density = 1e10
+		  np2c = 1e3
+		  speciesName = ions
+	 }
+	 Load
+	 {
+		  x1MinMKS = .025
+		  x1MaxMKS = .1
+		  x2MinMKS = .025
+		  x2MaxMKS = .1
+		  units = EV
+		  temperature = 0
+		  v1drift = 3e10
+		  v2drift = 0
+		  		  density = 1e10
+		 //		  analyticF = 1e12*x1
+//		  analyticF = 1e11
+		  np2c = 1e3
+		  speciesName = electrons
+LoadMethodFlag = 1
+	 }
+	 DielectricRegion
+	 {
+		  j1 = 3
+		  k1 =3
+		  j2 = 4
+		  k2 =4
+	 }
+	 Conductor
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = 0
+		  k2 = K
+		  normal = 1
+	 }
+	 Conductor
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = J
+		  k2 = 0
+		  normal = 1
+	 }
+	 Conductor
+	 {
+		  j1 = J
+		  k1 = K
+		  j2 = J
+		  k2 = 0
+		  normal = -1
+	 }
+	 Conductor
+	 {	
+		  j1 = 0
+		  k1 = K
+		  j2 = J
+		  k2 = K
+		  normal = -1
+	 }
+}

@@ -1,0 +1,130 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 20
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 20
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 5.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = .5e14
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 1
+	gasPressure = .01
+	eCollisionalFlag = 1
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+        ID = 1
+        m = 6.68e-28
+        q = 1.6e-19
+}
+BeamEmitter
+{
+	speciesID = 0
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 5
+	normal = 1
+	Rule
+	{Limit
+	 mass <= 0.0
+	 Fatal -- mass must be positive
+	}
+	vthdrift = 0
+	I = -0.1
+	thetadot = 0.0
+	vzdrift = 3.0e7
+	vrdrift = 0
+	numberparticlesinmacro = 1e7
+	vzthermal = 1e4
+	vrthermal = 1e4
+	vththermal = 1e4
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+	secondary = 0.0
+	secSpeciesID = 0
+	iSpeciesID = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 20
+	k1 = 15
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+Equipotential
+{
+	Vdc = 60
+	j1 = 20
+	k1 = 15
+	j2 = 20
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 20
+	k2 = 0
+	normal = 1
+}
+
+

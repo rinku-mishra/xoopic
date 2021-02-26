@@ -1,0 +1,136 @@
+default
+{
+A two 'fake' cavity klystron,  ExitPorts replacing the cavities.
+}
+Region
+{
+Grid
+{
+	x2f = .07569
+	x2s = 0
+	K = 25
+	x1f = 3.720e-01
+	x1s = 0
+	J = 74
+}
+Control
+{
+	B01 = 6.000e-1
+	dt = 5.000e-12
+	Rule
+	{
+	Limit
+	 dt <= 0.000e+00
+	 Fatal -- time step must be positive
+	}
+}
+CylindricalAxis
+{
+	normal = 1
+	k2 = 0
+	j2 = 74
+	k1 = 0
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 0
+	j2 = 0
+	k1 = 22
+	j1 = 0
+}
+Conductor
+{
+	normal = 1
+	k2 = 22
+	j2 = 0
+	k1 = 25
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 22
+	j2 = 74
+	k1 = 25
+	j1 = 74
+}
+Species
+{
+	name = electrons
+	m = 9.11e-31
+	q = -1.6e-19
+}
+BeamEmitter
+{
+	np2c = 3.000e+10
+	I = 1.2e4
+	speciesName = electrons
+	v1drift = 2.480e+08
+	normal = 1
+	k2 = 22
+	j2 = 0
+	k1 = 24
+	j1 = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 0
+	k1 = 25
+	j1 = 20
+}
+ExitPort
+{
+	normal = -1
+	k2 = 25
+	j2 = 20
+	k1 = 25
+	j1 = 24
+	A = 10
+	frequency = 1.21e9
+	EFFlag = 1
+	name = Input Gap
+	Rin = 2300
+	R = 20
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 51
+	k1 = 25
+	j1 = 24
+}
+ExitPort
+{
+	normal = -1
+	k2 = 25
+	j2 = 55
+	k1 = 25
+	j1 = 51
+	EFFlag = 1
+	A = 0
+	name = Output Cavity
+	R = 47.124
+	C = 0
+}
+Conductor
+{
+	normal = -1
+	k2 = 25
+	j2 = 74
+	k1 = 25
+	j1 = 55
+}
+Conductor
+{
+	normal = -1
+	k2 = 0
+	j2 = 74
+	k1 = 25
+	j1 = 74
+}
+}

@@ -1,0 +1,12 @@
+#!/bin/csh
+
+cd diffs
+RM `find . -size 0 -print `
+foreach i (advisor physics xg )
+foreach j ( `ls $i` )
+diff -cw ./$j /home/landau/johnv/oopic/$i/$j  > ../diffs/$i/$j.diffs
+end
+cd ..
+end
+cd ~/oopic/diffs
+RM `find . -size 0 -print`

@@ -1,0 +1,118 @@
+RZhelix
+{
+	Helical resonator
+}
+Variables
+{
+	 Zmax = .86924
+	 Rmax = .10
+	 Jmax = 340
+	 Kmax = 63
+	 Rdrift = .0765
+	 RbeamMax = .071  
+	 RbeamMin = .066
+	Ramp1Start = .2
+	Ramp1Length = 0.1
+	Ramp1End = Ramp1Start + Ramp1Length
+	Ramp2Start = .6
+	Ramp2Length = 0.1
+	Ramp2End = Ramp2Start + Ramp2Length
+	HelixLength = Ramp2Start - Ramp1End
+} 
+Region 
+{
+	 Grid
+	 {
+		  J = Jmax
+		  x1s = 0.0
+		  x1f = Zmax
+		  n1 = 1.0
+		  K = Kmax
+		  x2s = 0.0
+		  x2f = Rmax
+		  n2 = 1.0
+	 }
+	 Control
+	 {
+		  dt = 2E-12
+		  B01 = .8
+		  emdamping = .01
+	 }
+	 Species
+	 {
+		name = electrons
+	        m = 9.11E-31
+        	q = -1.6e-19
+	 }
+	 BeamEmitter
+	 {
+		  speciesName = electrons
+		  A1 = 0
+		  A2 = RbeamMin
+		  B1 = 0
+		  B2 = RbeamMax
+		  normal = 1
+		  np2c = 1e10
+		  I = 10000
+		  temperature = 0
+		  thetadot = 0.0
+		  v1drift = 2.59e8
+		  a0 = 0
+	 }
+	Conductor
+	{
+		name = left-hand-side
+		j1 = 0
+		k1 = 0
+		j2 = 0
+		k2 = Kmax
+		normal = 1
+	}
+
+	Conductor
+	{
+		name = top conductor
+		j1 = 0
+		k1 = Kmax
+		j2 = Jmax
+		k2 = Kmax
+		normal = -1
+	}
+	ExitPort
+	{
+		name = right-hand-exit-port
+		A1 = Zmax
+		A2 = Rmax
+		B1 = Zmax
+		B2 = Rdrift
+		normal = -1
+	}
+	Conductor
+	{
+		name = right conductor
+		A1 = Zmax
+		A2 = 0
+		B1 = Zmax
+		B2 = Rdrift
+		normal = -1
+	}
+	Polarizer
+	{
+		name = Polarizer
+		A1 = 0
+		A2 = Rdrift
+		B1 = Zmax
+		B2 = Rdrift
+		normal = -1
+		Phi = 45 * pulse(X,Ramp1Start,Ramp1Length,HelixLength,Ramp2Length)
+	}
+	 CylindricalAxis
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = Jmax
+		  k2 = 0
+		  normal = 1
+		  name = C36
+	 }
+}

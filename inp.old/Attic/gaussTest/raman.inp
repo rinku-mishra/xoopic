@@ -1,0 +1,248 @@
+raman.inp
+{
+
+File:           raman-nochirp.inp
+
+Purpose:        To simulate the Raman instability for a laser pulse.  Goal
+                of this first simulation is to verify the results of
+                Dodd-Umstadter paper.
+
+Version:        $Id: raman.inp 1587 2001-04-24 01:12:10Z rgia $
+
+Basic parameters:
+    Plasma of density 1.e25, into which is injected a laser
+    pulse that is 120 fs half-sine pulses.  (FWHM or FWZM?).
+    Cartesian geometry.
+
+Plasma variables:
+        elecPlasmaDensity = 1.e25
+    This gives a plasma frequency of omega_p=1.784e14, and a plasma
+    wavelength of 10.56 um.
+
+Laser variables:
+    Wavelength of 0.8 um, so omega = 2.355e15, and omega/omega_p = 13.20
+        angFreq_p0 = 2.355e15
+    Want a spot size (half width at 1/e) of 10 um:
+        rsm_p0 = 1.e-5
+    Focus at origin
+        zf_p0 = 0.
+    Wave amplitude is determined by a_0 = 1.  In MKS, a = eE/(m omega c).
+    Thus E = a*m*omega*c/e:
+        Aw_p0= 4.013e12
+    Rayleigh length (is it not determined?) is
+    pi*half_spot_width^2/wavelength = 393 um.
+        ryl_p0 = 393 um.
+    Pulse length of 50 fs (FWHM) or 1.499e-5 m or 30um FWZM.
+
+Simulation variables:
+    Length of 45 um., with moving window after pulse is is the 37.5 um
+    24 cells in 0.8 um -> 30 cells in 1 um, so 1350 cells long
+    Going 2+ Rayleigh lengths, so width will increase to sqrt(2)*w_0,
+    hence need 2 * sqrt(2) * 3 w_0 wide, or 90 um wide.  Dodd had 500
+    cells.  In this first run, we could probably do 10/half width, or
+    1 um cells.  This implies 90 cells wide?  To be safe, double to
+    180 cells.
+
+
+ - The wave is defined by the variables:
+     - waist_p0    = spot size at beam waist. 
+     - wLeng_p0    = wavelenght.
+     - focus_p0    = position of focus. 
+     - amp_p0      = peak wave amplitude.    
+     - chirp_p0    = chirping factor
+     - pshape_p0   = pulse shape (0=rectangular; 1=Gaussian; 2=half-sine)
+     - tdel_p0     = time delay to start pulse. 
+     - pleng_p0    = pulse length. (half-width for rectangular and Gaussian,
+				    full for half-sine).
+}
+
+Variables
+{
+// Grid variables
+
+      Nx = 1350 
+      Ny = 180
+      Lx = 450.0e-06 
+      Ly = 90.0e-06 
+
+// General parameters
+
+      electronMass = 9.1094e-31 
+      electronCharge = -1.6022e-19
+      permit = 8.8542e-12 
+      speedLight = 2.9979e8
+      speedLight2 = speedLight*speedLight 
+      electronCharge2 = electronCharge*electronCharge 
+      qOverm = electronCharge/electronMass
+      Pi = 3.14159265358979323846 
+
+// Plasma parameters
+
+      elecPlasmaDensity =  1.0e23 
+      elecPlasmaFreq = sqrt(electronCharge*qOverm*elecPlasmaDensity/permit)
+ 
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+// Pump wave (0) parameters - y polarization
+
+      waist_p0 = 10.0e-06 
+      wLeng_p0 = 0.8e-06
+      focus_p0 = 3e-07 
+      amp_p0 = 4.013e12
+      chirp_p0 = 0
+      pshape_p0 = 2
+      tdel_p0 = 0
+      pleng_p0 = 1.499e-05 
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+      angFreq_p0 = 2*Pi*speedLight/wLeng_p0 
+      angFreq2_p0 = angFreq_p0*angFreq_p0
+      waveVector_p0 = sqrt((angFreq2_p0-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+      rayleighLength_p0 = waist_p0*waist_p0*waveVector_p0/2.
+
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+// Forward Injection wave (1) parameters - z polarization
+
+      waist_p1 = 10.0e-06 
+      wLeng_p1 = 7e-06
+      focus_p1 = Lx*0.5
+      amp_p1   = 0.0
+      chirp_p0 = 0
+      pshape_p1 = 0
+      tdel_p1 = 0
+      pleng_p1 = 6e-6 
+
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+      angFreq_p1 = 2*Pi*speedLight/wLeng_p1 
+      angFreq2_p1 = angFreq_p1*angFreq_p1
+      waveVector_p1 = sqrt((angFreq2_p1-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+      rayleighLength_p1 = waist_p1*waist_p1*waveVector_p1/2.
+
+}
+Region
+{
+Grid
+{
+	J = Nx 
+	x1s = 0.0
+	x1f = Lx 
+	n1 = 1.0
+	K = Ny 
+	x2s = 0.0
+	x2f = Ly 
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 1.0e-15 
+	ElectrostaticFlag = 0
+	movingWindow = 1
+	shiftDelayTime = 2.016e-13 
+}
+Species
+{
+        name = electrons
+        m = electronMass 
+        q = electronCharge 
+}
+Species
+{
+        name = ions
+        m = 1.67e-27
+        q = 1.6e-19
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = electrons
+        density = elecPlasmaDensity 
+//        np2c = 3.6e10 
+        np2c = 1.2e11
+        LoadMethodFlag = 1
+        temperature = 0.0
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = ions
+        density = elecPlasmaDensity 
+        np2c = 0.0
+}
+
+PortGauss
+{
+	j1 = 0 
+	k1 = 0 
+	j2 = 0 
+	k2 = Ny 
+	normal = 1
+
+// Wave (0)
+	A = 0
+	C = 1.0 
+	pulShp_p0 = pshape_p0 
+	tdelay_p0 = tdel_p0 
+	lengPul_p0 = pleng_p0 
+        df_0 = chirp_p0 
+        rsm_p0 = waist_p0 
+        omeg_p0 = angFreq_p0
+        ryl_p0 = rayleighLength_p0 
+        zf_p0 = focus_p0 
+        Aw_p0 = amp_p0 
+
+// Wave (1)
+	A = 0
+	C = 1.0 
+        pulShp_p1 = pshape_p1 
+	tdelay_p1 = tdel_p1 
+	lengPul_p1 = pleng_p1 
+        df_1 = chirp_p1 
+        rsm_p1 = waist_p1 
+        omeg_p1 = angFreq_p1
+        ryl_p1 = rayleighLength_p1 
+        zf_p1 = focus_p1 
+        Aw_p1 = amp_p1 
+
+	EFFlag = 0 
+	name = PortGauss
+}
+Conductor
+{
+	j1 = 0
+	k1 = Ny 
+	j2 = Nx 
+	k2 = Ny 
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0 
+	j2 = Nx 
+	k2 = 0 
+	normal = 1
+}
+ExitPort
+{
+        j1 = Nx
+        k1 = 0
+        j2 = Nx
+        k2 = Ny
+        EFFlag = 0 
+        normal = -1
+        name = ExitPort
+        C = 0
+        A = 0
+}
+}

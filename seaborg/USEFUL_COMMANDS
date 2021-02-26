@@ -1,0 +1,8 @@
+llqs  # jobs status
+llq gives information about jobs submitted to Loadleveler. 
+llstatus gives information about machine status and load on individual nodes 
+llclass lists available classes 
+llcancel deletes job from LL (both running and waiting jobs) 
+llsubmit script_file
+
+

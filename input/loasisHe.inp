@@ -1,0 +1,280 @@
+loasisHe.inp
+{
+
+Here we make an initial attempt to model some aspects of
+the laser plasma experiments in the l'OASIS laboratory of
+Wim Leemans et al. at LBNL.
+
+Pulse with transverse Gaussian profile and y polarization is launched from
+the left boundary. 
+
+Cartesian geometry, no plasma initially, background of neutral H gas.
+
+This is derived from loasis2.inp -- here we replace H with He and
+further increase the laser intenstiy by an order of magnitude.
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverM = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+  HeMassNum = 4.0026
+  HeMass = unitMassMKS * HeMassNum
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+//   Here, we have zero initial plasma density.
+  elecPlasmaDensity =  0.0 
+  elecPlasmaFreq = sqrt(electronCharge*qOverM*elecPlasmaDensity/permit)
+ 
+// **********************************************************************
+// Laser pulse parameters - y polarization
+// **********************************************************************
+//   We are modeling a laser pulse with wavelength of 0.8 micron and
+//   FHWM pulse length of 50 fs to 200 fs, and a peak intensity of
+//   10^16 to 10^18 W/cm^2
+//
+  peakLaserIntensity = 1e+17  // W/cm^2
+  pulseLengthFWHM = 50.e-15
+  laserWavelength = 0.8e-06
+  laserFrequency = 2.*PI*speedLight/laserWavelength
+  // We must convert the intensity to MKS units
+  peakLaserIntensityMKS = peakLaserIntensity * 1.0e+04
+  peakElectricField = sqrt(2.*peakLaserIntensityMKS/speedLight/permit)
+
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+// We must resolve the laser wavelength
+  Nx = 512
+  Ny = 256
+  numGridsPerWavelength = 16
+  dx = laserWavelength / numGridsPerWavelength
+  gridSizeRatio = 16
+  dy = dx * gridSizeRatio
+  Lx = Nx * dx
+  Ly = Ny * dy
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.99 * d / speedLight
+
+// **********************************************************************
+// More laser parameters:
+// **********************************************************************
+// We model the laser pulse envelope as a Gaussian (nPulseShape=1).
+  nPulseShape = 1
+  pulseLength  = pulseLengthFWHM * speedLight
+
+// Here we specify the waist size, Rayleigh length, etc.
+// These parameters are for a pulse with y-polarization.
+  waistSize = 6.0e-06 
+  angFreq = laserFrequency
+  angFreq2 = angFreq * angFreq
+  waveVector = sqrt( (angFreq2-elecPlasmaFreq*elecPlasmaFreq) / speedLight2 )
+  rayleighLength = waistSize * waistSize * waveVector / 2.
+  waistLocation = 0.25 * rayleighLength
+
+// **********************************************************************
+// Define gas density, pressure and other MCC parameters
+// **********************************************************************
+  gasTempEV       = 1.0e-06  // make gas cold (cannot set temperature to zero)
+  gasDensityMKS   = 2.e25
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+
+  numFlatCells = 4
+  numRampCells = 4
+  numZeroCells = Nx - numFlatCells - numRampCells
+  zeroEnd = (numZeroCells + .5) * dx
+  rampEnd = (numZeroCells + numRampCells + .5) * dx
+
+// we need to turn off the gas jet after two Rayleigh lengths
+  NGDSwitchOffTime = 2. * rayleighLength / speedLight
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = (Nx-15) * dx / speedLight
+}
+
+Region
+{
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx 
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+}
+
+Control
+{
+  dt = timeStep
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+
+// Turn off the gas jet after some time
+  gasOffTime = NGDSwitchOffTime
+}
+
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+  particleLimit = 2.5e+05 // prevents out-of-control growth in # of ptcls
+}
+
+Species
+{
+  name = HePlus
+  m = HeMass
+  q = ionCharge
+  particleLimit = 1.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+Species
+{
+  name = HePlusPlus
+  m = HeMass
+  q = 2*ionCharge
+  particleLimit = 1.0e+05 // prevents out-of-control growth in # of ptcls
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas                         = He
+  pressure                    = gasPressureTorr
+  temperature                 = gasTempEV
+  analyticF = gasDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd) )
+
+  eSpecies                = electrons
+  iSpecies                = HePlus
+  iSpeciesPlusPlus        = HePlusPlus
+
+  // turn OFF electron/ion collisions, including impact ionization
+  collisionFlag = 0
+
+  // turn on tunneling ionization in linearly polarized alternating field
+  tunnelingIonizationFlag = 1
+  // specify static field / circular polarization
+  ETIPolarizationFlag     = 1
+  // specify the characteristic oscillation frequency of the electric field
+  // -- here we fudge the real frequency with a small factor --
+  EfieldFrequency =  laserFrequency
+  // fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = 8
+}
+//Diagnostic
+//{
+//	j1 = 0
+//	j2 = Nx
+//	k1 = 0
+//	k2 = Ny
+//	VarName = WaveDirDiagnostic
+//       polarizationEB = EzBy
+//      psd1dFlag = 0 // calculate the 1d power spectral density
+//     windowName = Blackman
+//	title = Wave Energy
+//	x1_Label = x
+//	x2_Label = y
+//	x3_Label = Wave Energy
+//}
+PortGauss
+{
+  j1 = 0 
+  k1 = 0 
+  j2 = 0 
+  k2 = Ny 
+  normal = 1
+
+  A = 0
+  C = 1.0 
+
+// Wave (0)
+  pulShp_p0 = nPulseShape
+  tdelay_p0 = 0.0 
+  pulLeng_p0 = pulseLength
+  chirp_p0 = 0.0
+  spotSize_p0 = waistSize
+  waveLeng_p0 = laserWavelength
+  focus_p0 = waistLocation
+  amp_p0 = 0.0
+
+// Wave (1)
+  pulShp_p1 = nPulseShape
+  tdelay_p1 = 0.0
+  pulLeng_p1 = pulseLength
+  chirp_p1 = 0.0
+  spotSize_p1 = waistSize
+  waveLeng_p1 = laserWavelength
+  focus_p1 = waistLocation
+  amp_p1 = peakElectricField
+
+  EFFlag = 0 
+  name = PortGauss
+}
+
+
+ExitPort
+{
+  j1 = 0
+  k1 = Ny 
+  j2 = Nx 
+  k2 = Ny 
+  normal = -1
+  EFFlag = 0 
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+ExitPort
+{
+  j1 = 0
+  k1 = 0 
+  j2 = Nx 
+  k2 = 0 
+  normal = 1
+  EFFlag = 0 
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+Conductor
+{
+  j1 = Nx
+  k1 = 0
+  j2 = Nx
+  k2 = Ny
+  normal = -1
+  EFFlag = 0 
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+}

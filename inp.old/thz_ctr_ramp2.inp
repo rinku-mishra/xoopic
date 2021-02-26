@@ -1,0 +1,357 @@
+thz_ctr_ramp
+{
+
+Low-charge, low-energy electron bunch exits an ionized gas jet in
+Cartesian geometry, generating coherent transition radiation (CTR)
+in the THz range of frequencies --
+
+This simulation models (very crudely) the electron beam generated via
+SM-LWFA at the LBNL l'OASIS lab.  The idea is to see coherent transition
+radiation (CTR) in the THz regime.
+a)  The background plasma is pre-ionized, with an electron density that
+    decreases from left to right (i.e. bunch is exiting the gas jet).
+    Ions are assumed stationary.
+b)  The electron beam is Gaussian in x (longitudinal) and y (transverse).
+}
+
+// Define variables that can be used throughout this input file.
+
+Variables
+{
+// First, define some useful constants.
+  pi = 3.14159265358979323846
+  speedOfLight = 2.99792458e+08
+  electronMass = 9.1093897e-31
+  unitCharge = electronMass * 1.75881962e11
+  electronCharge = -1. * unitCharge
+  electronMassEV = electronMass * speedOfLight * speedOfLight / unitCharge
+
+  ionCharge = unitCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+  HeMassNum = 4.0026
+  HeMass = unitMassMKS * HeMassNum
+  HeCharge = 2. * ionCharge
+
+// Next, define the parameters of the high-energy electron beam.
+  beamEnergyEV = 1.616e+06  // corresponds to beta*gamma=3
+  beamGammaMin1 = beamEnergyEV / electronMassEV
+  beamGamma = 1 + beamGammaMin1
+  beamBetaGamma = sqrt( beamGammaMin1 * (beamGammaMin1+2) )
+  beamBeta = beamBetaGamma / beamGamma
+
+  totalNumBeam = 1.e+10
+//  totalNumBeam = 2.e+10
+  totalBeamCharge = totalNumBeam * electronCharge
+  rmsBeamWidth  = 10.0e-06
+  rmsBeamTime   = 10.e-15
+  rmsBeamLength = rmsBeamTime * speedOfLight
+  totalBeamWidth  = 6. * rmsBeamWidth
+  totalBeamLength = 6. * rmsBeamLength
+  totalBeamArea = totalBeamWidth * 1.0
+  rmsBeamVolume = rmsBeamWidth * 1.0 * rmsBeamLength
+
+// Define the number of grids in X and Y
+  numYgridsAcrossBeam = 8
+  simWidthOverBeamWidth = 16
+  numYgrids = numYgridsAcrossBeam * simWidthOverBeamWidth
+  yGridSize = totalBeamWidth / numYgridsAcrossBeam
+  maxWidthMKS = numYgrids * yGridSize
+
+  numXgridsAcrossBeam = 8
+  simLengthOverBeamLength = 32
+  numXgrids = numXgridsAcrossBeam * simLengthOverBeamLength
+  xGridSize = totalBeamLength / numXgridsAcrossBeam
+  maxLengthMKS = numXgrids * xGridSize
+  numCells = numXgrids * numYgrids
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = 0.94 * maxLengthMKS / speedOfLight
+
+// Number of beam particles
+  numBeamPtclsPerCell = 100
+  numBeamCells = numXgridsAcrossBeam * numYgridsAcrossBeam
+  numBeamPtcls = numBeamPtclsPerCell * numBeamCells
+  beamNumRatio = totalNumBeam / numBeamPtcls
+
+// Intermediate calculations for modeling Gaussian shape of the beam.
+  invSigXsq = 0.5 / ( rmsBeamWidth * rmsBeamWidth )
+  invSigZsq = 0.5 / ( rmsBeamLength* rmsBeamLength)
+  invSigTsq = invSigZsq * speedOfLight * speedOfLight
+
+// Calculate peak currents for defining emission of the high-energy beam.
+  peakCurrentDensity=totalBeamCharge*speedOfLight/rmsBeamVolume/15.
+  peakCurrent = peakCurrentDensity * totalBeamArea
+  pulseLengthSec = totalBeamLength / speedOfLight
+  oneHalfPulse = pulseLengthSec/2.
+
+// Define the plasma density, number of plasma electron macro-particles, etc.
+  plasmaDensityMKS = 0.5e+25
+  simulationVolume = maxWidthMKS * 1.0 * maxLengthMKS
+  totalNumPlasma = plasmaDensityMKS * simulationVolume
+  numPtclsPerCell = 10
+  numPlasmaPtcls = numPtclsPerCell * numCells
+  plasmaNumRatio = totalNumPlasma / numPlasmaPtcls
+
+  endFlatTopMKS = 5. * totalBeamLength
+  jetCenterMKS = endFlatTopMKS
+  jetSigmaMKS = 0.3e-03
+
+// Calculation of the time step:
+// We must satisfy the Courant condition.  We must also resolve the electron
+//   plasma frequency.  Here, we calculate both of the relevant time steps
+//   and then choose the minimum.
+  courantSize = 1./sqrt( 1./(xGridSize*xGridSize) + 1./(yGridSize*yGridSize) )
+  timeStepCourant = 0.8 * courantSize / speedOfLight
+
+  plasmaFreq = 9000. * sqrt(1.0e-06*plasmaDensityMKS)
+  timeStepPlasma = 0.1 / plasmaFreq
+
+  timeStep = timeStepCourant*step(timeStepPlasma-timeStepCourant) + timeStepPlasma*step(timeStepCourant-timeStepPlasma)
+}
+
+// This simulation has only one "region", which contains grid, all particles, etc.
+Region
+{
+
+// Define the grid for this region.
+Grid
+{
+// Specify Cartesian geometry
+  Geometry = 1
+
+// Define number of grids along Z-axis and physical coordinates.
+  J = numXgrids
+  x1s = 0.0
+  x1f = maxLengthMKS
+  n1 = 1.0
+
+// Define number of grids along R-axis and physical coordinates.
+  K = numYgrids
+  x2s = 0.0
+  x2f = maxWidthMKS
+  n2 = 1.0
+}
+
+// Specify "control" parameters for this region
+Control
+{
+// Specify the time step.
+  dt = timeStep
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+
+// Turn off the initial Poisson solve
+  initPoissonSolve = 0
+}
+
+
+// Define the beam electrons.
+Species
+{
+  name = beam_electrons
+  m = electronMass
+  q = electronCharge
+//  rmsDiagnosticsFlag = 1
+}
+
+// Define the plasma ions.
+Species
+{
+  name = He_plus_plus
+  m = HeMass
+  q = HeCharge
+}
+
+// Load the plasma ions
+Load
+{
+  speciesName = He_plus_plus
+  density = 0.5 * plasmaDensityMKS  // this is ignored...
+  x1MinMKS = 0.0
+  x1MaxMKS = maxLengthMKS
+  x2MinMKS = 0.0
+  x2MaxMKS = maxWidthMKS
+
+  analyticF = 0.5 * plasmaDensityMKS * (step(endFlatTopMKS-x1+0.5*xGridSize) + step(x1-0.5*xGridSize-endFlatTopMKS)*exp(-(x1-jetCenterMKS)^2/jetSigmaMKS^2))
+
+// This specifies a static uniform background (no macro-particles).
+  np2c = 0
+}
+
+// Define the plasma electrons.
+Species
+{
+  name = plasma_electrons
+  m = electronMass
+  q = electronCharge
+}
+
+// Load the plasma electrons
+Load
+{
+  speciesName = plasma_electrons
+  density = plasmaDensityMKS  // this is ignored...
+  x1MinMKS = 0.0
+  x1MaxMKS = maxLengthMKS
+  x2MinMKS = 0.0
+  x2MaxMKS = maxWidthMKS
+  np2c = plasmaNumRatio
+
+  analyticF = plasmaDensityMKS * (step(endFlatTopMKS-x1+0.5*xGridSize) + step(x1-0.5*xGridSize-endFlatTopMKS)*exp(-(x1-jetCenterMKS)^2/jetSigmaMKS^2))
+
+// Specify loading that is more uniform than random
+  LoadMethodFlag = 1
+}
+
+
+// Define the beam emitter, which introduces the high-energy beam into the
+// simulation.
+
+BeamEmitter
+{
+  speciesName = beam_electrons
+  I = peakCurrent
+
+// Define the 2-D function F(x,t) that specifies beam emission profile.
+  xtFlag = 3
+  nIntervals = 32
+  F=exp(-invSigYsq*x*x)*exp(-invSigTsq*(t-oneHalfPulse)*(t-oneHalfPulse))*step(pulseLengthSec-t)
+
+// Macroparticles are emitted from the left boundary, close to the axis of symmetry.
+  j1 = 0
+  j2 = 0
+  k1 = (numYgrids - numYgridsAcrossBeam) / 2
+  k2 = (numYgrids + numYgridsAcrossBeam) / 2
+  normal = 1
+  np2c = beamNumRatio
+
+// Emit particles, directed along the Z-axis,  with specified energy and temperature.
+  units = EV
+  v1drift = beamEnergyEV
+}
+
+// Specify the 2-D FFT diagnostic for Ey
+Diagnostic
+{
+   j1 = 0
+   j2 = numXgrids
+   k1 = 0
+   k2 = numYgrids
+   VarName = PSDFieldDiag2d
+   windowName = None
+   title = 2-D PSD
+   x1_Label = kx
+   x2_Label = ky
+   x3_Label = 2-D PSD
+   fieldName = E
+   fieldComponentLabel = 2
+}
+
+// Specify the 1-D FFT diagnostic for Ey
+Diagnostic
+{
+   j1 = 0
+   j2 = numXgrids
+   k1 = 0
+   k2 = numYgrids
+   VarName = PSDFieldDiag1d
+   windowName = Blackman
+   title = 1-D PSD
+   x1_Label = y
+   x2_Label = kx
+   x3_Label = 1-D PSD
+   fieldName = E
+   fieldComponentLabel = 2
+}   
+
+// Specify the 2-D FFT diagnostic for Ex
+Diagnostic
+{
+   j1 = 0
+   j2 = numXgrids
+   k1 = 0
+   k2 = numYgrids
+   VarName = PSDFieldDiag2d
+   windowName = None
+   title = 2-D PSD
+   x1_Label = kx
+   x2_Label = ky
+   x3_Label = 2-D PSD
+   fieldName = E
+   fieldComponentLabel = 1
+}
+
+// Specify the 1-D FFT diagnostic for Ex
+Diagnostic
+{
+   j1 = 0
+   j2 = numXgrids
+   k1 = 0
+   k2 = numYgrids
+   VarName = PSDFieldDiag1d
+   windowName = Blackman
+   title = 1-D PSD
+   x1_Label = y
+   x2_Label = kx
+   x3_Label = 1-D PSD
+   fieldName = E
+   fieldComponentLabel = 1
+}   
+
+// Specify a perfect conductor along the left boundary.  This serves as a particle
+//   boundary condition (catches particles that leave the simulation) and as a
+//   field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numYgrids
+	normal = 1
+}
+
+// Specify a perfect conductor along the top boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_z is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = numXgrids
+	k1 = numYgrids
+	k2 = numYgrids
+	normal = -1
+}
+
+// Specify a perfect conductor along the bottom boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_z is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = numXgrids
+	k1 = 0
+	k2 = 0
+	normal = 1
+}
+
+// Specify a perfect conductor along the right boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = numXgrids
+	j2 = numXgrids
+	k1 = numYgrids
+	k2 = 0
+	normal = -1
+}
+
+}

@@ -1,0 +1,161 @@
+MovingWindow
+{
+
+  This input file shows an example of a beam moving in a uniform background.
+the geometry is xy, cartesian.
+
+  The leading edge is a TEM emitting port.
+
+
+  A special load named shiftLoad (its parameter Name = shiftLoad) is executed
+whenever a shift of the window occurs.  This special load in this example
+loads a uniform plasma into the last cell, which is initially empty when
+the moving window shifts.
+
+  The movingWindow has a hard-coded delay time before it starts shifting, 
+something like 1/2 or 2/3 of a lightspeed transit time across the system.
+
+  Also, the moving window motion is hard-coded to move to the right, so
+rightward-moving particles will stay in the window.  Everything else will
+seem to move left.
+
+}
+Variables
+{
+	JMAX = 20
+	KMAX = 20
+	XMAX = 0.1
+	YMAX = 0.1
+	DX = XMAX/JMAX
+        Lambda = 8 * XMAX / JMAX
+        freq = 3e8 / Lambda
+        Density = 1e12
+        Wp = sqrt(Density * 1.6e-19/8.85e-12 * 1.6e-19 / 9.11e-31 * 8.85e-12)
+        W = 2 * 3.141592654 * freq
+        K = sqrt(W * W - Wp * Wp) / 3e8
+
+        DT = 5e-13
+
+        Amplitude = 1e6
+}
+Region
+{
+Grid
+{
+	J = JMAX
+	x1s = 0.0
+	x1f = XMAX
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = YMAX
+	n2 = 1.0
+        Geometry = 1
+}
+Control
+{
+	dt = DT
+	movingWindow = 1
+        shiftDelayTime =  DT * 10        
+}
+Species
+{
+		  name = electrons
+		  m = 9.11e-31
+		  q = -1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+PortTEM_MW
+{
+        j1 = 20
+        k1 = 0
+        j2 = 20
+        k2 = 20
+        normal = -1
+        pwAmplitude = Amplitude
+        pwPhase = 0
+        pwDelay = DT*10
+        pwWavenumber = K
+        pwFrequency = W
+        n0 = Density
+}
+
+//Load
+//{
+//	x1MinMKS = 0.025
+//	x1MaxMKS = 0.075
+//	x2MinMKS = 0.0
+//	x2MaxMKS = 0.01
+//	speciesName = proton
+//	density = 1.0e17
+//        density = 1
+//	np2c = 1e11
+//	units = EV
+//	v1drift = 3.0e9
+//}
+Load
+{
+	// initial load
+	// i fill everything but the last cell
+	x1MinMKS = 0.0
+	x1MaxMKS = XMAX - DX
+	x2MinMKS = 0.0
+	x2MaxMKS = YMAX
+	speciesName = electrons
+	density = Density
+	np2c = 1e6
+	units = EV
+}
+Load_PW
+{
+	// initial load and shift load
+	// this fills the last cell when shifts are done, and at t=0
+	Name = shiftLoad
+	x1MinMKS = XMAX - DX
+	x1MaxMKS = XMAX
+	x2MinMKS = 0.0
+	x2MaxMKS = YMAX
+	speciesName = electrons
+	np2c = 1e6
+	units = EV
+        pwAmplitude = Amplitude
+        pwPhase = 0
+        pwDelay = DT*10
+        pwWavenumber = K
+        pwFrequency = W
+        density = Density
+}
+
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 20
+	k2 = 0
+	normal = 1
+}
+}
+

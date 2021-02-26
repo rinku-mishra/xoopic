@@ -1,0 +1,333 @@
+bench1
+{
+
+A benchmark of the particle-push.
+
+Run by:
+
+/bin/time xoopic -i <this file> -s 200 -nox
+or
+/bin/time oopic <this file> 200
+
+This benchmark is easily scalable to be larger than any cache.
+Change the line  (very near the bottom of this file)
+density = 3.0e14
+to something larger if desired.
+
+The benchmark consists mostly of an in-order traversal of
+a 1D array of structures of 5 floats.
+
+}
+Variables
+{
+	JMAX = 40
+	KMAX = 40
+	PART1 = 10
+	PART1MKS = 0.02 * PART1 / JMAX
+}
+Region
+{
+  name = left
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6E-19
+}
+Species
+{
+        name = Ar
+        m = 7.288E-28
+        q = 1.6E-19
+}
+Grid
+{
+	J = PART1
+	x1s = 0.0
+	x1f = PART1MKS
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 0
+}
+Control
+{
+	dt = 1E-14
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KMAX
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = KMAX
+	j2 = PART1
+	k2 = KMAX
+	normal = -1
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass1
+	j1 = PART1
+	j2 = PART1
+	k1 = 0
+	k2 = KMAX
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = PART1
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	x1MinMKS = 0.000
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = electrons
+	density = 1.0e12
+	np2c = 4E3
+}
+Load
+{
+	x1MinMKS = 0.00
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = Ar
+	density = 3.0e14
+	np2c = 2E3
+}
+}
+Region
+{
+  name = middle
+Grid
+{
+	J = PART1
+	x1s = 0.0
+	x1f = PART1MKS
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 0
+}
+Control
+{
+	dt = 1E-14
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass1
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KMAX
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = KMAX
+	j2 = PART1
+	k2 = KMAX
+	normal = -1
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass2
+	j1 = PART1
+	j2 = PART1
+	k1 = 0
+	k2 = KMAX
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = PART1
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	x1MinMKS = 0.000
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = electrons
+	density = 1.0e12
+	np2c = 4E3
+}
+Load
+{
+	x1MinMKS = 0.00
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = Ar
+	density = 3.0e14
+	np2c = 2E3
+}
+}
+Region
+{
+  name = middle2
+Grid
+{
+	J = PART1
+	x1s = 0.0
+	x1f = PART1MKS
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 0
+}
+Control
+{
+	dt = 1E-14
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass2
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KMAX
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = KMAX
+	j2 = PART1
+	k2 = KMAX
+	normal = -1
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass3
+	j1 = PART1
+	j2 = PART1
+	k1 = 0
+	k2 = KMAX
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = PART1
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	x1MinMKS = 0.000
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = electrons
+	density = 1.0e12
+	np2c = 4E3
+}
+Load
+{
+	x1MinMKS = 0.00
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = Ar
+	density = 3.0e14
+	np2c = 2E3
+}
+}
+Region
+{
+  name = right
+Grid
+{
+	J = PART1
+	x1s = 0.0
+	x1f = PART1MKS
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 0
+}
+Control
+{
+	dt = 1E-14
+}
+SpatialRegionBoundary
+{
+	PartnerName = Pass3
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KMAX
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = KMAX
+	j2 = PART1
+	k2 = KMAX
+	normal = -1
+}
+Conductor
+{
+	j1 = PART1
+	j2 = PART1
+	k1 = 0
+	k2 = KMAX
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = PART1
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	x1MinMKS = 0.000
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = electrons
+	density = 1.0e12
+	np2c = 4E3
+}
+Load
+{
+	x1MinMKS = 0.00
+	x1MaxMKS = PART1MKS
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = Ar
+	density = 3.0e14
+	np2c = 2E3
+}
+}

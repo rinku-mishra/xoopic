@@ -1,0 +1,22 @@
+As with Kepler actor for PyPD1, actor for XOOPIC is a custom actor that will accept three parameters and return one integer value.
+Parameters:
+ - working directory (string): /pfs/home/jzk/tmp
+ - XOOPIC directory (string): /pfs/home/jzk/msu-codes/xoopic/xoopic
+ - XOOPIC parameters (string): -i /pfs/home/jzk/msu-codes/xoopic/xoopic/inp/gasOff.inp -s 10000
+
+Return value:
+	- return code from script (integer): - 0=all OK, >0 - error. Meaning of the return codes is the same as return codes of programs running in tcsh 
+
+Log file named "<input file name>.log" will be written into directory working directory ("/pfs/home/jzk/tmp") with content of what XOOPIC would display on screen, including with start and end time of running the simulation. The last parameter has to define at least an input file (including switch "-i"), but can include all parameters available by XOOPIC. Switch "-nox" is added automatically because XOOPIC could not run with X-windows enabled.
+
+Create an actor directory (copy one of the sample actors - from CC Split 2014):
+ - get Makefile, cpp file for actor
+ - change _fc2k XML file to include new (changed) file name
+ - change _workflow XML file to include new (changed) file name for testing purposes
+
+Make new actor:
+ - change cpp file
+ - compile it to library (.a file)
+ - compile it for Kepler (fc2k)
+
+There is a script named "xoopic_kepler.sh" in XOOPIC directory is script called pypd1_kepler.sh <script.py> --> pypd1 script runs given script from current directory and saves script output to script.py.log file.

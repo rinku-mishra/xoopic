@@ -1,0 +1,314 @@
+TI_Hydrogen_Benchmark.inp
+{
+
+Here, we will try to duplicate some of the numerical results on laser
+ionization from Leemans et al., (1992) Phys. Plasmas for Hydrogen.
+
+A laser pulse with transverse Gaussian profile and y polarization is 
+launched from the left boundary.  At some point, we need to change
+to z-polarization.
+
+Cartesian geometry, with a background neutral Hydrogen gas.
+
+The laser pulse is defined by the variables:
+ - rsm_p0      = spot size at beam waist (i.e. location of focus)
+ - ryl_p0      = Rayleigh length.
+ - omeg_p0     = angular frequency.
+ - zf_p0       = position of focus (i.e. beam waist)
+ - Aw_p0       = wave amplitude.
+}
+
+Variables
+{
+// General parameters
+
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverm = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+
+  PI = 3.14159
+
+// Laser pulse variables
+  peakLaserIntensity = 1.0e+14  // W/cm^2
+  intensityFactor = 4.  // because half of the wave goes left and is lost
+  peakLaserIntensityMKS = peakLaserIntensity * 1.0e+04 * intensityFactor
+  peakElectricField = sqrt(2.*peakLaserIntensityMKS/speedLight/permit)
+
+  laserWavelength = 10.6e-06
+  laserFrequency = 2*PI*speedLight/laserWavelength
+    // normalized length scale = c/omega_0
+  xNormalized = laserWavelength / (2.*PI)
+
+  laserRiseTime =  750/laserFrequency
+  laserFallTime = 1250/laserFrequency
+
+// Grid variables
+
+  dx = laserWavelength / 10
+  dy = dx
+
+  Nx = 384
+  Ny = 256 
+
+  Lx = Nx * dx
+  Ly = Ny * dy
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.7 * d / speedLight
+
+// Plasma parameters
+
+  elecPlasmaDensity =  0.0 
+  elecPlasmaFreq = sqrt(electronCharge*qOverm*elecPlasmaDensity/permit)
+
+// **********************************************************************
+// More laser parameters:
+// **********************************************************************
+// We model the laser pulse envelope as a trapezoidal (nPulseShape=0).
+  nPulseShape = 0
+  pulseLengthFWHM = 7500.0/laserFrequency
+  pulseLength = pulseLengthFWHM * speedLight
+ 
+//
+// laser pulse parameters - y polarization
+//
+  ///// focus_p0 = 0.5 * Lx  // <- this is the old paramter
+  waist_p0 = 10. * xNormalized
+  angFreq_p0 = laserFrequency
+  angFreq2_p0 = angFreq_p0*angFreq_p0
+  waveVector_p0 = sqrt((angFreq2_p0-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+  rayleighLength_p0 = waist_p0*waist_p0*waveVector_p0/2.
+  waistLocation_p0 = 0.5 * Lx
+
+//
+// laser pulse parameters - z polarization
+//
+  ///// focus_p0 = 0.5 * Lx  // <- this is the old paramter
+  waist_p1 = 10. * xNormalized
+  angFreq_p1 = laserFrequency
+  angFreq2_p1 = angFreq_p0*angFreq_p0
+  waveVector_p1 = sqrt((angFreq2_p0-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+  rayleighLength_p1 = waist_p0*waist_p0*waveVector_p0/2.
+  waistLocation_p1 = 0.5 * Lx
+
+// Define gas density, pressure and other MCC parameters
+  gasTempEV       = 1.0e-06  // make gas cold cannot set temperature to zero)
+  rootCritDensity = laserFrequency / ( 2*PI*9000)
+  criticalDensity = rootCritDensity * rootCritDensity * 1.e+06
+  gasDensityMKS   = 0.1 * criticalDensity
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+ 
+  numZeroCells = 2
+  numRampCells = 1
+  numFlatCells = Nx - numRampCells - numZeroCells
+  zeroEnd = numZeroCells * dx
+  rampEnd = zeroEnd + numRampCells * dx
+}
+
+Region
+{
+
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx 
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+}
+
+Control
+{
+  dt = timeStep
+}
+
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+// prevents out-of-control growth in # of ptcls
+  particleLimit = 8.0e+04
+}
+Species
+{
+  name = ions
+  m = 1.67e-27
+  q = 1.6e-19
+  subcycle = 20
+// prevents out-of-control growth in # of ptcls
+  particleLimit = 8.0e+04
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas      = H
+  pressure = gasPressureTorr
+  temperature = gasTempEV
+  analyticF = gasDensityMKS * step(x1-zeroEnd) * ( ramp( (x1-zeroEnd)/(rampEnd-zeroEnd) ) * step(rampEnd-x1) + step(x1-rampEnd-0.5*dx) )
+  eSpecies = electrons
+  iSpecies = ions
+
+// turn off collision ionization
+  collisionFlag = 0
+
+// turn on tunneling ionization 
+  tunnelingIonizationFlag     = 1 
+
+// linear polarization == 0,  circular polarization == 1
+  ETIPolarizationFlag=0     
+
+// fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = 10
+}
+Diagnostic
+{
+	j1 = 0
+	j2 = Nx
+	k1 = 0
+	k2 = Ny
+	VarName = WaveDirDiagnostic
+        polarizationEB = EyBz
+        psd1dFlag = 1 // calculate the 1d power spectral density
+        windowName = Blackman
+	title = Wave Energy
+	x1_Label = x
+	x2_Label = y
+	x3_Label = Wave Energy
+}
+PortGauss
+{
+  j1 = 0
+  k1 = 0
+  j2 = 0
+  k2 = Ny
+  normal = 1
+
+//
+// wave (0) - y polarization
+//
+
+//
+// old version
+//
+//  A = 0.0
+//  C = 1.0 
+//  a1 = 1.0 
+//  a0 = 0.0
+//  tdelay = 0.
+//  trise = laserRiseTime
+//  tpulse = 0.
+//  tfall = laserFallTime
+//
+//  rsm_p0  = waist_p0
+//  omeg_p0 = laserFrequency
+//  ryl_p0  = rayleighLength_p0
+//  zf_p0   = focus_p0
+//  Aw_p0   = peakElectricField
+// 
+
+  pulShp_p0 = nPulseShape
+  tdelay_p0 = 0.0 
+  pulLeng_p0 = pulseLength
+  chirp_p0 = 0
+  spotSize_p0 = waist_p0 
+  waveLeng_p0 = laserWavelength
+  focus_p0 = waistLocation_p0
+  amp_p0 = peakElectricField
+  //amp_p0 = 0.0 // no polarization along y
+
+//
+// wave (1) - z polarization
+// 
+
+//
+// old version
+//  
+//  A = 0
+//  C = 1.0 
+//  a1_p1 = 1.0 
+//  a0_p1 = 0.0
+//
+//  tdelay_p1 = 1.2e13 
+//  trise_p1 = 1.66e-14 
+//  tpulse_p1 = 3.3e-14 
+//  tfall_p1 = 1.66e-14 
+//
+//  rsm_p1 = waist_p0
+//  omeg_p1 = angFreq_p0
+//  ryl_p1 = rayleighLength_p0
+//  zf_p1 = focus_p0
+//  Aw_p1 = 0.0
+//
+//  EFFlag = 0 
+//  name = PortGauss
+
+
+  pulShp_p1 = nPulseShape
+  tdelay_p1 = 0.0
+  pulLeng_p1 = pulseLength
+  chirp_p1 = 0
+  spotSize_p1 = waist_p0 
+  waveLeng_p1 = laserWavelength
+  focus_p1 = waistLocation_p0
+  //amp_p1 = peakElectricField
+  amp_p1 = 0.0 // no polarization along Ez
+
+  EFFlag = 0 
+  name = PortGauss
+}
+
+ExitPort
+{
+  j1 = 0
+  k1 = Ny 
+  j2 = Nx 
+  k2 = Ny
+  EFFlag = 0  
+  normal = -1
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+ExitPort
+{
+  j1 = 0
+  k1 = 0 
+  j2 = Nx 
+  k2 = 0 
+  EFFlag = 0 
+  normal = 1
+  name = ExitPort
+  C = 0
+  A = 0
+}
+
+ExitPort
+{
+        j1 = Nx
+        k1 = 0
+        j2 = Nx
+        k2 = Ny
+        EFFlag = 0 
+        normal = -1
+        name = ExitPort
+        C = 0
+        A = 0
+}
+
+}

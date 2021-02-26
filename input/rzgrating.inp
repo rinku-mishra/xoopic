@@ -1,0 +1,300 @@
+grating
+{
+	Planar beam in a slab grating traveling wave tube.  Similar to UW-Madison
+	grating twt (Scharer, Booske).  A magnetic beam dump diverts the beam to
+	the wall, while RF is extracted axially.
+}
+Region
+{
+Grid
+{
+	J = 80
+	x1s = 0.0
+	x1f = 0.10
+	n1 = 1.0
+	K = 29
+	x2s = 0.0
+	x2f = 0.015
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-12
+	B01 = 10
+	j1BeamDump = 64
+	j2BeamDump = 76
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+Species
+{
+		  name = electrons
+		  m = 9.11E-31
+		  q = -1.6e-19
+}
+BeamEmitter
+{
+	name = cathode
+	j1 = 0
+	k1 = 17
+	j2 = 0
+	k2 = 20
+	speciesName = electrons
+	normal = 1
+	np2c = 5000000
+	I = 10
+	v1drift = 1e8
+}
+Conductor
+{
+	name = leftLower
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 17
+	normal = 1
+}
+Conductor
+{
+	name = leftUpper
+	j1 = 0
+	k1 = 20
+	j2 = 0
+	k2 = 29
+	normal = 1
+}
+CylindricalAxis
+{
+	name = lower
+	j1 = 0
+	k1 = 0
+	j2 = 80
+	k2 = 0
+	normal = 1
+}
+Conductor
+{
+	name = upper
+	j1 = 0
+	k1 = 29
+	j2 = 80
+	k2 = 29
+	normal = -1
+}
+ExitPort
+{
+	name = output
+	j1 = 80
+	k1 = 0
+	j2 = 80
+	k2 = 29
+	C = 0
+	normal = -1
+	EFFlag = 1
+}
+Conductor
+{
+	name = grate0r
+	j1 = 14
+	k1 = 21
+	j2 = 14
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate1lead
+	j1 = 14
+	k1 = 21
+	j2 = 18
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate1l
+	j1 = 18
+	k1 = 21
+	j2 = 18
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate1r
+	j1 = 22
+	k1 = 21
+	j2 = 22
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate2lead
+	j1 = 22
+	k1 = 21
+	j2 = 26
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate2l
+	j1 = 26
+	k1 = 21
+	j2 = 26
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate2r
+	j1 = 30
+	k1 = 21
+	j2 = 30
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate3lead
+	j1 = 30
+	k1 = 21
+	j2 = 34
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate3l
+	j1 = 34
+	k1 = 21
+	j2 = 34
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate3r
+	j1 = 38
+	k1 = 21
+	j2 = 38
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate4lead
+	j1 = 38
+	k1 = 21
+	j2 = 42
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate4l
+	j1 = 42
+	k1 = 21
+	j2 = 42
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate4r
+	j1 = 46
+	k1 = 21
+	j2 = 46
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate5lead
+	j1 = 46
+	k1 = 21
+	j2 = 50
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate5l
+	j1 = 50
+	k1 = 21
+	j2 = 50
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate5r
+	j1 = 54
+	k1 = 21
+	j2 = 54
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate6lead
+	j1 = 54
+	k1 = 21
+	j2 = 58
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate6l
+	j1 = 58
+	k1 = 21
+	j2 = 58
+	k2 = 29
+	normal = 1
+}
+Conductor
+{
+	name = grate6r
+	j1 = 62
+	k1 = 21
+	j2 = 62
+	k2 = 29
+	normal = -1
+}
+Conductor
+{
+	name = grate7lead
+	j1 = 62
+	k1 = 21
+	j2 = 66
+	k2 = 21
+	normal = -1
+}
+Conductor
+{
+	name = grate7l
+	j1 = 66
+	k1 = 21
+	j2 = 66
+	k2 = 29
+	normal = 1
+}
+}

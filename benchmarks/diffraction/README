@@ -1,0 +1,29 @@
+Contents:
+README:  this file
+
+General notes:
+
+  The measurement technique for calculating the beam waist was
+changed.  The files:
+        EE2.ps.gz
+        EE.ps.gz
+        param_compare2.ps.gz
+        param_compare.ps.gz
+
+show results using this new method, compared with results from
+the old method and with theory.  Other .ps.gz files have
+no such results. 
+
+gauss1a.inp, gauss1b.inp, gauss1bp.inp
+example input files, not actually used.
+
+
+gauss_1.inp:  Input file actually used to generate results
+gauss_1p.inp:   gauss_1.inp with a plasma
+gauss_1p*  Various input files used.
+
+interfere.inp:  interference pattern
+
+*.agr:  xmgrace graph files of results
+*.ps.gz:  compressed postscript graphs of results
+Results:  Results of measurements.

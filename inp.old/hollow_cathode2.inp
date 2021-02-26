@@ -1,0 +1,135 @@
+default
+{
+Hollow Cathode
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6E-19
+}
+Species
+{
+        ID = 1
+        m = 7.288E-28
+        q = 1.6E-19
+}
+Grid
+{
+	J = 30
+	x1s = 0.0
+	x1f = 0.02
+	n1 = 1.0
+	K = 15
+	x2s = 0.0
+	x2f = 0.01
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-12
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = .5e14
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 1
+	gasPressure = 0.5
+	eCollisionalFlag = 1
+	B01 = 0e-1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 15
+	normal = 1
+	secondary = 0.3
+	secSpeciesID = 0
+	iSpeciesID = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 15
+	j2 = 30
+	k2 = 15
+	normal = -1
+	secondary = 0.3
+	secSpeciesID = 0
+	iSpeciesID = 1
+}
+Conductor
+{
+        j1=15
+        k1=15
+        j2=15
+        k2= 2
+        normal=-1
+        secondary= 0.3
+        secSpeciesID = 0
+        iSpeciesID= 1
+}
+Equipotential
+{
+	C = 2000
+	frequency = 6.28E5
+	phase = 0
+	j1 = 30
+	j2 = 30
+	k1 = 0
+	k2 = 15
+	normal = -1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 15
+	j2 = 30
+	k1 = 2
+	k2 = 2
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 30
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	zMinMKS = 0.00
+	zMaxMKS = 0.02
+	rMinMKS = 0.0
+	rMaxMKS = 0.001
+	speciesID = 0
+	density = 1.0e19
+	np2c = 1E8
+}
+Load
+{
+	zMinMKS = 0.00
+	zMaxMKS = 0.02
+	rMinMKS = 0.0
+	rMaxMKS = 0.001
+	speciesID = 1
+	density = 1.0e19
+	np2c = 1E8
+}
+

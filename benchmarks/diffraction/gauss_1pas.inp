@@ -1,0 +1,276 @@
+gauss_1.inp
+{
+
+ - Propagation of a laser beam in vacuum with transverse Gaussian profile. 
+
+ - Pump pulse with Gaussian profile and y polarization is launched from
+   the left boundary. 
+-  Cartesian geometry, vacuum.
+
+ - The wave is defined by the variables:
+     - rsm_p0      = spot size at beam waist. 
+     - ryl_p0      = Rayleigh length.
+     - omeg_p0     = angular frequency.
+     - zf_p0       = position of focus. 
+     - Aw_p0       = wave amplitude.    
+
+
+Plasma parameters:
+ n chosen such that wp = 0.5 w  
+ where w is the laser frequency
+
+Laser Parameters
+
+ Transverse Gaussian profile
+ Laser Wavelength  =    1.0     [microns]
+ Laser spot        =    1.0     [microns]
+ Rayleigh length   =    15.0    [microns]
+
+}
+
+Variables
+{
+// Grid variables
+
+      Nx = 100
+      Ny = 200
+      Lx = 10e-06 
+      Ly = 20.0e-06 
+      DX = Lx/Nx
+
+// General parameters
+
+      electronMass = 9.1094e-31 
+      electronCharge = -1.6022e-19
+      e = electronCharge
+      permit = 8.8542e-12 
+      speedLight = 2.9979e8
+      speedLight2 = speedLight*speedLight 
+      electronCharge2 = electronCharge*electronCharge 
+      qOverm = electronCharge/electronMass
+
+// Pump wave (0) parameters - y polarization
+
+      waist_p0 = 1e-06 
+      angFreq_p0 = 1.88e15 
+      angFreq2_p0 = angFreq_p0*angFreq_p0
+      waveVector_p0 = sqrt((angFreq2_p0-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+      rayleighLength_p0 = waist_p0*waist_p0*waveVector_p0/2.
+      focus_p0 = DX
+
+// Plasma parameters
+        // wave frequency * 1/sqrt(2)
+      elecPlasmaFreq = angFreq_p0 * 0.5
+        wp = elecPlasmaFreq
+
+        // evaluation order chosen to prevent overflow
+      elecPlasmaDensity =  2.78e26
+
+ 
+
+
+// Forward Injection wave (1) parameters - z polarization
+
+      waist_p1 = 1.5e-05 
+      angFreq_p1 = 2.27e15 
+      angFreq2_p1 = angFreq_p1*angFreq_p1
+      waveVector_p1 = sqrt((angFreq2_p1-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+      rayleighLength_p1 = waist_p1*waist_p1*waveVector_p1/2.
+      focus_p1 = Lx*0.5
+
+
+}
+Region
+{
+Grid
+{
+	J = Nx 
+	x1s = 0.0
+	x1f = Lx 
+	n1 = 1.0
+	K = Ny 
+	x2s = 0.0
+	x2f = Ly 
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 1.5e-16 
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = electrons
+        m = electronMass 
+        q = electronCharge 
+}
+Load
+{
+	units=EV
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx - DX
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = electrons
+        density = elecPlasmaDensity
+        np2c = 1e12
+	LoadMethodFlag = 1
+}
+
+Diagnostic
+{
+	j1 = 1
+	j2 = 1
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = waist
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+Diagnostic
+{
+	j1 = Nx/4
+	j2 = Nx/4
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = laser spot14
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+
+Diagnostic
+{
+	j1 = Nx/3
+	j2 = Nx/3
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = laser spot13
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+
+Diagnostic
+{
+	j1 = Nx/2
+	j2 = Nx/2
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = laser spot12
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+
+Diagnostic
+{
+	j1 = 2*Nx/3
+	j2 = 2*Nx/3
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = laser spot23
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+
+
+Diagnostic
+{
+	j1 = 3*Nx/4
+	j2 = 3*Nx/4
+	k1 = 0
+	k2 = Ny
+	HistMax = 2 * 3.1415 * 3 / 1.5e-16 / angFreq_p0
+	VarName = LaserSpotSize
+	title = laser spot34
+	x1_Label = time
+	x2_Label = size
+	x3_Label = size
+}
+
+PortGauss
+{
+	j1 = 0 
+	k1 = 0 
+	j2 = 0 
+	k2 = Ny 
+	normal = 1
+
+// Wave (0)
+	A = 0
+	C = 1.0 
+	a1 = 1.0 
+	a0 = 0.0
+	tdelay = 0 
+	trise = 1.5e-14
+	tpulse = 3.33e-10
+	tfall = 0
+
+        rsm_p0 = waist_p0 
+        omeg_p0 = angFreq_p0
+        ryl_p0 = rayleighLength_p0 
+        zf_p0 = DX
+        Aw_p0 = 1e9
+
+// Wave (1)
+	A = 0
+	C = 1.0 
+	a1_p1 = 1.0 
+	a0_p1 = 0.0
+	tdelay_p1 = 1.66e13 
+	trise_p1 = 4.0e-16 
+	tpulse_p1 = 3.0e-15 
+	tfall_p1 = 4.0e-16 
+
+        rsm_p1 = waist_p1 
+        omeg_p1 = angFreq_p1
+        ryl_p1 = rayleighLength_p1 
+        zf_p1 = focus_p1 
+        Aw_p1 = 0.0 
+
+	EFFlag = 0 
+	name = PortGauss
+}
+Conductor
+{
+	j1 = 0
+	k1 = Ny 
+	j2 = Nx 
+	k2 = Ny 
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0 
+	j2 = Nx 
+	k2 = 0 
+	normal = 1
+}
+ExitPort
+{
+        j1 = Nx
+        k1 = 0
+        j2 = Nx
+        k2 = Ny
+        EFFlag = 0 
+        normal = -1
+        name = ExitPort
+        C = 0
+        A = 0
+}
+}

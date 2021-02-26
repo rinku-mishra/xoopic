@@ -1,0 +1,79 @@
+##########
+#
+# For creating a Mac bundle
+#
+##########
+
+HAVE_BUNDLES	= @HAVE_BUNDLES@
+
+all-local: all-bundle
+all-bundle:
+	if test "$(HAVE_BUNDLES)" = true -a -n "$(PROGRAMS)"; then \
+	  for i in $(PROGRAMS); do \
+	    make BNDL_PROGRAM=$$i bundle; \
+	  done; \
+	fi
+
+BUNDLE_CONTDIR  = $(BNDL_PROGRAM).app/Contents
+BNDLOBJECTS     = $($(BNDL_PROGRAM)_OBJECTS)
+BNDLLDFLAGS     = $($(BNDL_PROGRAM)_LDFLAGS) --subsystem,console
+## BNDLLDFLAGS  = $($(BNDL_PROGRAM)_LDFLAGS) -bundle    # works
+## BNDLLDFLAGS  = $($(BNDL_PROGRAM)_LDFLAGS) -bundle -framework System
+## BNDLLDFLAGS  = $($(BNDL_PROGRAM)_LDFLAGS) -bundle -framework System --subsystem,console
+BNDLLDADD       = $($(BNDL_PROGRAM)_LDADD)
+
+bundle: $(BUNDLE_CONTDIR)/MacOS/$(BNDL_PROGRAM) $(BUNDLE_CONTDIR)/PkgInfo \
+	$(BUNDLE_CONTDIR)/Info.plist $(BUNDLE_CONTDIR)/Resources/$(BNDL_PROGRAM).icns
+
+$(BUNDLE_CONTDIR)/MacOS/$(BNDL_PROGRAM): $(BNDL_PROGRAM) $(BNDLOBJECTS)
+	@$(INSTALL) -d `dirname $@`
+	$(CXXLINK) $(BNDLLDFLAGS) $(BNDLOBJECTS) $(BNDLLDADD) $(LIBS)
+	echo A hack to get library loaded correctly
+	HASQTLIB=`otool -L $@ | grep 'libqt-mt*.dylib'`; \
+	if test -n "$$HASQTLIB"; then \
+	  install_name_tool -change libqt-mt.3.dylib \
+		$(QT_LIBDIR)/libqt-mt.3.dylib $@ 2>/dev/null; \
+	fi
+
+$(BUNDLE_CONTDIR)/PkgInfo:
+	@$(INSTALL) -d `dirname $@`
+	echo -n "APPL????" > $@
+
+$(BUNDLE_CONTDIR)/Info.plist: $(top_builddir)/config/Info.plist
+	@$(INSTALL) -d `dirname $@`
+	if test -f $(BNDL_PROGRAM)_Info.plist; \
+	  then infile=$(BNDL_PROGRAM)_Info.plist; \
+	else infile=$(top_builddir)/config/Info.plist; \
+	fi; \
+	echo infile = $$infile ; \
+	sed -e "s/IDENTIFIER/$(BNDL_PROGRAM)/" \
+		-e "s/EXECUTABLE/$(BNDL_PROGRAM)/" < $$infile >$@
+
+$(BUNDLE_CONTDIR)/Resources/$(BNDL_PROGRAM).icns:
+	if test -f $(srcdir)/$(BNDL_PROGRAM).icns; then \
+	  $(INSTALL) -d `dirname $@`; \
+	  cp $(srcdir)/$(BNDL_PROGRAM).icns $@; \
+	elif test -f $(top_srcdir)/$(PACKAGE).icns; then \
+	  $(INSTALL) -d `dirname $@`; \
+	  cp $(top_srcdir)/$(PACKAGE).icns $@; \
+	fi
+
+install-exec-local: install-bundle
+install-bundle:
+	if test "$(HAVE_BUNDLES)" = true -a -n "$(bin_PROGRAMS)"; then \
+	  for i in "$(bin_PROGRAMS)"; do \
+	    make BNDL_PROGRAM=$$i installbundle; \
+	  done; \
+	fi
+
+installbundle:
+	cp -Rp $(BNDL_PROGRAM).app $(DESTDIR)$(bindir)
+	qtlib=`otool -L $(BUNDLE_CONTDIR)/MacOS/$(BNDL_PROGRAM) | grep 'libqt*.dylib' | sed 's/dylib .*/dylib/'` ; \
+	echo qtlib = $$qtlib;\
+	if test -n "$$qtlib"; then \
+	  $(INSTALL) -d $(DESTDIR)$(bindir)/$(BUNDLE_CONTDIR)/Frameworks; \
+	  $(INSTALL) -m 775 $$qtlib $(DESTDIR)$(bindir)/$(BUNDLE_CONTDIR)/Frameworks; \
+	  install_name_tool -change $$qtlib @executable_path/../Frameworks/libqt-mt.3.dylib $(DESTDIR)$(bindir)/$(BUNDLE_CONTDIR)/MacOS/$(BNDL_PROGRAM) ;\
+	fi
+
+

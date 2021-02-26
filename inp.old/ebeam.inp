@@ -1,0 +1,116 @@
+default
+{
+A simple beam propagating across the system.
+It uses a coarse spatial mesh on a cylindrical system
+with a radius of 2cm and a length of 10cm.
+Beam: 
+  velocity:  1e8 m/s
+  current: .01 A
+  species:  positrons
+}
+Grid
+{
+	J = 5
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 5
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 1
+	BoltzmannDensity = .5e14
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 1
+
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = 1.6e-19
+}
+BeamEmitter
+{
+	speciesID = 0
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 2
+	normal = 1
+	Rule
+	{Limit
+	 mass <= 0.0
+	 Fatal -- mass must be positive
+	}
+	numberparticlesinmacro = 10000
+	I = 0.01
+	vthermal = 1e7
+	thetadot = 0.0
+	vzdrift = 1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 2
+	j2 = 0
+	k2 = 5
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 5
+	k2 = 5
+	normal = -1
+}
+Conductor
+{
+	j1 = 5
+	k1 = 5
+	j2 = 5
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+}

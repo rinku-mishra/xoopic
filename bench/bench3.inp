@@ -1,0 +1,104 @@
+bench3
+{
+This is a large EM benchmark.
+
+Run it like this:
+
+/bin/time xoopic -i <this filename> -s 500 -nox
+
+or
+
+/bin/time oopic <this filename> 500
+
+This benchmark is not easily scalable.
+
+It tests the EM solve in OOPIC and a couple of the EM boundary conditions.
+
+}
+Variables
+{
+  MAX = 400
+}
+Region 
+{
+Grid
+{
+	J = MAX
+	x1s = 0.0
+	x1f = 1
+	n1 = 1.0
+	K = MAX
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+}
+Control
+{
+	dt = 5e-13
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+PortTM
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = MAX
+	normal = 1
+	frequency = 5e11
+	A = 1
+	C = 0
+	EFFlag = 1
+	name = PortTM
+}
+Conductor
+{
+	j1 = 0
+	k1 = MAX
+	j2 = MAX
+	k2 = MAX
+	normal = -1
+}
+ExitPort
+{
+	j1 = MAX
+	k1 = MAX-1
+	j2 = MAX
+	k2 = 1
+	EFFlag = 1
+	normal = -1
+	name = ExitPort
+	C = 0
+	A = 0
+	frequency = 1
+}
+Conductor
+{
+	j1 = MAX
+	k1 = 1
+	j2 = MAX
+	k2 = 0
+	normal = -1
+}
+Conductor
+{
+	j1 = MAX
+	k1 = MAX-1
+	j2 = MAX
+	k2 = MAX
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = MAX
+	k2 = 0
+	normal = 1
+}
+}

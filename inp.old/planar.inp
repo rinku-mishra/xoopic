@@ -1,0 +1,129 @@
+Planar
+{
+	A simulation of Mike Lieberman's planar discharge in
+argon.
+}
+Variables
+{
+// units in m
+  Pitch = 0.0762
+  Depth = 0.20
+  Width = 0.305
+  dQuartz = 0.05
+  tQuartz = 0.004
+  dMetal = 0.0127
+  PlasmaDensity = 2.5e16
+  ElectronTemperature = 3
+  IonTemperature = 0.026
+  TopSpace = 0.01
+  PlasmaStart = TopSpace + dQuartz + 0.005
+// pressure in mTorr
+  ArgonPressure = 0.0014
+// 1mm grid spacings
+  GridPitch = 0.001
+  Jmax = Width / GridPitch
+  Kmax = Depth / GridPitch
+// choose DT
+  DT = GridPitch / 7e8
+}
+Region
+{
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6E-19
+	collisionModel=1
+}
+Species
+{
+        name = argon
+        m = 6.67e-26
+        q = 1.6E-19
+	collisionModel=2
+}
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = Width
+	n1 = 1.0
+	K = Kmax
+	x2s = 0.0
+	x2f = Depth
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = DT
+	ElectrostaticFlag = 0
+}
+MCC
+{
+	gas = Ar
+	pressure = ArgonPressure
+	eSpecies = electrons
+	iSpecies = argon
+}
+Conductor
+{
+	name = TopConductor
+	A1 = 0
+	A2 = Depth
+	B1 = Width
+	B2 = Depth
+	normal = -1
+}
+Conductor
+{
+	name = LeftConductor
+	A1 = 0
+	A2 = 0
+	B1 = 0
+	B2 = Depth
+	normal = 1
+}
+Conductor
+{
+	name = RightConductor
+	A1 = Width
+	A2 = 0
+	B1 = Width
+	B2 = Depth
+	normal = -1
+}
+Conductor
+{
+	name = BottomConductor
+	A1 = 0
+	A2 = 0
+	B1 = Width
+	B2 = 0
+	normal = 1
+}
+Load
+{
+	units = EV
+	x1MinMKS = 0.000
+	x1MaxMKS = Width
+	x2MinMKS = 0.00
+	x2MaxMKS = Depth - PlasmaStart
+	speciesName = electrons
+	density = PlasmaDensity
+	np2c = 1.0E9
+	temperature = ElectronTemperature
+}
+Load
+{
+	units = EV
+	x1MinMKS = 0.000
+	x1MaxMKS = Width
+	x2MinMKS = 0.00
+	x2MaxMKS = Depth - PlasmaStart
+	speciesName = argon
+	density = PlasmaDensity
+	np2c = 1.0E9
+	temperature = IonTemperature
+}
+}

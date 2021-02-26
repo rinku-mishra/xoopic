@@ -1,0 +1,35 @@
+evaluator.txt: This file documents the existing operators and
+functions understood by the equation evaluator.
+
+Operators:
+
+= equality
+- subtraction
++ addition
+* multiplication
+/ division
+NEG negation (unary minus)
+^ exponentiation
+
+Functions:
+
+sin(): sine of argument
+cos(): cosine of argument
+atan(): arctangent of argument
+ln(): natural logarithm of argument
+exp(): natural exponential of argument
+sqrt(): square root of argument
+pow(x,y): x^y
+pulse(t,tdelay,trise,tpulse,tfall)   : finite pulse, see timefunc.txt 
+step(x)	:  returns 0 if x < 0 and returns 1 otherwise
+ramp(x) :  returns 0 if x < 0 and returns x otherwise
+
+Constants:
+
+PI = 3.141592654
+e = 2.18281828
+
+
+
+
+

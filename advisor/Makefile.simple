@@ -1,0 +1,137 @@
+
+SHELL = /bin/sh
+
+srcdir = .
+top_srcdir = ..
+
+AR = ar cr
+AR_FLAGS =  
+CC = icc
+CPP = icc -E
+CXXCOMP = icc 
+CXXCPP = icc -E
+DEFINE_NOX = 
+LN_S = ln -s
+MPICC = 
+MPICXX = 
+RANLIB = ranlib
+
+EXTRA_DIST = evaluator.y
+
+##########
+#
+#
+##########
+DEFINE_MPI = 
+DEFINE_SCALAR = 
+DEFINES = -DUNIX    
+
+##########
+#
+#
+##########
+CXX = icc
+CXXFLAGS =  $(DEFINES)  -O1
+
+##########
+#
+# 
+##########
+
+libdir = 
+lib_LIBRARIES = libadvisor.a
+
+libadvisor_a_SOURCES = eqpotg.cpp abswag.cpp controlg.cpp gapg.cpp particlg.cpp vbemitg.cpp advisman.cpp cylaxisg.cpp gridg.cpp portg.cpp bemitg.cpp diags.cpp lnchwag.cpp rules.cpp boundg.cpp eportg.cpp param.cpp spatialg.cpp conductg.cpp femitg.cpp part1g.cpp strstuff.cpp dielecg.cpp speciesg.cpp loadg.cpp varloadg.cpp porttmg.cpp portteg.cpp foilg.cpp emitprtg.cpp emitterg.cpp polarg.cpp diagg.cpp iloopg.cpp iregiong.cpp plsmsrcg.cpp laserplasmasrcg.cpp segmentg.cpp spemitg.cpp mccg.cpp portgaussg.cpp porttemmwg.cpp loadpwg.cpp
+
+
+libadvisor_a_LIBADD = 
+
+##########
+#
+#
+##########
+
+MPI_INCLUDE = 
+XGRAFIX_INCLUDE = -I/usr/local/include
+XOOPIC_INCLUDES = -I$(top_srcdir)/advisor -I$(top_srcdir)/physics -I$(top_srcdir)/otools -I$(top_srcdir)
+FFTW_INCLUDE = 
+X11_INCLUDE = @X11_INCLUDE@
+INCLUDES = $(XOOPIC_INCLUDES) $(MPI_INCLUDE) $(XGRAFIX_INCLUDE) $(X11_INCLDE) $(FFTW_INCLUDE)
+
+include_HEADERS =  abswag.h		foilg.h			portgaussg.h advisman.h		gapg.h			portteg.h bemitg.h		gridg.h			porttmg.h boundg.h		iloopg.h		rules.h conductg.h		iregiong.h		segmentg.h controlg.h		laserplasmasrcg.h	spatialg.h cylaxisg.h		lnchwag.h		spboundg.h diagg.h			loadg.h			speciesg.h diags.h			mccg.h			spemitg.h dielecg.h		param.h			symmetg.h emitprtg.h		part1g.h		varg.h emitterg.h		particlg.h		varloadg.h eportg.h		plsmsrcg.h		vbemitg.h eqpotg.h		polarg.h                femitg.h portg.h                 porttemmwg.h            loadpwg.h
+
+abs_top_builddir = /home/pmlocal/oopic/oopic
+# include .depend
+INCLUDES = $(XOOPIC_INCLUDES) $(XGRAFIX_INCLUDE) $(X11_INCLDE)
+
+
+
+SRCS = $(libphysics_a_SOURCES)
+
+LIBRARIES =  $(lib_LIBRARIES)
+
+
+DEFS =  -I. -I$(srcdir) -I../.
+CPPFLAGS = 
+LDFLAGS =  
+LIBS = 
+libadvisor_a_DEPENDENCIES = 
+libadvisor_a_OBJECTS =  eqpotg.o abswag.o controlg.o gapg.o particlg.o \
+vbemitg.o advisman.o cylaxisg.o gridg.o portg.o bemitg.o diags.o \
+lnchwag.o rules.o boundg.o eportg.o param.o spatialg.o conductg.o \
+femitg.o part1g.o strstuff.o dielecg.o speciesg.o loadg.o varloadg.o \
+porttmg.o portteg.o foilg.o emitprtg.o emitterg.o polarg.o diagg.o \
+iloopg.o iregiong.o plsmsrcg.o laserplasmasrcg.o segmentg.o spemitg.o \
+mccg.o portgaussg.o porttemmwg.o loadpwg.o
+
+
+CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES)  $(CPPFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
+CFLAGS = -Wall -Wno-unused  -g
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+HEADERS =  $(include_HEADERS)
+
+
+
+DISTFILES =  $(SOURCES) $(HEADERS) 
+
+TAR = gtar
+GZIP_ENV = --best
+SOURCES = $(libadvisor_a_SOURCES)
+OBJECTS = $(libadvisor_a_OBJECTS)
+
+
+
+.c.o:
+	$(COMPILE) -c $<
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
+
+
+libadvisor.a: $(libadvisor_a_OBJECTS) $(libadvisor_a_DEPENDENCIES)
+	-rm -f libadvisor.a
+	$(AR) libadvisor.a $(libadvisor_a_OBJECTS) $(libadvisor_a_LIBADD)
+	$(RANLIB) libadvisor.a
+.cpp.o:
+	$(CXXCOMPILE) -c $<
+
+
+subdir = physics
+
+lib: $(lib_LIBRARIES)
+	$(AR) ../lib/$(lib_LIBRARIES) $(libphysics_a_OBJECTS)
+
+
+clean:
+	rm -f *.bak core *.prev *.o
+	rm -rf ii_files cxx_repository exec_repository so_locations ti_files
+	rm -rf SunWS_cache
+	rm -f evaluator.tab.h evaluator.tab.c
+

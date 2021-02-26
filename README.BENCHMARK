@@ -1,0 +1,27 @@
+
+If you are trying to use XOOPIC as a benchmark,
+you probably do not want to compile XOOPIC with
+the GUI, but rather a non-interactive version.
+
+To do this, ignore all the instructions about
+building xgrafix in README.INSTALL, and you will
+not need libXGC20.a, libtcl.a, libtk.a, or 
+libXpm.a (nor any of the header files
+associated with these libraries.)
+
+Compile the files in advisor/ and physics/ using 
+the Makefiles in those directories.
+
+In the xg/ directory, you must use Makefile.nox 
+as the Makefile instead of Makefile.
+
+Usage of the non-interactive version:
+
+oopic <inputfile> <number of steps>
+
+The output is a file called trace.dat,
+which can be used to validate the run.
+
+Traces for some benchmarks are in 
+bench/trace*.dat:  we consider these
+correct output for the benchmark versions.

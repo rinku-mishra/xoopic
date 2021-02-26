@@ -1,0 +1,67 @@
+######################################################################
+#
+# File:		MPI.txt
+#
+# Purpose:	Documentation of use of mpi
+#
+# Version:	$Id: MPI.txt 1294 2000-07-06 16:07:33Z bruhwile $
+#
+######################################################################
+
+##########
+#
+# MAKING WITH MPI
+#
+##########
+
+./configure --with-mpi=/usr/local/mpi
+
+##########
+#
+# RUNNING AN MPI VERSION
+#
+##########
+
+The to get a parallel run with dump files, do
+mpirun -np 2 xoopic -i input/default.inp -nox -s 10 -dp 10
+-s = # steps
+-nox means no X11
+-dp = periodicity of dumps - here is just puts out an end dump
+The dump files in this case
+end up in input/default.dmp.X, where X=0 is created by the first
+process, and X=1 is created by the second.
+
+
+##########
+#
+# EXTRA MPI PARAMETERS
+#
+##########
+
+If these are not specified, the region is divided up evenly among
+the processors.
+
+Input parameters:
+
+    MPIpartition
+
+    Nx1  -->  one-d partitioning in the x1 direction, the default
+    8x2	 -->  8 partitions in the x1 direction, 2 in the x2 direction,
+	      for a total of 16 computational partitions.
+
+You MUST give the MPI version the same # of CPU's as partitions when
+you start it!
+
+##########
+#
+# VIEWING AN MPI RUN
+#
+##########
+
+Build a NON-MPI version of xoopic, then do
+
+xoopic -i input/default.inp -d input/default
+
+This will read in the data from all of the default.cmp.? files and
+display it as a single coherent simulation.  However, JRC finds that
+this does not work.

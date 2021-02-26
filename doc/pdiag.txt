@@ -1,0 +1,11 @@
+Boundaries can be made to keep track of particles which hit them.
+In XOOPIC, any boundary with this diagnostic on will cause 
+graphs to appear in the diagnostics list.  Be sure to give
+the boundary a name.
+
+The particles are counted up by velocity.  If the particle
+doesn't fall in between v[x]start and v[x]end
+([x] is 1, 2, or 3) it is not counted in that diagnostic.
+
+At present only one species can have diagnostics collected
+per boundary.

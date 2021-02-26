@@ -1,0 +1,217 @@
+raman-nochirp.inp
+{
+
+File:   vacuum-nochirp.inp
+
+Purpose:  To test wave launcher in preparation for raman runs.
+
+Version:  $Id: raman-nochirp.inp 1587 2001-04-24 01:12:10Z rgia $
+
+Basic parameters:
+    Plasma of density 1.e25, into which is injected a laser
+    pulse that is 100 (FWZM) fs half-sine pulses.
+    Cartesian geometry.
+
+Plasma variables:
+  elecPlasmaDensity = 1.e25
+    This gives a plasma frequency of omega_p=1.784e14, and a plasma
+    wavelength of 10.56 um.
+
+Laser variables:
+    Half sine pulse
+  pulShp_p0 = 2
+    Time delay to start pulse
+  tdelay_p0 = 0.
+    Pulse length of 50 fs (FWHM) or 1.499e-5 m or 30um FWZM.
+  pulLeng_p0 = 30.e-6
+    Chirp (change of frequency over pulse length)
+  chirp_p0 = 0.
+    Want a spot size (half width at 1/e) of 10 um:
+  spotSize_p0 = 1.e-5
+    Wavelength of 0.8 um, so omega = 2.355e15, and omega/omega_p = 13.20
+  waveLeng_p0 = 0.8e-6
+    Focus at origin
+  focus_p0 = 0.
+    Wave amplitude is determined by a_0 = 1.  In MKS, a = eE/(m omega c).
+    Thus E = a*m*omega*c/e:
+  amp_p0= 4.013e12
+
+Simulation variables:
+    Length of 45 um., with moving window after pulse is is the 37.5 um
+    24 cells in 0.8 um -> 30 cells in 1 um, so 1350 cells long
+    Going 2+ Rayleigh lengths, so width will increase to sqrt(2)*w_0,
+    hence need 2 * sqrt(2) * 3 w_0 wide, or 90 um wide.  Dodd had 500
+    cells.  In this first run, we could probably do 10/half width, or
+    1 um cells.  This implies 90 cells wide?  To be safe, double to
+    180 cells. Thus, a cell has area of 0.033um*0.5um = 1.67e-14m^2.
+    With density of 1.e25, this implies 1.67e11 physical particles
+    per cell.  For 2ppc, want np2c=8.e10.
+
+====================================================================
+
+ - The wave is defined by the variables:
+
+     - spotSize_p0      = Half width at amplitude of central amplitde over
+                          e at the beam waist. 
+     - waveLeng_p0      = wavelenght.
+     - focus_p0         = position of focus. 
+     - amp_p0           = peak wave amplitude.    
+     - chirp_p0         = change of wavelength from begining of pulse
+                          to end.
+     - pulShp_p0        = pulse shape (0=trapezoid; 1=Gaussian; 2=half-sine)
+     - tdelay_p0        = time delay to start pulse. 
+     - pulLeng_p0       = pulse length (meters). (half-width for trapezoid and
+                          Gaussian full for half-sine).
+}
+
+Variables
+{
+// Grid variables
+
+      Nx = 675 
+      Ny = 50 
+      Lx = 45.0e-06 
+      Ly = 90.0e-06 
+      Dx = Lx/Nx
+
+// General parameters
+
+      electronMass = 9.1094e-31 
+      electronCharge = -1.6022e-19
+      permit = 8.8542e-12 
+      speedLight = 2.9979e8
+      speedLight2 = speedLight*speedLight 
+      electronCharge2 = electronCharge*electronCharge 
+      qOverm = electronCharge/electronMass
+      Pi = 3.14159265358979323846 
+
+// Plasma parameters
+
+      elecPlasmaDensity =  1.0e25 
+      elecPlasmaFreq = sqrt(electronCharge*qOverm*elecPlasmaDensity/permit)
+ 
+//=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+}
+Region
+{
+Grid
+{
+	J = Nx 
+	x1s = 0.0
+	x1f = Lx 
+	n1 = 1.0
+	K = Ny 
+	x2s = 0.0
+	x2f = Ly 
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 1.33e-16 
+	ElectrostaticFlag = 0
+	movingWindow = 1
+// Start shifting at 37.5 um
+	shiftDelayTime = 1.25e-13 
+}
+Species
+{
+        name = electrons
+        m = electronMass 
+        q = electronCharge 
+}
+Species
+{
+        name = ions
+        m = 1.67e-27
+        q = 1.6e-19
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = electrons
+        density = elecPlasmaDensity 
+        np2c = 1.5e11 
+        LoadMethodFlag = 1
+        temperature = 0.0
+}
+Load
+{
+        x1MinMKS = 0.000
+        x1MaxMKS = Lx 
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = ions
+        density = elecPlasmaDensity 
+        np2c = 0.0
+}
+
+PortGauss
+{
+	j1 = 0 
+	k1 = 0 
+	j2 = 0 
+	k2 = Ny 
+	normal = 1
+
+// Wave (0)
+	A = 0
+	C = 1.0 
+	pulShp_p0 = 2 
+	tdelay_p0 = 0.0 
+	pulLeng_p0 = 30.0e-06 
+        chirp_p0 = 0
+        spotSize_p0 = 1.0e-05  
+        waveLeng_p0 = 0.8e-06 
+        focus_p0 = 6.7e-08 
+        amp_p0 = 4.013e12 
+
+// Wave (1)
+	A = 0
+	C = 1.0 
+        pulShp_p1 = 0
+        tdelay_p1 = 10.0
+        pulLeng_p1 = 3e-05
+        chirp_p1 = 0
+        spotSize_p1 = 10e-06
+        waveLeng_p1 = 6.2e-06
+        focus_p1 = 0.5*Lx
+        amp_p1 = 0.0 
+
+	EFFlag = 0 
+	name = PortGauss
+}
+Conductor
+{
+	j1 = 0
+	k1 = Ny 
+	j2 = Nx 
+	k2 = Ny 
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0 
+	j2 = Nx 
+	k2 = 0 
+	normal = 1
+}
+ExitPort
+{
+        j1 = Nx
+        k1 = 0
+        j2 = Nx
+        k2 = Ny
+        EFFlag = 0 
+        normal = -1
+        name = ExitPort
+        C = 0
+        A = 0
+}
+}

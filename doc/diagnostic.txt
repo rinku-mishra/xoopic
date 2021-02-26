@@ -1,0 +1,23 @@
+Diagnostic can form three type of graphs.  Graphing the value of of
+VarName.
+
+Spatial regions
+    if (j1,k1) and (j2,k2) form the corners of a rectangle then the graph
+is X versus Y or R versus Z.  These is good for plotting the time average 
+of variable.
+
+Time history of a line
+    if (j1,k1) and (j2,k2) form the ends of a line.  Then the graph is
+a time history of the variable versus position along the line.  
+
+Time history of a point
+    if (j1,k1) and (j2,k2) is the same point then the graph is a time history
+is the variable at that point.
+
+Time histories
+    The time histories is HistMax long.  When the array is full and  
+Comb is defined then the array is combed to every comb'th value.  
+If Comb is 0 then the array is a moving window.  
+The Ave data points are averaged if Ave is set to a non zero value.
+ 
+ 

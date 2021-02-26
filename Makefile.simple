@@ -1,0 +1,115 @@
+# Generated automatically from Makefile.in by configure.
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
+
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+
+SHELL = /bin/sh
+
+srcdir = .
+top_srcdir = .
+prefix = /usr/local
+exec_prefix = ${prefix}
+
+bindir = ${exec_prefix}/bin
+sbindir = ${exec_prefix}/sbin
+libexecdir = ${exec_prefix}/libexec
+datadir = ${prefix}/share
+sysconfdir = ${prefix}/etc
+sharedstatedir = ${prefix}/com
+localstatedir = ${prefix}/var
+libdir = ${exec_prefix}/lib
+infodir = ${prefix}/info
+mandir = ${prefix}/man
+includedir = ${prefix}/include
+oldincludedir = /usr/include
+
+DESTDIR =
+
+pkgdatadir = $(datadir)/oopic
+pkglibdir = $(libdir)/oopic
+pkgincludedir = $(includedir)/oopic
+
+top_builddir = .
+
+
+INSTALL = /usr/bin/install -c
+INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_DATA = ${INSTALL} -m 644
+INSTALL_SCRIPT = ${INSTALL_PROGRAM}
+transform = s,x,x,
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+host_alias = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
+AR = ar cr
+ARFLAGS =  
+CC = gcc
+CPP = gcc -E
+CXX = g++
+CXXCOMP = g++
+CXXCPP = g++ -E
+DEFINE_MPI = 
+DEFINE_NOX = 
+INSTALL_LIBRARY = ${INSTALL} -m 644
+LIBEXT = .a
+LN_S = ln -s
+MAKEINFO = makeinfo
+MPICC = 
+MPICXX = 
+PACKAGE = oopic
+PURIFY_DEFINE = 
+PURIFY_PATH = 
+RANLIB = ranlib
+REALMPICC = 
+REALMPICXX = 
+VERSION = 2.6
+abs_top_builddir = /home/pmlocal/oopic/oopic
+
+PIC_DIRS = otools physics advisor xg 
+SUBDIRS =  $(PIC_DIRS) 
+
+DISTFILES =  $(SOURCES) $(HEADERS)  $(EXTRA_DIST)
+
+TAR = gtar
+GZIP_ENV = --best
+
+.SUFFIXES:
+
+
+
+
+all::
+	(touch config.h)
+	(cd otools; make -f Makefile.simple; cd ..)
+	(cd physics; make -f Makefile.simple; cd ..)
+	(cd advisor; make -f Makefile.simple; cd ..)
+	(cd xg; make -f Makefile.simple; cd ..)
+
+clean::
+	(rm -f */*.a */*.o)
+	(cd otools; make -f Makefile.simple clean; cd ..)
+	(cd physics; make -f Makefile.simple clean; cd ..)
+	(cd advisor; make -f Makefile.simple clean; cd ..)
+	(cd xg; make -f Makefile.simple clean; cd ..)
+
+
+depend::
+	(cd otools; make -f Makefile.simple depend; cd ..)
+	(cd physics; make -f Makefile.simple depend; cd ..)
+	(cd advisor; make -f Makefile.simple depend; cd ..)
+	(cd xg; make -f Makefile.simple depend; cd ..)
+

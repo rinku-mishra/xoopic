@@ -1,0 +1,103 @@
+default
+{
+ RF discharge
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6E-19
+}
+Species
+{
+        name = argon
+        m = 6.67e-26
+        q = 1.6E-19
+}
+Grid
+{
+	J = 30
+	x1s = 0.0
+	x1f = 0.05
+	n1 = 1.0
+	K = 30
+	x2s = 0.0
+	x2f = 0.01
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-10
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+	BoltzmannDensity = .5e14
+	BoltzmannCharge = -1
+	BoltzmannTemp = 1
+	BoltzmannSourceFlag = 0
+	BoltzmannChargeRatio = 1
+	gasPressure = 0.05
+	eCollisionalFlag = 1
+	iCollisionalFlag = 1
+}
+Conductor
+{
+	j1 = 30
+	k1 = 0
+	j2 = 30
+	k2 = 30
+	normal = -1
+	secondary = 0.2
+	secSpeciesName = electrons
+	iSpeciesName = argon
+}
+Equipotential
+{       
+	C = 0
+	A = 500
+	frequency = 1E7
+	phase = 0
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 30
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 0
+	j2 = 30
+	k1 = 30
+	k2 = 30
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 30
+	k2 = 0
+	normal = 1
+}
+Load
+{
+	zMinMKS = 0.000
+	zMaxMKS = 0.05
+	rMinMKS = 0.00
+	rMaxMKS = 0.01
+	speciesName = electrons
+	density = 1.0e15
+	np2c = 1E6
+	temperature = 5.93e5
+}
+Load
+{
+	zMinMKS = 0.00
+	zMaxMKS = 0.05
+	rMinMKS = 0.00
+	rMaxMKS = 0.01
+	speciesName = argon
+	density = 1.0e15
+	np2c = 1E6
+	temperature = 4.9e2
+}

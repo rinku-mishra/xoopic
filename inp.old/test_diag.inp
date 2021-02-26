@@ -1,0 +1,274 @@
+default
+{
+This loads two squares of different particles in 
+}
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 3e-12
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 0
+}
+Diagnostic
+{
+	Comb = 0
+	Ave = 2
+	HistMax = 8
+	title = local line ave Ez(r,Time) 
+	j1 = 3
+	k1 = 4
+	j2 = 3
+	k2 = 30
+	VarName = E1
+	x2_Label = Time 
+	x1_Label = R
+	x3_Label = Ez
+}
+Diagnostic
+{
+	Comb = 2
+	Ave = 2
+	HistMax = 8
+	title = line ave Ez(r,Time) 
+	j1 = 3
+	k1 = 4
+	j2 = 3
+	k2 = 30
+	nfft = 0
+	VarName = E1
+	x2_Label = Time 
+	x1_Label = R
+	x3_Label = Ez
+}
+Diagnostic
+{
+	Comb = 2
+	Ave = 0
+	HistMax = 16
+	title = line Ez(r,Time) 
+	j1 = 3
+	k1 = 4
+	j2 = 3
+	k2 = 30
+	nfft = 0
+	VarName = E1
+	x2_Label = Time 
+	x1_Label = R
+	x3_Label = Ez
+}
+Diagnostic
+{
+	Comb = 2
+	title = point 3,4 Er(time)
+	j1 = 3
+	k1 = 4
+	j2 = 3
+	k2 = 4
+	nfft = 0
+	VarName = E2
+	x1_Label = Time
+	x2_Label = Er
+}
+Diagnostic
+{
+	Comb = 4
+	Ave = 1
+	HistMax = 16
+	title = electron density(r,Time) 
+	j1 = 3
+	k1 = 4
+	j2 = 3
+	k2 = 30
+	nfft = 0
+	VarName = electrons
+	x2_Label = Time 
+	x1_Label = R
+	x3_Label = charge density
+}
+Diagnostic
+{
+	Ave = 40
+        title = E1 ave
+        j1 = 0
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = E1
+	x1_Label = X
+        x2_Label = Y
+        x3_Label = E1
+}
+Diagnostic
+{
+	Ave = -1
+        title = ave electron density
+        j1 = 0
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = electrons
+	x1_Label = X
+        x2_Label = Y
+        x3_Label = electron density
+}
+Diagnostic
+{
+	Ave = 0
+	HistMax = 64
+	Comb = 2
+        title = Poyting Flux 
+        j1 = 25
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = poynting1
+	integral = flux
+	x1_Label = time
+        x2_Label = energy
+}
+Diagnostic
+{
+	Ave = 2
+	Comb = 2
+	HistMax = 64
+        title = Poyting Flux2 
+        j1 = 25
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = poynting1
+	integral = flux
+	x1_Label = time
+        x2_Label = energy
+}
+Diagnostic
+{
+        Ave = 0
+        Comb = 2
+        HistMax = 512
+        title = Pot between  
+        j1 = 25
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = E2
+        integral = line
+        x1_Label = time
+        x2_Label = phi
+}
+Diagnostic
+{
+        Ave = 0
+        Comb = 2
+        HistMax = 512
+        title = Pot int  
+        j1 = 25
+        k1 = 0
+        j2 = 25
+        k2 = 50
+        VarName = intEdl2
+        integral = sum
+        x1_Label = time
+        x2_Label = phi
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+	name = ion
+	m = 1.6e-27
+	q = 1.6e-19
+}
+Load
+{
+	speciesName = electrons
+	zMinMKS = .0
+	zMaxMKS = .05
+	rMinMKS = .0
+	rMaxMKS = .05
+	vrdrift = 0
+	vzdrift = 1e6
+	vthdrift = 0
+	temperature = 1e6
+	cutoff = 0
+	density = 1e14
+	np2c = 5e7
+}
+Load
+{
+	zMinMKS = .04
+	zMaxMKS = .06
+	rMinMKS = .04
+	rMaxMKS = .06
+	speciesName = ion
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 1e6
+	cutoff = .5e5
+	density = 1e14
+	np2c = 5e8
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 50
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 50
+	j2 = 50
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}

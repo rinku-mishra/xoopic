@@ -1,0 +1,127 @@
+default
+{
+	An flux port on the top of a cylinder, attempting to determine
+	ion flux profiles downstream
+}
+Region
+{
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+ 	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-10
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+}
+MCC
+{
+	gas = Ar
+	pressure = .01
+	eSpecies = electrons
+	iSpecies = ions
+}
+Species
+{
+		  name = electrons
+		  m = 9.11E-31
+		  q = -1.6e-19
+	collisionModel = 1
+}
+Species
+{
+        name = ions
+        m = 6.68e-28
+        q = 1.6e-19
+}
+EmitPort
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	speciesName = electrons
+	normal = 1
+	np2c = 1e6
+	I = 0.01
+	thetadot = 0.0
+	v1drift = 1e6
+	v2drift = 0
+	v3drift = 0
+	v1thermal = 0
+	v2thermal = 0
+	v3thermal = 0
+}
+EmitPort
+{
+        j1 = 0
+        k1 = 0
+        j2 = 0
+        k2 = 10
+        speciesName = ions
+        normal = 1
+        np2c = 1e6
+        I = 0.0001
+        thetadot = 0.0
+        v1drift = 1e3
+        v2drift = 0
+        v3drift = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 50
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 50
+	j2 = 50
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}
+}

@@ -1,0 +1,666 @@
+Klystron
+{
+	 RKO klystron
+}
+Variables
+{
+	 Zmax = .86924
+	 Rmax = .16075
+	 Jmax = 340
+	 Kmax = 63
+	 DeltaZ = Zmax/Jmax
+	 DeltaR = Rmax/Kmax
+	 Rdrift = .0765
+	 cavOuterR = .148
+	 RbeamMax = .071  
+	 RbeamMin = .066
+	 ROutputUnderBeam = .061 
+	 Gap1 = .02
+	 Zgap1 = .188
+	 Gap2 = .0202
+	 Gap3 = .02
+	 gap1l = .188
+	 cavlinnerR = Rdrift + .002
+	 cav1l = .078
+	 cav1gL = cav1l + .03462 
+	 cav1gStumpL = cav1gL + .01 
+	 cav1gStumpR = cav1gStumpL + .01 
+	 cav1gR = cav1gStumpR + .01 
+	 cav1r = .208
+	 gap2 = .292
+	 cav2R = .424
+	 R2min = Rdrift + .02
+	 cav2L = gap2 + .0202 
+	 gap3 = .574
+	 cav3R = .70524
+	 RoutWaveGuide = .142
+	 RinWaveGuide = .128  
+	 R3min = R2min
+	 cav3L = .594
+	 Rshunt = .06
+	 RouterShunt = .05
+	 ZmaxShunt = .60524
+	 RinnerShunt = .03
+	 Zshunt = .49124
+	 ZshuntPt = Zshunt-Rshunt
+	 dumpPt = cav3R/DeltaZ - 3*(Rdrift-Rshunt)/DeltaR
+	 ExitCavL = cav3R+.02
+} 
+Region 
+{
+	 Grid
+	 {
+		  J = Jmax
+		  x1s = 0.0
+		  x1f = Zmax
+		  n1 = 1.0
+		  K = Kmax
+		  x2s = 0.0
+		  x2f = Rmax
+		  n2 = 1.0
+	 }
+	 Control
+	 {
+		  dt = 4E-12
+		  B01 = .8
+		  emdamping = .01
+	 }
+//	 Species
+//	 {
+//		  name = plasma electrons
+//      m = 9.11E-31
+//        q = -1.6e-19
+//	 }
+//	 Species
+//	 {
+//       name = ions
+//       m = 1.67E-27
+//       q = 1.6e-19
+//	 }
+	 Species
+	 {
+		  name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+	 }
+//	 PlasmaSource
+//	 {
+//		  j1 = Zshunt/DeltaZ
+//		  k1 = Rshunt/DeltaR
+//		  j2 = dumpPt
+//		  k2 = Rdrift/DeltaR
+//		  speciesName1 = ions
+//		  name = plasmaSource
+//		  speciesName2 = plasma electrons
+//		  sourceRate = 5.52e22
+//		  normal = 1
+//		  np2c = 1e9
+//		  a0 = 0
+//		  tdelay = 150e-9
+//		  trise = 150e-9
+//		  A = 0
+//		  analyticF = 0.0
+//	 }
+	 BeamEmitter
+	 {
+		  speciesName = electrons
+		  j1 = 0
+		  k1 = RbeamMin/DeltaR
+		  j2 = 0
+		  k2 = RbeamMax/DeltaR
+		  normal = 1
+		  np2c = 1e10
+		  I = 10000
+		  temperature = 0
+		  thetadot = 0.0
+		  v1drift = 2.59e8
+		  tdelay = 0 //25e-9
+		  trise = 0 //25e-9
+		  a0 = 0
+	 }
+	 Conductor
+	 {
+		  j1 = 0 
+		  k2 = RbeamMin/DeltaR
+		  j2 = 0
+		  k1 = ROutputUnderBeam/DeltaR
+		  normal = 1
+	 }
+	 ExitPort
+	 {
+		  j1 = 0 
+		  k2 = 0
+		  j2 = 0
+		  k1 = ROutputUnderBeam/DeltaR
+		  normal = 1
+        EFFlag = 1
+        name = below beam
+        C = 0
+        A = 0
+        frequency = 1
+	 }
+	 Conductor
+	 {
+		  j1 = 0
+		  k1 = RbeamMax/DeltaR
+		  j2 = 0
+		  k2 = Rdrift/DeltaR
+		  normal = 1
+		  name = C1
+	 }
+	 Conductor
+	 {
+		  j1 = 0
+		  k2 = Rdrift/DeltaR
+		  j2 = gap1l/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C2
+	 }
+	 Conductor
+	 {
+		  j1 = gap1l/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = gap1l/DeltaZ
+		  k1 = cavlinnerR/DeltaR
+		  normal = 1
+		  name = C3
+	 }
+	 Conductor
+	 {
+		  j1 = gap1l/DeltaZ
+		  k2 = cavlinnerR/DeltaR
+		  j2 = cav1l/DeltaZ
+		  k1 = cavlinnerR/DeltaR
+		  normal = 1
+		  name = C4
+	 }
+	 Conductor
+	 {
+		  j1 = cav1l/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1gL/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C5
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gL/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1gL/DeltaZ
+		  k1 = Rmax/DeltaR
+		  normal = 1
+		  name = C5
+	 }
+	 Gap
+	 {
+		  j1 = cav1gL/DeltaZ
+		  k2 = Rmax/DeltaR
+		  j2 = cav1gStumpL/DeltaZ
+		  k1 = Rmax/DeltaR
+		  normal = -1
+		  A = -3.2e6
+		  frequency = 1.34e9
+		  phase = 0
+		  EFFlag = 0
+		  name = Gap Left
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gStumpL/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1gStumpL/DeltaZ
+		  k1 = Rmax/DeltaR
+		  normal = -1
+		  name = C5
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gStumpL/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1gStumpR/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C6
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gStumpR/DeltaZ
+		  k2 = Rmax/DeltaR
+		  j2 = cav1gStumpR/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = 1
+		  name = C6
+	 }
+	 Gap
+	 {
+		  j1 = cav1gStumpR/DeltaZ
+		  k2 = Rmax/DeltaR
+		  j2 = cav1gR/DeltaZ
+		  k1 = Rmax/DeltaR
+		  normal = -1
+		  A = 3.2e6
+		  frequency = 1.34e9
+		  phase = 0.0
+		  EFFlag = 0
+		  name = Gap Right
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gR/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1gR/DeltaZ
+		  k1 = Rmax/DeltaR
+		  normal = -1
+		  name = C6
+	 }
+	 Diagnostic
+	 {
+		  Ave = 0
+		  HistMax = 2024
+        title = Poyting Flux of Input Gaps
+        j1 = cav1gL/DeltaZ
+        k1 = cavOuterR/DeltaR
+        j2 = cav1gR/DeltaZ
+        k2 = cavOuterR/DeltaR
+        VarName = poynting2
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Diagnostic
+	 {
+		  Ave = 10
+		  HistMax = 2024
+		  Comb = 2
+        title = Beam Current at Gap
+        j1 = (gap3+cav3L)/(2*DeltaZ)
+        k1 = RouterShunt/DeltaR
+        j2 = (gap3+cav3L)/(2*DeltaZ)
+        k2 = Rdrift/DeltaR
+        VarName = I1
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Diagnostic
+	 {
+		  Ave = 0
+		  HistMax = 2024
+		  Comb = 2
+        title = Beam Current at Emitter
+        j1 = 1
+        k1 = RbeamMin/DeltaR
+        j2 = 1
+        k2 = RbeamMax/DeltaR
+        VarName = I1
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Diagnostic
+	 {
+		  Ave = 1870
+		  HistMax = 2024
+        title = Cycle Ave Poyting Flux IG
+        j1 = cav1gL/DeltaZ
+        k1 = cavOuterR/DeltaR
+        j2 = cav1gR/DeltaZ
+        k2 = cavOuterR/DeltaR
+        VarName = poynting2
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Conductor
+	 {
+		  j1 = cav1gR/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1r/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C7
+	 }
+	 Conductor
+	 {
+		  j1 = cav1l/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1l/DeltaZ
+		  k1 = cavlinnerR/DeltaR
+		  normal = 1
+		  name = C8
+	 }
+	 Conductor
+	 {
+		  j1 = cav1r/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav1r/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C9
+	 }
+	 Conductor
+	 {
+		  j1 = cav1r/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = gap2/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C10
+	 }
+	 Conductor
+	 {
+		  j1 = gap2/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = gap2/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = 1
+		  name = C11
+	 }
+	 Conductor
+	 {
+		  j1 = gap2/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav2R/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C12
+	 }
+	 Conductor
+	 {
+		  j1 = gap2/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav2R/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C13
+	 }
+	 Conductor
+	 {
+		  j1 = cav2R/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav2R/DeltaZ
+		  k1 = R2min/DeltaR
+		  normal = -1
+		  name = C14
+	 }
+	 Conductor
+	 {
+		  j1 = cav2R/DeltaZ
+		  k2 = R2min/DeltaR
+		  j2 = cav2L/DeltaZ
+		  k1 = R2min/DeltaR
+		  normal = 1
+		  name = C15
+	 }
+	 Conductor
+	 {
+		  j1 = cav2L/DeltaZ
+		  k2 = R2min/DeltaR
+		  j2 = cav2L/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C16
+	 }
+	 Conductor
+	 {
+		  j1 = cav2L/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = gap3/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C17
+	 }
+	 Conductor
+	 {
+		  j1 = gap3/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = gap3/DeltaZ
+		  k1 = cavOuterR/DeltaR
+		  normal = 1
+		  name = C18
+	 }
+	 Conductor
+	 {
+		  j1 = gap3/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = Jmax
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  name = C19
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = cav3R/DeltaZ
+		  k1 = RoutWaveGuide/DeltaR
+		  normal = -1
+		  name = C20
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = RoutWaveGuide/DeltaR
+		  j2 = ExitCavL/DeltaZ
+		  k1 = RoutWaveGuide/DeltaR
+		  normal = -1
+		  name = C20
+	 }
+	 Conductor
+	 {
+		  j1 = ExitCavL/DeltaZ
+		  k2 = cavOuterR/DeltaR
+		  j2 = ExitCavL/DeltaZ
+		  k1 = RoutWaveGuide/DeltaR
+		  normal = 1
+		  name = C20
+	 }
+	 ExitPort
+	 {
+		  j1 = Jmax
+		  k2 = R3min/DeltaR
+		  j2 = Jmax
+		  k1 = cavOuterR/DeltaR
+		  normal = -1
+		  EFFlag = 1
+		  name = Out Wave Guide
+		  R = 37
+		  C = 0
+		  A = 0
+		  frequency = 1
+	 }
+	 Diagnostic
+	 {
+		  Ave = 0
+		  HistMax = 2024
+		  Comb = 2
+        title = Power Output Slot
+        j1 = cav3R/DeltaZ
+        k1 = RinWaveGuide/DeltaR
+        j2 = cav3R/DeltaZ
+        k2 = RoutWaveGuide/DeltaR
+        VarName = poynting1
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Diagnostic
+	 {
+		  Ave = 1870
+		  Comb = 2
+		  HistMax = 2024
+        title = Cycle Ave Power Output Slot
+        j1 = cav3R/DeltaZ
+        k1 = RinWaveGuide/DeltaR
+        j2 = cav3R/DeltaZ
+        k2 = RoutWaveGuide/DeltaR
+        VarName = poynting1
+        integral = sum
+        x1_Label = time
+        x2_Label = energy
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = RinWaveGuide/DeltaR
+		  j2 = cav3R/DeltaZ
+		  k1 = R3min/DeltaR
+		  normal = -1
+		  name = C21
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = RinWaveGuide/DeltaR
+		  j2 = ExitCavL/DeltaZ
+		  k1 = RinWaveGuide/DeltaR
+		  normal = 1
+		  name = C21
+	 }
+	 Conductor
+	 {
+		  j1 = ExitCavL/DeltaZ
+		  k2 = RinWaveGuide/DeltaR
+		  j2 = ExitCavL/DeltaZ
+		  k1 = R3min/DeltaR
+		  normal = 1
+		  name = C21
+	 }
+	 Conductor
+	 {
+		  j1 = Jmax
+		  k2 = R3min/DeltaR
+		  j2 = cav3L/DeltaZ
+		  k1 = R3min/DeltaR
+		  normal = 1
+		  name = C22
+	 }
+	 Conductor
+	 {
+		  j1 = cav3L/DeltaZ
+		  k2 = R3min/DeltaR
+		  j2 = cav3L/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C23
+	 }
+	 Conductor
+	 {
+		  j1 = cav3L/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = cav3R/DeltaZ
+		  k1 = Rdrift/DeltaR
+		  normal = -1
+		  name = C24
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = Rdrift/DeltaR
+		  j2 = cav3R/DeltaZ
+		  k1 = Rshunt/DeltaR
+		  normal = -1
+		  name = C25
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k2 = Rshunt/DeltaR
+		  j2 = cav3L/DeltaZ
+		  k1 = Rshunt/DeltaR
+		  normal = 1
+		  name = C26
+	 }
+	 Conductor
+	 {
+		  j1 = cav3L/DeltaZ
+		  k2 = Rshunt/DeltaR
+		  j2 = cav3L/DeltaZ
+		  k1 = RouterShunt/DeltaR
+		  normal = -1
+		  name = C27
+	 }
+	 Conductor
+	 {
+		  j1 = cav3L/DeltaZ
+		  k2 = RouterShunt/DeltaR
+		  j2 = ZmaxShunt/DeltaZ
+		  k1 = RouterShunt/DeltaR
+		  normal = -1
+		  name = C28
+	 }
+	 Conductor
+	 {
+		  j1 = ZmaxShunt/DeltaZ
+		  k2 = RouterShunt/DeltaR
+		  j2 = ZmaxShunt/DeltaZ
+		  k1 = RinnerShunt/DeltaR
+		  normal = -1
+		  name = C29
+	 }
+	 Conductor
+	 {
+		  j1 = gap3/DeltaZ
+		  k2 = RinnerShunt/DeltaR
+		  j2 = ZmaxShunt/DeltaZ
+		  k1 = RinnerShunt/DeltaR
+		  normal = 1
+		  name = C30
+	 }
+	 Conductor
+	 {
+		  j1 = gap3/DeltaZ
+		  k2 = RinnerShunt/DeltaR
+		  j2 = gap3/DeltaZ
+		  k1 = Rshunt/DeltaR
+		  normal = 1
+		  name = C31
+	 }
+	 Conductor
+	 {
+		  j1 = gap3/DeltaZ
+		  k2 = Rshunt/DeltaR
+		  j2 = Zshunt/DeltaZ
+		  k1 = Rshunt/DeltaR
+		  normal = 1
+		  name = C32
+	 }
+	 Conductor
+	 {
+		  j1 = Zshunt/DeltaZ
+		  k2 = Rshunt/DeltaR
+		  j2 = Zshunt/DeltaZ
+		  k1 = 0
+		  normal = -1
+		  name = C33
+	 }
+	 Conductor
+	 {
+		  j1 = ZshuntPt/DeltaZ
+		  k2 = Rshunt/DeltaR
+		  j2 = Zshunt/DeltaZ
+		  k1 = 0
+		  normal = 1
+		  name = C34
+	 }
+	 Conductor
+	 {
+		  j1 = cav3R/DeltaZ
+		  k1 = Rshunt/DeltaR
+		  j2 = dumpPt
+		  k2 = Rdrift/DeltaR
+		  normal = 1
+		  name = C35
+	 }
+	 CylindricalAxis
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = Jmax
+		  k2 = 0
+		  normal = 1
+		  name = C36
+	 }
+}

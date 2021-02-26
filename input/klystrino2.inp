@@ -1,0 +1,511 @@
+klystrino
+{
+  A 2-d model of a 3-d problem we're gonna tackle later.
+  somewhat modified.
+}
+
+Variables
+{
+	Freq = 9.1e10
+	BeamVoltage = 120000
+	Current = 2.5
+	NP2C = 3.0e5
+	Ri = 0.0004
+	Rb = 0.00025
+	Ro = 0.00063
+	GapLength = 0.0005
+	UniformB = .5
+//	LambdaP = 0.04
+//	L = LambdaP * 0.25
+	L01 = 0.004
+// 	starting z coordinates for sections
+	S1start = 0
+	L12 = 0.008
+	S2start = L01 + GapLength + L12/2.0
+	L23 = 0.012
+	S3start = S2start + GapLength + L23/2.0 + L12/2.0
+	L34 = 0.014
+	S4start = S3start + GapLength + L34/2.0 + L23/2.0
+	L45 = .016 
+	S5start = S4start + GapLength + L45/2.0 + L34/2.0
+	L56 = .006 
+	S6start = S5start + GapLength + L56/2.0 + L45/2.0
+	L67 = .003
+	S7start = S6start + GapLength + L67/2.0 + L56/2.0
+//	Lsection = L + GapLength
+//	Ltotal = 4 * Lsection
+	Ltotal = S7start + GapLength + L67
+	dZ = GapLength / 4
+	dR = 0.00005
+	Jmax = Ltotal / dZ
+	Kmax = Ro / dR
+	DT = dR / 6.1e8
+	BEAM_DELAY = 50 * DT
+	BEAM_RISE = 20 * DT
+}
+
+Region 
+{
+
+Grid
+{
+	J = Jmax
+	K = Kmax
+	x1s = 0
+	x1f = Ltotal
+	x2s = 0
+	x2f = Ro
+}
+
+Control
+{
+	B01 = UniformB
+	dt = DT
+}
+
+Species
+{
+	name = electrons
+	m = 9.11e-31
+	q = -1.6e-19
+}
+
+CylindricalAxis
+{
+	normal = 1
+	A1 = 0
+	A2 = 0
+	B1 = Ltotal
+	B2 = 0
+}
+
+BeamEmitter
+{
+	np2c = NP2C
+	I = Current
+	speciesName = electrons
+	v1drift = BeamVoltage
+	units = EV
+	A1 = 0
+	A2 = 0
+	B1 = 0
+	B2 = Rb
+	a0 = 0
+	a1 = 1
+	tdelay = BEAM_DELAY
+	trise = BEAM_RISE
+	normal = 1
+}
+
+// the left hand wall conductor, spans the whole wall.
+Conductor
+{
+  name = LeftHandWall
+  normal = 1
+  A1 = 0
+  A2 = 0
+  B1 = 0
+  B2 = Ro
+}
+
+// the top wall conductor, spans the whole wall.
+Conductor
+{ 
+  name = TopWall
+  normal = -1
+  A1 = 0
+  A2 = Ro
+  B1 = Ltotal
+  B2 = Ro
+}
+
+//Diagnostic
+//{
+//  A1 = L * 0.5
+//  A2 = Ri
+//  B1 = L * 0.5 + GapLength
+//  B2 = Ri
+//  VarName = intEdl1
+//  x1_Label = time
+//  x2_Label = Voltage
+//  title = Gap1Voltage
+//  integral = sum
+//  HistMax = 2048
+//}
+
+CurrentRegion
+{
+	name = InputSig
+	analyticF = 1
+	A1 = L01 
+	A2 = Ro - 2 * dR
+	B1 = L01 + GapLength
+	B2 = Ro - 3 * dR
+	C = 0
+	A = 1000
+	direction = 1
+	frequency = 2 * 3.1415926 * Freq
+	a0 = 0
+	a1 = 1
+	tdelay = 0
+	trise = 0
+	tpulse = 100000 * DT
+	tfall = 0
+	
+}
+	
+
+//the conductor determining the first cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity1
+  Segment
+  {
+	name = LeadInSection
+  	A1 = 0
+	A2 = Ri
+	B1 = L01
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = L01
+	A2 = Ri
+	B1 = L01
+	B2 = Ro
+	normal = 1
+  }
+
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = L01 + GapLength
+	A2 = Ri
+	B1 = L01 + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 = L01 + GapLength
+	A2 = Ri
+	B1 = L01 + GapLength + L12/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+
+//the conductor determining the second cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity2
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S2start
+	A2 = Ri
+	B1 = S2start + L12/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S2start + L12/2.0
+	A2 = Ri
+	B1 = S2start + L12/2.0
+	B2 = Ro
+	normal = 1
+  }
+
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S2start + L12/2.0 + GapLength
+	A2 = Ri
+	B1 = S2start + L12/2.0 + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 =  S2start + L12/2.0 + GapLength
+	A2 = Ri
+	B1 =  S2start + L12/2.0 + GapLength + L23/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+//the conductor determining the 3rd cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity3
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S3start
+	A2 = Ri
+	B1 = S3start + L23/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S3start + L23/2.0
+	A2 = Ri
+	B1 = S3start + L23/2.0
+	B2 = Ro
+	normal = 1
+  }
+
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S3start + L23/2.0 + GapLength
+	A2 = Ri
+	B1 = S3start + L23/2.0 + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 = S3start + L23/2.0 + GapLength
+	A2 = Ri
+	B1 = S3start + L23/2.0 + GapLength + L34/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+
+//the conductor determining the 4th cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity4
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S4start
+	A2 = Ri
+	B1 = S4start + L34/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S4start + L34/2.0
+	A2 = Ri
+	B1 = S4start + L34/2.0
+	B2 = Ro
+	normal = 1
+  }
+// this segment doesn't exist in the output cavity.
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S4start + L34/2.0 + GapLength
+	A2 = Ri
+	B1 = S4start + L34/2.0  + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 =  S4start + L34/2.0  + GapLength 
+	A2 = Ri
+	B1 =  S4start + L34/2.0  + GapLength + L45/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+
+//the conductor determining the 5th cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity5
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S5start
+	A2 = Ri
+	B1 = S5start + L45/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S5start + L45/2.0
+	A2 = Ri
+	B1 = S5start + L45/2.0
+	B2 = Ro
+	normal = 1
+  }
+// this segment doesn't exist in the output cavity.
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S5start + L45/2.0 + GapLength
+	A2 = Ri
+	B1 = S5start + L45/2.0  + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 =  S5start + L45/2.0  + GapLength 
+	A2 = Ri
+	B1 =  S5start + L45/2.0  + GapLength + L56/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+
+
+//the conductor determining the 6th cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity6
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S6start
+	A2 = Ri
+	B1 = S6start + L56/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S6start + L56/2.0
+	A2 = Ri
+	B1 = S6start + L56/2.0
+	B2 = Ro
+	normal = 1
+  }
+// this segment doesn't exist in the output cavity.
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S6start + L56/2.0 + GapLength
+	A2 = Ri
+	B1 = S6start + L56/2.0  + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 =  S6start + L56/2.0  + GapLength 
+	A2 = Ri
+	B1 =  S6start + L56/2.0  + GapLength + L67/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+//the conductor determining the 7th cavity
+// a multisegment conductor.
+Conductor
+{
+  name = cavity7
+  Segment
+  {
+	name = LeadInSection
+  	A1 = S7start
+	A2 = Ri
+	B1 = S7start + L67/2.0
+	B2 = Ri
+	normal = -1
+  }
+
+  Segment
+  {
+	name = CavityLeftWall
+  	A1 = S7start + L67/2.0
+	A2 = Ri
+	B1 = S7start + L67/2.0
+	B2 = Ro
+	normal = 1
+  }
+// this segment doesn't exist in the output cavity.
+  Segment
+  {
+	name = CavityRightWall
+  	A1 = S7start + L67/2.0 + GapLength
+	A2 = Ri
+	B1 = S7start + L67/2.0  + GapLength
+	B2 = Ro
+	normal = -1
+  }
+
+  Segment
+  {
+	name = LeadOutDrift
+  	A1 =  S7start + L67/2.0  + GapLength 
+	A2 = Ri
+	B1 =  S7start + L67/2.0  + GapLength + L67/2.0
+	B2 = Ri
+	normal = -1
+   }
+}
+
+ExitPort
+{
+	name = OutPut
+  	A1 =  S4start + L34/2.0 + GapLength
+	A2 = Ri
+	B1 =  S4start + L34/2.0 + GapLength
+	B2 = Ro
+	EFFlag = 1
+	normal = -1
+	C = 0
+	
+}
+
+
+
+// Conductor for the right hand wall.  Beam dumps into it.
+Conductor
+{
+  name = RightHandWall
+  A1 = Ltotal
+  A2 = 0
+  B1 = Ltotal
+  B2 = Ro
+  normal = -1
+}
+
+}

@@ -1,0 +1,13 @@
+# note that tolerances are difference for GMRES
+
+hollow_MORGAN.inp
+	--> changed dielectric edge to conductor
+	--> rz -> xy
+	--> cylindrical axis is now a conducting boundary
+
+xybeam_MORGAN.inp
+	--> changed dielectric west and east edges to conductor
+	--> cg breaking - ??
+
+periodic_MORGAN.inp
+	

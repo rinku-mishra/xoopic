@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['m_5fpi',['M_PI',['../electrostatic__operator_8cpp.html#ae71449b1cc6e6250b91f539153a7a0d3',1,'M_PI():&#160;electrostatic_operator.cpp'],['../misc_8h.html#ae71449b1cc6e6250b91f539153a7a0d3',1,'M_PI():&#160;misc.h']]],
+  ['macheps',['macheps',['../inverter_8h.html#a34ed2673c439468547b90bc7264308cb',1,'inverter.h']]],
+  ['max',['MAX',['../misc_8h.html#afa99ec4acc4ecb2dc3c2d05da15d0e3f',1,'MAX():&#160;misc.h'],['../xgdatamacros_8h.html#a1f39e3fa1b93a95a39a68c1b0baf46f7',1,'max():&#160;xgdatamacros.h'],['../xgprintgif_8h.html#affe776513b24d84b39af8ab0930fef7f',1,'max():&#160;xgprintgif.h']]],
+  ['max_5f3d_5fplots',['MAX_3D_PLOTS',['../xgminint_8h.html#a31e120678d91fd3fb2e3f9fc5decbb68',1,'xgminint.h']]],
+  ['max_5fbuffer_5fsize',['MAX_BUFFER_SIZE',['../windowtype_8h.html#ad4d796b98c583d49e83adabd74a63bf6',1,'MAX_BUFFER_SIZE():&#160;windowtype.h'],['../xgminint_8h.html#ad4d796b98c583d49e83adabd74a63bf6',1,'MAX_BUFFER_SIZE():&#160;xgminint.h']]],
+  ['max_5fiter',['MAX_ITER',['../load_8cpp.html#acd517c6f195c75b9dd0f3aad65326f3b',1,'load.cpp']]],
+  ['max_5fnumber_5fspecies',['MAX_NUMBER_SPECIES',['../diag2file_8h.html#a5f2d9718f81071a3aca084b40653b1b4',1,'diag2file.h']]],
+  ['maxcolors',['MAXCOLORS',['../xgrafixext_8h.html#a653a781f54d9d640c5dc8eb5360892a9',1,'MAXCOLORS():&#160;xgrafixext.h'],['../xgrafixint_8h.html#a653a781f54d9d640c5dc8eb5360892a9',1,'MAXCOLORS():&#160;xgrafixint.h']]],
+  ['maxdiags',['MaxDiags',['../gridprob_8h.html#a14681d863df261c391b739c927320c75',1,'MaxDiags():&#160;gridprob.h'],['../predef_diag_8h.html#a14681d863df261c391b739c927320c75',1,'MaxDiags():&#160;predefDiag.h']]],
+  ['maxgrayshades',['MAXGRAYSHADES',['../xgrafixext_8h.html#af27d89292be251f70e719c43a69fdd69',1,'MAXGRAYSHADES():&#160;xgrafixext.h'],['../xgrafixint_8h.html#af27d89292be251f70e719c43a69fdd69',1,'MAXGRAYSHADES():&#160;xgrafixint.h']]],
+  ['maxlen',['MaxLen',['../gridprob_8h.html#abe1360a2d11df61723f74b40ba29ac3e',1,'MaxLen():&#160;gridprob.h'],['../predef_diag_8h.html#abe1360a2d11df61723f74b40ba29ac3e',1,'MaxLen():&#160;predefDiag.h']]],
+  ['maxthreedcolors',['MAXTHREEDCOLORS',['../xgrafixext_8h.html#afdc07d2f5827012ab6c64ad767848740',1,'MAXTHREEDCOLORS():&#160;xgrafixext.h'],['../xgrafixint_8h.html#afdc07d2f5827012ab6c64ad767848740',1,'MAXTHREEDCOLORS():&#160;xgrafixint.h']]],
+  ['memchr',['memchr',['../cstring_8h.html#ad44e0789846e8edde6892e3ff6d64d09',1,'cstring.h']]],
+  ['mgrid_5fsolve',['MGRID_SOLVE',['../fields_8h.html#ac55e5348e0ef15558a0a9d4a382b47dd',1,'fields.h']]],
+  ['min',['MIN',['../misc_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f',1,'MIN():&#160;misc.h'],['../xgdatamacros_8h.html#a9f82065e821d3ba5f809dc4641965c06',1,'min():&#160;xgdatamacros.h'],['../xgprintgif_8h.html#ac6afabdc09a49a433ee19d8a9486056d',1,'min():&#160;xgprintgif.h']]],
+  ['mpi_5flink',['MPI_LINK',['../spblink_8h.html#a1d47d0d205bbe005cf571b947e4f6aea',1,'spblink.h']]],
+  ['mpi_5fscalar',['MPI_Scalar',['../precision_8h.html#afc47645143fd3938b3acf3522b83649b',1,'precision.h']]],
+  ['mpich_5fskip_5fmpicxx',['MPICH_SKIP_MPICXX',['../parpoi_8h.html#a077ffa213bd6af61ce94d0b0e1d4942a',1,'parpoi.h']]]
+];

@@ -1,0 +1,49 @@
+
+The GNU autotools list f77 and f90 as supported languages.  However, the
+support for them is weak, due largely to a lack of developers who have
+familiarity with fortran and the wide array of compilers available.  
+
+Specifically, one must use automake 1.9.0 or greater to have the FC
+variable work at all -- older versions always used F77COMPILE in the
+target rules.  
+
+Libtool doesn't have a good way of specifying which PIC flag to
+test things with automatically.  As a result, any fortran compiler that
+does not use "-fpic" can't generate PIC which is the first step in
+generating a shared library.  This is an autoconf/libtool interaction
+issue, with the onus on libtool to either have the correct libtool.m4 
+file which has the PIC flags hardcodes (as has recently been done for
+the PG compilers), or to tell the autoconf guys how to get the users to
+specify the PIC flag.
+
+In general, we need to do things the autotools way.  This means that f90
+and f77 are separate languages -- I configure them in completely
+separate files.  In addition to being consistent with autoconf, this 
+has the advantage of allowing users to use only one compiler (pure f90
+say) and fix things relative to the other compiler.  In the case of
+automake, one can configure the f90 compiler and then set F77=$FC in
+configure.in.
+
+In the documentation and such, I use FC and F90 interchangeably.  FC is
+the autotools awful variable name for any fortran version beyond F77.
+It has nothing to do with f2c.  If you want to use an F90 variable in
+makefiles, then set it manually in configure.in (F90=FC).  All of the
+variables are FC to be autoconf consistent.
+
+
+File layout and comments:
+  f77.m4 and fc.m4
+  	Replaces AC_PROG_FC and AC_PROG_F77
+  f77flags.m4 and fcflags.m4
+	Depends on compiler definitions as well as host.
+	Keep separate from the compiler def to allow user friendliness:
+	-if you change the compiler, it changes the default flags
+	-specify flags (or flag type such as optimization or debug) 
+	  independently of compiler
+  f77interop.m4 and fcinterop.m4
+  	Things required for interoperability.  If you want to use this,
+	it is HIGHLY recommended that you read the autoconf info file.
+	They have lots of detailed information on interoperability issues.
+  mpif77.m4 and mpif90.m4
+  	This can be tricky because we want the mpi wrappers to be
+	consistent with the chosen compiler/flags.

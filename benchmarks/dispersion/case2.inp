@@ -1,0 +1,179 @@
+Dispersion
+{
+
+ - Propagation of a laser beam in a plasma.  This input file is meant
+   as a benchmark of OOPIC vs. theory.
+
+ - A plane EM wave is introduced in x-y geometry from the left, which
+   hits a plasma interface.  The idea is to measure the wavelength
+   in the plasma for various frequencies to measure the dispersion.
+
+ - In this case, the incident wave is at 1.2
+
+
+
+}
+
+Variables
+{
+// General parameters
+
+      electronMass = 9.1094e-31 
+      electronCharge = -1.6022e-19
+      permit = 8.8542e-12 
+      speedLight = 2.9979e8
+      speedLight2 = speedLight*speedLight 
+      electronCharge2 = electronCharge*electronCharge 
+      qOverm = electronCharge/electronMass
+      PI = 3.141592654
+
+      Amplitude = 1e7
+
+// Plasma parameters
+
+      elecPlasmaDensity =  1e20
+      elecPlasmaFreq = sqrt(electronCharge*qOverm*elecPlasmaDensity/permit)
+
+     // laser parameters
+      PumpLaserSpot = 1e-2
+
+      AngFreq = 1.2*elecPlasmaFreq
+      Frequency = AngFreq/2/PI
+      WaveLength = speedLight/Frequency
+      MeshPerWavelength = 8
+      NumWavelengths = 40
+
+
+	
+// Grid variables
+
+      Nx = MeshPerWavelength * NumWavelengths
+      Ny = Nx/4
+      Lx = NumWavelengths * WaveLength
+      Ly = Lx/4
+      DX = Lx/Nx
+
+
+      Focus = 100
+ 
+// Pump wave (0) parameters - y polarization
+
+      waist_p0 = PumpLaserSpot
+      angFreq_p0 = AngFreq
+      angFreq2_p0 = angFreq_p0*angFreq_p0
+      waveVector_p0 = sqrt((angFreq2_p0-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+//      rayleighLength_p0 = waist_p0*waist_p0*waveVector_p0/2.
+	rayleighLength_p0 = 1
+      focus_p0 = Focus
+
+// Forward Injection wave (1) parameters - z polarization
+
+      waist_p1 = 1
+      angFreq_p1 = AngFreq
+      angFreq2_p1 = angFreq_p0*angFreq_p0
+      waveVector_p1 = sqrt((angFreq2_p1-elecPlasmaFreq*elecPlasmaFreq)/speedLight2)
+	rayleighLength_p1 = 1
+//      rayleighLength_p1 = waist_p0*waist_p0*waveVector_p0/2.
+      focus_p1 = Lx*0.5
+
+}
+Region
+{
+Grid
+{
+	J = Nx 
+	x1s = 0.0
+	x1f = Lx 
+	n1 = 1.0
+	K = Ny 
+	x2s = 0.0
+	x2f = Ly 
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = Lx/(1.1*sqrt(2)*Nx * speedLight)
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = electrons
+        m = electronMass 
+        q = electronCharge 
+}
+Load
+{
+	units=EV
+        x1MinMKS = 0
+        x1MaxMKS = Lx - DX
+        x2MinMKS = 0.00
+        x2MaxMKS = Ly
+        speciesName = electrons
+        density = elecPlasmaDensity
+// always use 50,000 particles
+	np2c = elecPlasmaDensity * Lx * Ly / 2 / 50000
+//        np2c = 1e14
+	LoadMethodFlag = 1
+}
+
+PortGauss
+{
+	j1 = 0 
+	k1 = 0
+	j2 = 0 
+	k2 = Ny
+	normal = 1
+
+// Wave (0)
+	A = 0
+	C = 1.0 
+	a1 = 1.0 
+	a0 = 1
+        rsm_p0 = waist_p0 
+        omeg_p0 = angFreq_p0
+        ryl_p0 = rayleighLength_p0 
+        zf_p0 = focus_p0 
+        Aw_p0 = Amplitude
+
+// Wave (1)
+	A = 0
+	C = 0
+	a1_p1 = 1.0 
+	a0_p1 = 0.0
+	tdelay_p1 = 1.66e13 
+        rsm_p1 = waist_p1 
+        omeg_p1 = angFreq_p1
+        ryl_p1 = rayleighLength_p1 
+        zf_p1 = focus_p1 
+        Aw_p1 = 0.0 
+
+	EFFlag = 0 
+	name = PortGauss
+}
+Conductor
+{
+	j1 = Nx
+	k1 = 0
+	j2 = Nx
+	k2 = Ny
+	normal = -1
+
+}
+Conductor
+{
+	j1 = 0
+	k1 = Ny 
+	j2 = Nx 
+	k2 = Ny 
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0 
+	j2 = Nx 
+	k2 = 0 
+	normal = 1
+}
+}

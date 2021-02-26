@@ -1,0 +1,12 @@
+
+G++ has a certain number of bugs in it, which may cause problems
+when you compile XOOPIC.  These are some of them and their work arounds:
+
+Problem				Workaround
+--------------------------------------------------------------------
+xoopic compile fails due	get cstring.h from this directory
+to errors in cstring.h		and replace 
+				/usr/local/lib/g++-include/std/cstring.h
+				with cstring.h in this directory.
+				This may break other things, but
+				XOOPIC will compile.

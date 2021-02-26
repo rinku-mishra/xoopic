@@ -1,0 +1,13 @@
+#!/bin/csh
+/bin/rm -rf diffs
+mkdir diffs
+foreach i ( advisor physics xg )
+cd $i
+mkdir ../diffs/$i
+foreach j ( *.cpp *.h )
+diff -cw  /home/landau/johnv/oopic/$i/$j ./$j  > ../diffs/$i/$j.diffs
+end
+cd ..
+end
+cd ~/oopic/diffs
+RM `find . -size 0 -print`

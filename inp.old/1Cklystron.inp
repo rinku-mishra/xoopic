@@ -1,0 +1,167 @@
+default
+{
+klystron
+}
+Grid
+{
+	J = 100
+	x1s = 0.0
+	x1f = 0.25
+	n1 = 1.0
+	K = 36
+	x2s = 0.0
+	x2f = 0.02585
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-12
+	B01 = 1.0
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 12
+	j2 = 0
+	k2 = 14
+	normal = 1
+	speciesName = electrons
+	numberparticlesinmacro = 2.5e6
+	I = -.189
+	thetadot = 0.0
+	vzdrift = 5e7
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 12
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 14
+	j2 = 0
+	k2 = 15
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 15
+	j2 = 24
+	k2 = 15
+	normal = -1
+}
+Conductor
+{
+	j1 = 24
+	k1 = 15
+	j2 = 24
+	k2 = 18
+	normal = 1
+}
+Conductor
+{
+	j1 = 24
+	k1 = 18
+	j2 = 3
+	k2 = 18
+	normal = 1
+}
+Conductor
+{
+	j1 = 3
+	k1 = 18
+	j2 = 3
+	k2 = 36
+	normal = 1
+}
+ExitPort
+{
+	EFFlag = 1
+	name = Input Gap
+	j1 = 3
+	k1 = 36
+	j2 = 26
+	k2 = 36
+	normal = -1
+	A = 100000
+	frequency = 6.283E9
+	phase = 0.0
+	C = 0
+	R = 50
+}
+Conductor
+{
+	j1 = 26
+	k1 = 36
+	j2 = 26
+	k2 = 15
+	normal = -1
+}
+Conductor
+{
+	j1 = 26
+	k1 = 15
+	j2 = 74
+	k2 = 15
+	normal = -1
+}
+ExitPort
+{
+	EFFlag = 1	
+	name = Output Gap
+	C = 0
+	A = 0
+	j1 = 74
+	k1 = 15
+	j2 = 76
+	k2 = 15
+	R = 300
+	Cap = 5e-8
+	L = 5e-12
+	frequency = 6.283e9
+	normal = -1
+}
+Conductor
+{
+	j1 = 76
+	k1 = 15
+	j2 = 100
+	k2 = 15
+	normal = -1
+}
+Conductor
+{
+	j1 = 100
+	k1 = 15
+	j2 = 100
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 100
+	k2 = 0
+	normal = 1
+}

@@ -1,0 +1,21 @@
+## ####################################################################
+##
+## File:	clean-ac.am
+##
+## Purpose:	Clean the autoconf stuff and remake all makefiles
+##
+## Version:	$Id: clean-ac.am 794 2002-07-11 20:42:41Z cary $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+cleanautoconf:
+	rm -f Makefile.in
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do cd $$i; $(MAKE) cleanautoconf; done \
+	fi
+	rm -f Makefile.bak
+	mv Makefile Makefile.bak
+

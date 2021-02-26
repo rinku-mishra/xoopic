@@ -1,0 +1,9 @@
+The input files in here are used for the purposes of benchmarking
+XOOPIC or OOPIC.
+
+Please read the top of each input file for instructions on how
+to run them.
+
+If you run these benchmarks, please send the results to 
+peterm@langmuir.eecs.berkeley.edu, so that I may
+include the results in XOOPIC_TIMINGS

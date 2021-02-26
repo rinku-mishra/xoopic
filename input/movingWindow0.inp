@@ -1,0 +1,134 @@
+MovingWindow0
+{
+
+This is based on movingWindow0.inp.
+
+This input file shows an example of a beam moving in a uniform background.
+the geometry is r-z, cylindrical.  All the edges are bounded with conductors:
+these boundaries are necessary.
+
+There are equal beams of protons and electrons.
+
+Also, the moving window motion is hard-coded to move to the right, so
+rightward-moving particles will stay in the window.  Everything else will
+seem to move left.
+
+}
+Variables
+{
+	JMAX = 20
+	KMAX = 20
+	XMAX = 0.1
+	RMAX = 0.02
+	DX = XMAX/JMAX
+}
+Region
+{
+Grid
+{
+	J = JMAX
+	x1s = 0.0
+	x1f = XMAX
+	n1 = 1.0
+	K = KMAX
+	x2s = 0.0
+	x2f = RMAX
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-12
+	// movingWindow = 1
+}
+
+Species
+{
+		  name = electron
+		  m = 9.5E-31
+		  q = -1.6e-19
+}
+
+Species
+{
+		  name = proton
+		  m = 1.8E-27
+		  q = 1.6e-19
+}
+
+Species
+{
+		  name = deuterium
+		  m = 3.6E-27
+		  q = 1.6e-19
+}
+
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 20
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 20
+	j2 = 20
+	k2 = 20
+	normal = -1
+}
+Conductor
+{
+	j1 = 20
+	k1 = 20
+	j2 = 20
+	k2 = 0
+	normal = -1
+}
+
+Load
+{
+	x1MinMKS = 0.033
+	x1MaxMKS = 0.067
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = electron
+	density = 1.0e17
+	np2c = 3e8
+	units = EV
+	v1drift = 3.0e6
+	LoadMethodFlag=1
+}
+
+Load
+{
+	x1MinMKS = 0.033
+	x1MaxMKS = 0.067
+	x2MinMKS = 0.0
+	x2MaxMKS = 0.01
+	speciesName = proton
+	density = 1.0e17
+	np2c = 3e8
+	units = EV
+	LoadMethodFlag=1
+}
+
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 20
+	k2 = 0
+	normal = 1
+}
+}
+

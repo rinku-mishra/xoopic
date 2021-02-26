@@ -1,0 +1,24 @@
+var searchData=
+[
+  ['dadi_5fsolve',['DADI_SOLVE',['../fields_8h.html#aa8f2204f4c0cadc2e28a8a396ea7917b',1,'fields.h']]],
+  ['data_5ftype_5fderivative_5fscalar_5f2d',['DATA_TYPE_DERIVATIVE_SCALAR_2D',['../diag2file_8h.html#a807c3eead461428beda1d2439955f4d1',1,'diag2file.h']]],
+  ['data_5ftype_5fderivative_5fvector3',['DATA_TYPE_DERIVATIVE_VECTOR3',['../diag2file_8h.html#ace22ae25f32da552df3e0278e75443cb',1,'diag2file.h']]],
+  ['data_5ftype_5fscalar',['DATA_TYPE_SCALAR',['../diag2file_8h.html#a002df7b4a4453d1b2fb782b4c471db4c',1,'diag2file.h']]],
+  ['data_5ftype_5fscalar_5f2d',['DATA_TYPE_SCALAR_2D',['../diag2file_8h.html#a294ad7523cb75b6993c29322bb6beb1d',1,'diag2file.h']]],
+  ['data_5ftype_5fspecies',['DATA_TYPE_SPECIES',['../diag2file_8h.html#a3f8dab4ced3321bb2c9b58bddf3ccd4f',1,'diag2file.h']]],
+  ['data_5ftype_5fspecies_5ftime_5fgraph',['DATA_TYPE_SPECIES_TIME_GRAPH',['../diag2file_8h.html#a15a4e33f7e19143fdd45d605e92dbe5c',1,'diag2file.h']]],
+  ['data_5ftype_5fspecies_5fx_5fv',['DATA_TYPE_SPECIES_X_V',['../diag2file_8h.html#a088f997388c517d60f19c15ee2dd4fa3',1,'diag2file.h']]],
+  ['data_5ftype_5ftime_5fgraph',['DATA_TYPE_TIME_GRAPH',['../diag2file_8h.html#ad849e0d15b6b0b5a6612d97ab6080500',1,'diag2file.h']]],
+  ['data_5ftype_5fvector3',['DATA_TYPE_VECTOR3',['../diag2file_8h.html#a9a41e85cccb8118e9aeb96ec20f141f8',1,'diag2file.h']]],
+  ['dbl_5fmin',['DBL_MIN',['../_g_l_plot3_d_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;GLPlot3D.cpp'],['../xgminint_8h.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;xgminint.h'],['../dadi_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;dadi.cpp'],['../dadirz_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;dadirz.cpp'],['../dadixy_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;dadixy.cpp'],['../dadixyp_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;dadixyp.cpp'],['../maxwelln_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;maxwelln.cpp'],['../vmaxwelln_8cpp.html#ab5f2d2630bc132bca0a4c9733164e91a',1,'DBL_MIN():&#160;vmaxwelln.cpp']]],
+  ['defined_5fderived_5fdiagnostics',['DEFINED_DERIVED_DIAGNOSTICS',['../deriv_diag_8h.html#a601e3d5a2368521d764e3425ab22cff3',1,'derivDiag.h']]],
+  ['delta',['DELTA',['../dielectr_8cpp.html#a3fd2b1bcd7ddcf506237987ad780f495',1,'dielectr.cpp']]],
+  ['derivative_5ftype_5foffset',['DERIVATIVE_TYPE_OFFSET',['../diag2file_8h.html#a4af0c7b4a6e9370b8a0f5ea2a4e87e94',1,'diag2file.h']]],
+  ['diag_5fwindow_5finit_5fclosed',['DIAG_WINDOW_INIT_CLOSED',['../newdiag_8h.html#a13fab1ca258ce14493de76dd7ae95d09',1,'newdiag.h']]],
+  ['diag_5fwindow_5finit_5fopen',['DIAG_WINDOW_INIT_OPEN',['../newdiag_8h.html#aa407e59d365334739e78fc40c60723a2',1,'newdiag.h']]],
+  ['dielectric',['DIELECTRIC',['../define_8h.html#a853e344fba0c227a5efc29556ca437d5',1,'define.h']]],
+  ['dielectric_5fregion',['DIELECTRIC_REGION',['../define_8h.html#ad5c942d44dfb6d8909f93d22842a96d0',1,'define.h']]],
+  ['dielectric_5ftriangle_5fdown',['DIELECTRIC_TRIANGLE_DOWN',['../define_8h.html#a59f1f898aecb3ed67b914123bd24e672',1,'define.h']]],
+  ['dielectric_5ftriangle_5fup',['DIELECTRIC_TRIANGLE_UP',['../define_8h.html#af1055ecd65b3782766c544bb58fb46fc',1,'define.h']]],
+  ['double',['DOUBLE',['../xgminint_8h.html#a8747af38b86aa2bbcda2f1b1aa0888c2',1,'xgminint.h']]]
+];

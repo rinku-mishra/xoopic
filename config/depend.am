@@ -1,0 +1,46 @@
+## ####################################################################
+##
+## File:	depend.am
+##
+## Purpose:	Adds in targets for writedep method of getting 
+##		dependencies.  Must be included last.
+##
+## Version:	$Id: depend.am 2373 2007-08-21 11:17:01Z cary $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+vpath
+include $(top_builddir)/$(subdir)/.depend
+CXXDEPFLAGS	= @CXXDEPFLAGS@
+CXXDEP 		= @CXXDEP@
+depend: $(SOURCES)
+	depends=depend.u; \
+	for i in $(SOURCES); do \
+	  if test -n "`echo $$i | grep ^moc_`"; then \
+	    srcs="$$srcs $$i"; \
+	  else \
+	    srcs="$$srcs $(srcdir)/$$i"; \
+	  fi; \
+	  depends="$$depends $$i"; \
+	done; \
+	depends=`echo $$depends | sed 's/\.cpp/.u/g' | sed 's/\.cxx/.u/g' | sed 's/\.c/.u/g'`; \
+	if test -n "$$srcs" ; then \
+	  $(CXXDEP) -DHAVE_CONFIG_H -DMAKEDEPEND -I$(srcdir) $(INCLUDES) \
+	  -I$(top_builddir) $(CXXFLAGS) $(CPPFLAGS) $$srcs ; \
+	  cat $$depends 2>/dev/null | sed "s/\.o :/.o:/g" | \
+	  perl $(top_srcdir)/config/writedep.pl $(top_srcdir); \
+	fi; \
+	rm -f $$depends
+	if test -n "$(CXXSUBDIRS)"; then \
+	  for i in $(CXXSUBDIRS); do \
+	    (cd $$i; make depend); \
+	  done; \
+	fi
+
+distclean-local: dependclean
+dependclean:
+	rm -f .depend
+

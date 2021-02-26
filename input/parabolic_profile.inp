@@ -1,0 +1,84 @@
+Parabolic Profile
+{
+  This input file illustrates loading a parabolic profile of electrons
+into a metal box.  Density varies in y from 1e17 up to approximately 3e17.
+}
+Variables
+{
+    XMIN = 0
+    XMAX = 0.1
+    YMIN = 0
+    YMAX = 0.1
+    JMAX = 20
+    KMAX = 20
+}
+Region
+{
+Grid
+{
+	J = JMAX
+	x1s = XMIN
+	x1f = XMAX
+	n1 = 1.0
+	K = KMAX
+	x2s = YMIN
+	x2f = YMAX
+	n2 = 1.0
+        Geometry = 1
+
+}
+Control
+{
+	dt = 1.0E-12
+}
+Species
+{
+		  name = electrons
+		  m = 9.11E-31
+		  q = -1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = KMAX
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = KMAX
+	j2 = JMAX
+	k2 = KMAX
+	normal = -1
+}
+Conductor
+{
+	j1 = JMAX
+	k1 = KMAX
+	j2 = JMAX
+	k2 = 0
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = JMAX
+	k2 = 0
+	normal = 1
+}
+Load
+{
+  x1MinMKS = XMIN
+  x1MaxMKS = XMAX
+  x2MinMKS = YMIN
+  x2MaxMKS = YMAX
+  speciesName = electrons
+// This density number is seemingly ignored:  it uses analyticF apparently.
+  density = 1e17
+// Decrease to 3e9 if you want a smoother density profile.
+  np2c = 3e10
+  analyticF = 1e17*(1 + 1000*(x2 - YMAX/2) * (x2 - YMAX/2))
+}

@@ -1,0 +1,118 @@
+default
+{
+sumitomo's surface wave source, 20cmx20cm !!!!
+}
+Grid
+{
+	J = 49
+	x1s = 0.0
+	x1f = 0.20
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.20
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt = 1.594387e-12
+	ElectrostaticFlag = 0
+	gasPressure = 0.01
+        eCollisionalFlag = 1
+	FieldSubFlag = 25
+}
+Diagnostic
+{
+        Ave = 40000 
+        PlotLabel = JdotE
+        j1 = 1
+        k1 = 1
+        j2 = 48
+        k2 = 48
+        VarName = JdotE
+}
+Diagnostic
+{
+        Comb = 4
+        HistMax = 1
+        PlotLabel = point Ez
+        j1 = 5
+        k1 = 2
+        j2 = 5
+        k2 = 48
+        VarName = E1
+}
+Gap
+{
+	name = gap1
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+	frequency = 1.539e10
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+DielectricRegion
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 49
+	er = 2.0
+}
+DielectricRegion
+{
+	j1 = 10
+	k1 = 0
+	j2 = 15
+	k2 = 49
+	er = 9.5
+}
+Conductor
+{
+	j1 = 5
+	k1 = 0
+	j2 = 49
+	k2 = 0
+	normal = +1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 49
+	normal = +1
+}
+Conductor
+{
+	j1 = 5
+	k1 = 49
+	j2 = 49
+	k2 = 49
+	normal = -1
+}
+Conductor
+{
+	j1 = 49
+	k1 = 0
+	j2 = 49
+	k2 = 49
+	normal = -1
+}

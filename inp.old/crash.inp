@@ -1,0 +1,71 @@
+crash
+{
+	A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 5
+	x1s = 0.0
+	x1f = 0.02
+	n1 = 1.0
+	K = 5
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 3e-11
+	ElectrostaticFlag = 1
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 5
+	normal = 1
+	speciesName = electrons
+	thetadot = 0.0
+	I = .1
+	numberparticlesinmacro = 1.0E5
+	vzdrift = 1e7
+	vrdrift = 0
+	vthdrift = 0
+	vthermal = 1e7
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 5
+	j2 = 5
+	k2 = 5
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = 5
+	k1 = 5
+	j2 = 5
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 5
+	k2 = 0
+	normal = 1
+}

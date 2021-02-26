@@ -1,0 +1,176 @@
+default
+{
+	Beam in right circular cylinder.  This is useful for obtaining beam
+	spreading curves, for example, by adjusting the injection current
+	and the magnetic field.
+}
+Variables
+{
+  Jmax = 20
+  Kmax = Jmax
+}
+Region
+{
+name = lower
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = Kmax
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 1
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-12
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+Species
+{
+		  name = positrons
+		  m = 9.11E-31
+		  q = 1.6e-19
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = Jmax/2
+	k2 = 0
+	speciesName = positrons
+	normal = 1
+	np2c = 10000
+	I = 0.00
+	thetadot = 0.0
+	v1drift = 0
+	v2drift = 1e8
+	v3drift = 0
+	v1thermal = 0
+	v2thermal = 0
+	v3thermal = 0
+}
+Conductor
+{
+	j1 = Jmax/2
+	k1 = 0
+	j2 = Jmax
+	k2 = 0
+	normal = 1
+}
+Conductor
+{
+	j1 = Jmax
+	k1 = 0
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+SpatialRegionBoundary
+{
+	name = Pass
+	PartnerName = Pass
+	j1 = 0
+	k1 = Kmax
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = Kmax
+	normal = 1
+}
+}
+Region
+{
+name = upper
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = Kmax
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Geometry = 1
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-12
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+PortTM
+{
+	j1 = 0
+	k1 = Kmax
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+	frequency = 1.4e10
+	A = 1
+	C = 0
+	EFFlag = 1
+	name = PortTM
+}
+Conductor
+{
+	j1 = Jmax
+	k1 = 0
+	j2 = Jmax
+	k2 = Kmax
+	normal = -1
+}
+SpatialRegionBoundary
+{
+	name = Pass
+	PartnerName = Pass
+	j1 = 0
+	k1 = 0
+	j2 = Jmax
+	k2 = 0
+	normal = 1
+}
+}

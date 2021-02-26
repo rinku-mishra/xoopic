@@ -1,0 +1,111 @@
+default
+{
+testing the loader
+}
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 0
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+	ID = 1
+	m = 1
+	q = 1.6e-19
+}
+Load
+{
+	speciesID = 0
+	zMinMKS = .0
+	zMaxMKS = .1
+	rMinMKS = .02
+	rMaxMKS = .1
+	vrdrift = 0
+	vzdrift = 1e6
+	vthdrift = 0
+	temperature = 1e6
+	cutoff = 0
+	density = 1e14
+	np2c = 5e6
+}
+Load
+{
+	zMinMKS = .0
+	zMaxMKS = .1
+	rMinMKS = .02
+	rMaxMKS = .1
+	speciesID = 1
+	vzdrift = 0
+	vrdrift = 0
+	vthdrift = 0
+	temperature = 0
+	density = 1e14
+	np2c = 5e6
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 50
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 50
+	j2 = 50
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}

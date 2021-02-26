@@ -1,0 +1,133 @@
+plsource.inp
+{
+	Helmut Pedit's input file (actually a variation)
+	Ignition of a plasma.
+}
+Region
+{
+Grid
+{
+	J = 10
+	x1s = 0.0
+	x1f = 0.03
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.05
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 1
+	BoltzmannFlag = 0
+}
+MCC
+{
+	gas = Ar
+	pressure = .025
+	eSpecies = electrons
+	iSpecies = ions
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+	collisionModel = 1
+}
+Species
+{
+        name = ions
+        m = 6.68e-29
+        q = 1.6e-19
+	collisionModel = 2
+}
+BeamEmitter
+{
+	speciesName = electrons
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 5
+	normal = 1
+	I = 2
+	a0 = 0
+	a1 = 1
+	C = 1
+	trise = 1e-6
+	thetadot = 0.0
+	np2c = 1e7
+	temperature = 4e5
+}
+Conductor
+{
+	j1 = 0
+	k1 = 5
+	j2 = 0
+	k2 = 10
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 10
+	k2 = 10
+	normal = -1
+}
+Equipotential
+{
+	C = 20
+	tfall = 5e-9
+	tpulse = 1e-6
+	a0 = 1
+	a1 = 3
+	j1 = 10
+	k1 = 2
+	j2 = 10
+	k2 = 10
+	normal = -1
+}
+Dielectric
+{
+	j1 = 10
+	k1 = 0
+	j2 = 10
+	k2 = 2
+	normal = -1
+	er = 1.0
+	QuseFlag = 0
+	nxbins = 10
+	nenergybins = 20
+	energy_min = 0
+	energy_max = 30
+	name = Aperture
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 10
+	k2 = 0
+	normal = 1
+}
+}

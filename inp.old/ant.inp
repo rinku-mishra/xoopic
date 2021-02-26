@@ -1,0 +1,70 @@
+default
+{
+This loads two squares of different particles in 
+}
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 50
+	x2s = 0.0
+	x2f = 0.1
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-13
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+	ElectrostaticFlag = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 50
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 50
+	j2 = 50
+	k2 = 50
+	normal = -1
+}
+Conductor
+{
+	j1 = 50
+	k1 = 50
+	j2 = 50
+	k2 = 0
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}

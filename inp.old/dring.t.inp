@@ -1,0 +1,118 @@
+dring
+{
+	A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 13
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 13
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = -1.6e-19
+}
+Control
+{
+	dt = 1.0E-13
+	ElectrostaticFlag = 1
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+	speciesName = electrons
+	thetadot = 0.0
+	I = 10
+	numberparticlesinmacro = 1.0E7
+	vzdrift = 2.99e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 1e8
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 13
+	normal = 1
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 13
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = 13
+	k1 = 13
+	j2 = 13
+	k2 = 0
+	normal = -1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 3
+	j2 = 3
+	k2 = 10
+	normal = -1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 10
+	k1 = 3
+	j2 = 10
+	k2 = 10
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 10
+	j2 = 10
+	k2 = 10
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 3
+	j2 = 10
+	k2 = 3
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 13
+	k2 = 0
+	normal = 1
+}

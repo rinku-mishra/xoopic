@@ -1,0 +1,346 @@
+laser_solid.inp
+{
+
+Here we make an initial attempt to model acceleration
+of ions from the backside of a thin film.
+
+Pulse with transverse half-sine profile and z polarization 
+is launched from the left boundary. 
+
+We use Cartesian (2-D slab) geometry.
+
+The bulk of the thin film is a solid-density H gas, but the
+generated H ions are given a large mass, so that they don't
+move.  This is not very realistic, but we are just trying
+to see if we can capture the basic phenomena. 
+
+The back side of the film has an even thinner layer of (mobile)
+F7+ ions and 7 times as many (preionized) electrons.  Again,
+this is not realistic, but recent experimental work indicates
+that F7+ is effectively accelerated to high-energy from a thin
+CaF2 coating on the back of an Al film.
+}
+
+Variables
+{
+// General numerical parameters
+  PI = 3.14159
+
+// **********************************************************************
+// General physical parameters
+// **********************************************************************
+  electronMass = 9.1094e-31 
+  electronCharge = -1.6022e-19
+  permit = 8.8542e-12 
+  speedLight = 2.9979e8
+  speedLight2 = speedLight*speedLight 
+  electronCharge2 = electronCharge*electronCharge 
+  qOverM = electronCharge/electronMass
+
+  ionCharge = -electronCharge
+  unitMassMKS = electronMass / 5.48579903e-04
+  hydrogenMassNum = 1.00797
+  hydrogenMass = unitMassMKS * hydrogenMassNum
+  fluorineMassNum = 18.9984
+  fluorineMass = unitMassMKS * fluorineMassNum
+  fluorineCharge = 7. * ionCharge
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+//   Here, we specify a zero plasma density, because we launch the laser
+//   pulse into a vacuum region.  Down below, we define the parameters
+//   used for loading the initial electron plasma into the simulation.
+  elecPlasmaDensity =  0.0
+  elecPlasmaFreq = sqrt(electronCharge*qOverM*elecPlasmaDensity/permit)
+ 
+// **********************************************************************
+// Laser pulse parameters - z polarization
+// **********************************************************************
+//   We are modeling a laser pulse with wavelength of 0.8 micron and
+//   FHWM pulse length of ~50 fs, and a peak intensity of ~10^19 W/cm^2
+//
+//   We are using a half sine function for the longitudinal shape of
+//   the pulse and Gaussians for the transverse directions with the
+//   same standard deviations sigma_r, same as waistSize below. 
+//
+//   The energy of the pulse is ~500 mJ.
+//
+//   In terms of the energy of the pulse [J], called here "energyOfPulse",
+//   the FHWM pulse length [s] "pulseLengthFWHM" and the transverse 
+//   width "waistSize" [m], the peak laser intensity is given by: 
+//
+//   Ipeak = (2*energyOfPulse)/(1.5*pulseLengthFWHM*PI*waistSize^2)
+//         ~ 4e23 W/m^2
+//         ~ 4e19 W/cm^2
+//
+  energyOfPulse =   300.0e-03     // [J]
+  pulseLengthFWHM =  30.0e-15     // [s]      
+  waistSize =         3.0e-06     // [m] 
+  laserWavelength =   0.8e-06     // [m]
+  laserFrequency = 2.*PI*speedLight/laserWavelength
+  peakElectricField = sqrt(8.*energyOfPulse/(1.5*permit*speedLight*pulseLengthFWHM*PI*waistSize*waistSize))
+
+// **********************************************************************
+// Grid parameters
+// **********************************************************************
+// We must resolve the laser wavelength
+  numGridsPerWavelength = 16
+  dx = laserWavelength / numGridsPerWavelength
+  Nx = 32 * numGridsPerWavelength
+  Lx = Nx * dx
+
+  gridSizeRatio = 1
+  dy = dx * gridSizeRatio
+  Ny = 32 * numGridsPerWavelength / gridSizeRatio
+  Ly = Ny * dy
+
+  d = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep = 0.99 * d / speedLight
+
+// **********************************************************************
+// Plasma parameters
+// **********************************************************************
+// An electron density of 1.736e+27 m^-3 leads to a plasma wavelength
+//   of 0.8 microns.
+//  plasmaDensityMKS = 1.736e+27
+  plasmaDensityMKS = 7.0e+27
+
+  numZeroCells    =  13.0 * numGridsPerWavelength
+  numSlabCells_H  =  18.0 * numGridsPerWavelength
+  numSlabCells_F  =   0.5 * numGridsPerWavelength
+  
+  numPlasmaCellsX = numSlabCells_H + numSlabCells_F
+  numPlasmaCellsY = Ny
+  numPlasmaCells  = numPlasmaCellsX * numPlasmaCellsY
+
+  totalNumElectrons  = plasmaDensityMKS * dx * dy * 1.0 * numPlasmaCellsY * numPlasmaCellsX
+  numPtclsPerCell    = 8
+  totalNumMacroPtcls = numPtclsPerCell * numPlasmaCells
+  np2cRatio          = totalNumElectrons / totalNumMacroPtcls
+
+// This is the desired delay time before the moving window algorithm activates.
+  movingWindowDelay = 1.8 * numZeroCells * dx / speedLight
+
+// **********************************************************************
+// Define gas density, pressure and other MCC parameters
+// **********************************************************************
+  gasTempEV       = 1.0e-06  // make gas cold (cannot set temperature to zero)
+  gasDensityMKS   = plasmaDensityMKS
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+
+// **********************************************************************
+// More laser parameters:
+// **********************************************************************
+// We model the laser pulse envelope as a Gaussian (nPulseShape=1).
+// or a half sine shape (nPulseShape=2)
+  nPulseShape = 2
+  pulseLength  = 1.5 * pulseLengthFWHM * speedLight
+
+// Here we specify Rayleigh length, etc.
+// These parameters are for a pulse with z-polarization.
+  angFreq = laserFrequency
+  angFreq2 = angFreq * angFreq
+  waveVector = sqrt( (angFreq2-elecPlasmaFreq*elecPlasmaFreq) / speedLight2 )
+  rayleighLength = waistSize * waistSize * waveVector / 2.
+  waistLocation = numZeroCells * dx
+}
+
+Region
+{
+Grid
+{
+  J = Nx 
+  x1s = 0.0
+  x1f = Lx
+  n1 = 1.0 
+  K = Ny 
+  x2s = 0.0
+  x2f = Ly 
+  n2 = 1.0
+  Geometry = 1
+  PeriodicFlagX2 = 1	
+}
+
+Control
+{
+  dt = timeStep
+
+// Turn off the initial Poisson solve
+  initPoissonSolve=0
+
+// Turn on the moving window algorithm.
+  movingWindow = 1
+  shiftDelayTime = movingWindowDelay
+}
+
+// Define the electrons
+Species
+{
+  name = electrons
+  m = electronMass 
+  q = electronCharge 
+  collisionModel = 1
+}
+
+// Define the F7+ macro-particles
+Species
+{
+  name = fluorineP7
+  m = fluorineMass 
+  q = fluorineCharge 
+}
+
+// Define the H+ species (no macro-particles will be generated).
+Species
+{
+  name = heavyProtons
+  m = 1e6*hydrogenMass
+  q = ionCharge
+}
+
+// Load the plasma electrons over a thin rectangular region within
+//   the grid, covering only the F7+ film.
+Load
+{
+  speciesName = electrons
+//  density = plasmaDensityMKS
+  analyticF = plasmaDensityMKS
+
+  x1MinMKS = (numZeroCells + numSlabCells_H) * dx
+  x1MaxMKS = (numZeroCells + numSlabCells_H + numSlabCells_F) * dx
+  x2MinMKS = 0.
+  x2MaxMKS = Ly
+
+  np2c = np2cRatio
+
+// Specify loading that is more uniform than random
+  LoadMethodFlag = 1
+}
+
+
+// Load the Fluorine 7+ ions over the F slab.
+Load
+{
+  speciesName = fluorineP7
+//  density = plasmaDensityMKS / 7.
+  analyticF = plasmaDensityMKS / 7.
+
+  x1MinMKS = (numZeroCells + numSlabCells_H) * dx
+  x1MaxMKS = (numZeroCells + numSlabCells_H + numSlabCells_F) * dx
+  x2MinMKS = 0.
+  x2MaxMKS = Ly
+
+  np2c = np2cRatio / 21.
+
+// Specify loading that is more uniform than random
+  LoadMethodFlag = 1
+}
+
+
+// Specify the Monte Carlo collision parameters for the background gas
+// We use the hydrogen cross-sections for impact ionization and elastic scattering.
+// We also use tunneling ionization rate for hydrogen.
+MCC
+{
+  gas         = H
+  pressure    = gasPressureTorr
+  temperature = gasTempEV
+
+  x1MinMKS = numZeroCells * dx
+  x1MaxMKS = 
+  x2MinMKS = 0.
+  x2MaxMKS = Ly
+
+  analyticF = gasDensityMKS * step( x1 - numZeroCells*dx ) * step( (numZeroCells+numSlabCells_H)*dx - x1 )
+
+  eSpecies                = electrons
+  iSpecies                = heavyProtons
+
+  // turn on electron/ion collisions, including impact ionization
+  collisionFlag = 1
+  relativisticMCC = 1
+
+  // turn on tunneling ionization in linearly polarized alternating field
+  tunnelingIonizationFlag = 1
+
+ // specify static field / circular polarization
+  ETIPolarizationFlag     = 1
+
+  // specify the characteristic oscillation frequency of the electric field
+  // -- here we fudge the real frequency with a small factor --
+  EfieldFrequency =  laserFrequency
+
+  // fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = 20
+}
+
+// Launch the laser pulse
+// This subsequently applies conducting boundary conditions along the left
+//    boundary.  It would be good if this could become an ExitPort...
+PortGauss
+{
+  j1 = 0 
+  j2 = 0 
+  k1 = 0 
+  k2 = Ny 
+  normal = 1
+
+  A = 0
+  C = 1.0 
+
+// Wave (0)
+  pulShp_p0 = nPulseShape
+  tdelay_p0 = 0.0 
+  pulLeng_p0 = pulseLength
+  chirp_p0 = 0.0
+  spotSize_p0 = waistSize
+  waveLeng_p0 = laserWavelength
+  focus_p0 = waistLocation
+  amp_p0 = 0.0
+
+// Wave (1)
+  pulShp_p1 = nPulseShape
+  tdelay_p1 = 0.0
+  pulLeng_p1 = pulseLength
+  chirp_p1 = 0.0
+  spotSize_p1 = waistSize
+  waveLeng_p1 = laserWavelength
+  focus_p1 = waistLocation
+  amp_p1 = peakElectricField
+
+  EFFlag = 0 
+  name = PortGauss
+}
+
+// Top boundary
+//Conductor
+//{
+//  j1 = 0
+//  j2 = Nx
+//  k1 = Ny 
+//  k2 = Ny 
+//  normal = -1
+//}
+
+// Bottom boundary
+//Conductor
+//{
+//  j1 = 0
+//  j2 = Nx
+//  k1 = 0
+//  k2 = 0
+//  normal = 1
+//}
+
+// Right boundary
+Conductor
+{
+  j1 = Nx
+  j2 = Nx
+  k1 = 0
+  k2 = Ny
+  normal = -1
+}
+
+}

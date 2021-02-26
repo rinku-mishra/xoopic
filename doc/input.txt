@@ -1,0 +1,869 @@
+INPUT PARAMETERS
+================
+
+XOOPIC Version 3.0  -- Last revised on 10-08-2002
+
+This document describes the input parameters in XOOPIC.
+The format of entries in this file consist of the following components:
+  <parameter>[=<default value>] (type) [units] description
+where type is one of flag, int, scalar, or string, and units describes the
+physical units used.
+
+Variables------------------------------------------
+
+This is a special group for user-defined variables.
+You are free here to make definitions used lower down in
+the input file.
+
+Examples:
+  JMAX = 200
+  KMAX = 120
+  k_half = KMAX/2
+
+XOOPIC will then interpret any occurrence of these strings in parameter
+groups below the Variables section as having the values given here, if 
+the occurrence is on the right-hand-side of an = sign.
+
+Region--------------------------------------
+
+XOOPIC allows multiple spatial regions to be simulated simultaneously.
+These regions are independent of each other, except for special boundary
+conditions  -- implemented ONLY in the parallel version -- which enable
+inter-region communication.
+
+In practice, one only specifies a single region.
+
+Each Region may have the following subgroups:
+
+Grid-----------------------------------------
+
+J  (int) Number of cells in the x1 direction. No default value.
+K  (int) Number of cells in the x2 direction. No default value.
+x1s   (scalar) [m] Lower coordinate in the x1 direction. No default value.
+x1f   (scalar) [m] Upper coordinate in the x1 direction. No default value.
+n1=1  (scalar) Non-uniform grid scaling parameter. Mapping is performed according
+		to xj = x1s + (x1f-x1s)(j/J)^n1, 0<=j<=J.
+x2s   (scalar) [m] Lower coordinate in the x2 direction. No default value.
+x2f   (scalar) [m] Upper coordinate in the x2 direction. No default value.
+n2=1  (scalar) Non-uniform grid scaling parameter.  Mapping is performed according
+to xk = x2s + (x2f-x2s)(k/K)^n2, 0<=k<=K.
+Geometry=0  (flag) Toggles between rz (0) and xy (1) geometries.
+PeriodicFlagX1 = 0  (flag) Toggles between non-periodic (0) and periodic (1) in the
+			  first direction.  (Handy for doing 1d problems)
+			  Currently works with multigrid and EM solve.
+PeriodicFlagX2 = 0  (flag) Toggles between non-periodic (0) and periodic (1) in the
+			  second direction.
+			  Currently works with multigrid and EM solve.
+dx1=1  (string)  Function which will modulate the mesh spacing in x1 direction.
+	      It is a function of j, so dx1="f(j)" forms are acceptable.
+		  examples:  dx1 = j,  dx1 = j/J + 0.5.
+		  j varies from 1/2 to J-1/2
+dx2=1  (string)  As above, except for k.
+
+Control--------------------------------------
+
+dt=1E-12 (scalar) [sec] Time step in seconds
+frandseed = (int) 31207321 seed for random number generator.  
+B01=0 (scalar) [Tesla] Uniform static magnetic field in x1 direction.
+B02=0 (scalar) [Tesla] Uniform static magnetic field in x2 direction.
+B03=0 (scalar) [Tesla] Uniform static magnetic field in x3 direction.
+B01analytic="0" (string) [Tesla] x1 component of the static magnetic
+		 	field as a function of x1 and x2 (see evaluator.txt)
+B02analytic="0" (string) [Tesla] x2 component of the static magnetic 
+			field as a function of x1 and x2 (see evaluator.txt)
+B03analytic="0" (string) [Tesla] x3 component of the static magnetic
+			field as a function of x1 and x2 (see evaluator.txt)
+Bf="NULL" (string) This is a filename which contains the values of the
+		magnetic field at each node.  A simulation of 40x40 cells will
+		have 41x41 mesh points, or nodes.
+		The file is composed of lines 
+		in this format: x1 x2 B1 B2 B3
+		where x1 and x2 are ignored but must be present, 
+		(later interpolation to the grid will be added)
+		B1 B2 B3 are magnetic field components in gauss.
+		B1 B2 B3 actually exist on the mesh points, and
+		are read in the X2 direction most rapidly.  (i.e.,
+		j=0, read k=0,k=1,k=2,....k=K,
+		j=1, read k=0,...k=K)
+
+E1init="0" (string) [V/m]  x1 component of an initial electric field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+E2init="0" (string) [V/m]  x2 component of an initial electric field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+E3init="0" (string) [V/m]  x3 component of an initial electric field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+		
+B1init="0" (string) [Tesla]  x1 component of an initial magnetic field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+B2init="0" (string) [Tesla]  x2 component of an initial magnetic field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+B3init="0" (string) [Tesla]  x3 component of an initial magnetic field,
+		given as an analytic function of x1 and x2.(see evaluator.txt)
+		This function is added at t=0 to the fields already present.
+
+movingWindow = 0 (int) Flag turning on "moving window", which at present,
+		moves fields and particles in the simulation 1 cell to the 
+		left at the speed of light.  Boundaries are NOT moved.
+		Additionally, a load with the Name "shiftLoad" will be
+		loaded whenever a shift occurs.
+shiftDelayTime = 0 (scalar) The time before the moving window begins to
+		move i in code units.
+		
+j1BeamDump=-1  (int) Grid coordinate of left side of beam dump (magnetic
+		field). -1 = do not use.  B01 is used for the field magnitude.
+j2BeamDump=-1  (int) Grid coordinate of right side of beam dump (magnetic
+		field). -1 = do not use.  B01 is used for the field magnitude.
+MarderIter=0 (int) Number of iterations of Marder correction for non-charge 
+				 conserving particle current.
+MarderParameter=0.5  (scalar) Relaxation parameter for Marder correction.
+ElectrostaticFlag=0  (flag) Determines field solver: 0=electromagnetic,
+				1-4=electrostatic:  1=DADI,...,4=multigrid.
+initPoissonSolve=1   (flag) Do an initial Eletrostatic Poisson solve at t=0.
+				Default is to do it, but often we don't want to.
+CurrentWeighting=0   (flag) Determines current weighting for EM model:
+				0=charge conserving, 1=bilinear in current (may require 
+				divergence correction).
+DivergenceCleanFlag=0   (flag) Determines whether a divergence correction
+				will be applied to the electric field: 0=no, 1=yes.
+BoltzmannFlag=0   (flag) Determines whether to use Boltzmann (massless) electrons:
+				0=explicit PIC electrons, 1=zero electron mass.
+BoltzmannTemp=1   (scalar) [eV] Temperature of the Boltzmann electrons.
+BoltzmannDensity=0   (scalar) [m^-3] Neutral density of the Boltzmann
+				electrons, n0, from n = n0 exp(-e*Phi/kT).
+BoltzmannCharge=-1   (scalar) [1.602E-19 C] Normalized charge of the
+				Boltzmann electrons.
+BoltzmannChargeRatio=1  (scalar) Charge ratio of Boltzmann source to n_0.
+BoltzSpecies = NULL (string) species used in boltzmann solve.
+NonRelativisticFlag=0 (flag) 1=NonRelativistic (faster) particle push, 0=Relativistic
+nSmoothing=0 (int) Number of binomial smoothing passes (0=none)
+InfiniteBFlag=0 (flag) 1=NonRelativistic Infinite B1, 0=normal relativistic particle push
+FieldSubFlag=1 (int) Number of EM advances/particle advance ( >= 1)
+emdamping=0 (scalar) Damping value for high frequency noise, varies 0-->1.
+np2cFactor=1 (scalar) Increases the numerical weighting (np2c) of particles read 
+				in from the dump file. Note that it is applied each time, so
+				generally it should be reset to 1 after the first read.
+particleLimit=1e8 (scalar) max number of particles in the simulation, halves the 
+				number of particles when exceeded.
+presidue=1e-3 (scalar) specifies a residue for the Poisson Solver.
+histmax=4096 (int) specified the length for history arrays
+
+For the MPI version of XOOPIC only:
+MPIpartition=Nx1  (string)  Partitioning information for the parallel version.
+			    (see MPI.txt, ../README.PARALLEL)
+
+Species--------------------------------------
+
+speciesName=NULL  (string) Unique name for this species.
+q=-1.602E-19   (scalar) [C] Charge per physical particle of this species.
+m=9.11E-31  (scalar) [kg] Mass per physical particle of this species.
+subcycle=1 (int) Number of field advances/particle advance (>=1)
+		This is known not to work with emitters presently. (v1.1)
+	 Should now work with all emitters (v2.51)
+supercycle=1 (int) Number of particle advances/field advance (>=1)
+		This is known not to work with emitters presently. (v1.1)
+	 Should now work with all emitters (v2.51)
+collisionModel=none	  (string) Model to use for collisions of this species: none (0),
+			  electron (1), ion (2), test (3), or boltzmann (4).
+threshold=0 (scalar) [eV] if the total energy of the particle drops below this
+			 then it is transfered to the BoltzSpecies.
+particleLimit=1e8 (scalar) max number of particles of this species in the simulation, 
+			 halves the number of particles when exceeded.  
+rmsDiagnosticsFlag=0 (integer) Set to 1 if you want time history plots of
+		    RMS values for beam size and velocity.  Energy spread
+		    and emittance will be added soon.  At present, this
+		    can only be done for one species at a time.
+		    (Dimitrov/Bruhwiler 10/18/2000)
+
+MCC------------------------------------------
+
+name=NULL (string) Name of the background gas package (currently only
+		Ar, Ne or Xe).
+pressure=0  (scalar) [Torr] Uniform background gas pressure for this gas.
+temperature=0.025 (scalar) [eV] Uniform background gas temperature.
+eSpecies=NULL	(string) Electron species to create in ionization collisions.
+iSpecies=NULL	(string) Ion species to create in ionization collisions.
+ionzFraction_i=1 (int) Number of ions to create per ionization event.
+ecxFactor=1 (Scalar) Increase all electron cross sections for this gas by 
+	a fixed ecxFactor (for example to compensate for mobility due 
+	to reduction of mass ratio).
+icxFactor=1 (Scalar) Increase all ion cross sections for this gas by 
+	icxFactor.
+collisionFlag=1 (int) A flag to turn on/off collisions in the Monte Carlo 
+        simulations. By default it is on (1). Set it to 0 to turn it off.
+tunnelingIonizationFlag=0 (int) A flag to turn on/off the tunneling ionization
+        calculations. It is off (0) by default. A non zero value will turn
+        them on. 
+analyticF="0.0" (StringParameter) Analytic function of x1,x2 describing 
+        the neutral gas density. The default evaluation of the function 
+        will return 0.0.
+ETIPolarizationFlag=0 (int) A flag to specify the E field polarization in
+        order to decide which function to use for the calculation of the
+        tunneling ionization probability. By default (0), it specifies
+        linear polarization, set it to 1 for circular polarization.    
+Example: The input file: inp/CsTest.inp demonstrates how to set up
+         a simulation with tunneling ionization of Cs neutral gas. 
+Load----------------------------------------- 
+
+units=MKS	(string) [MKS or EV] units for ALL the velocities
+v1drift=0   (scalar) [m/s or eV] Drift velocity in x1.
+v2drift=0   (scalar) [m/s or eV] Drift velocity in x2.
+v3drift=0  (scalar) [m/s or eV] Drift velocity in x3.
+temperature=0  (scalar) [m/s or eV] Isotropic temperature (3/2 kT = 1/2 m (Vtx^2+Vty^2+Vtz^2) = 1/2 m Vt^2).
+v1thermal=0   (scalar) [m/s or eV] Thermal velocity in x1. (1/2 kT = 1/2 m Vtx^2)
+v2thermal=0   (scalar) [m/s or eV] Thermal velocity in x2. (1/2 kT = 1/2 m Vty^2)
+v3thermal=0  (scalar) [m/s or eV] Thermal velocity in x3. (1/2 kT = 1/2 m Vtz^2)
+Ucutoff=0 (scalar) [m/s or eV] isotropic upper cutoff for temperature.
+v1Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x1.
+v2Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x2.
+v3Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x3.
+Lcutoff=0 (scalar) [m/s or eV] isotropic lower cutoff for temperature.
+v1Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x1.
+v2Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x2.
+v3Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x3.
+density=0   (scalar) [m^-3] Uniform number density.
+x1MinMKS  (scalar) [m] Lower x1 coordinate of region.
+x1MaxMKS  (scalar) [m] Upper x1 coordinate of region.
+x2MinMKS  (scalar) [m] Lower x2 coordinate of region.
+x2MaxMKS  (scalar) [m] Upper x2 coordinate of region.
+np2c  (scalar) Number of physical particles to computer particles.
+					 If np2c = 0, unmoving background rho.
+speciesName=NULL  (scalar) Refers to the Species with the same speciesName.
+analyticF (string) Spatial distribution of particles to be loaded.
+	Understands the variables x1 and x2 (see evaluator.txt)
+LoadMethodFlag=0 (int) Loads using random numbers if 0, bit reverse if 1.
+
+
+VarWeightLoad-------------------------
+(Useful for cylindrical geometry -- the macroparticle density is held
+ constant by linearly increasing the weight with radius.  This helps to
+ reduce statistical noise on axis and to limit growth in the number of
+ macroparticles as the load radius is increased.)
+
+Load parameters
+
+
+Generic Boundary Parameters------------------ 
+[for time functions, read timefunc.txt and evaluator.txt]
+[for particle diagnostics see pdiag.txt]
+
+
+j1 (int) x1 index for first boundary endpoint.
+k1 (int) x2 index for first boundary endpoint.
+j2 (int) x1 index for second boundary endpoint.
+k2 (int) x2 index for second boundary endpoint.
+
+Alternately, you may specify boundary locations in MKS units.
+However, XOOPIC will put the computational boundary on the
+nearest grid point.
+
+A1 (scalar) x1 location for first boundary endpoint. 
+A2 (scalar) x2 location for first boundary endpoint.
+B1 (scalar) x1 location for second boundary endpoint.
+B2 (scalar) x2 location for second boundary endpoint.
+
+As another alternative, you may specify the boundary endpoints by
+using the Segment group, example:
+Boundary 
+{
+  Segment
+  {
+	SegName = element1
+	A1 = 0
+	A2 = 0
+	B1 = 0.3
+	B2 = 0
+	normal = 1
+  }
+...
+
+Some boundaries will support multiple segments, see below.
+
+normal   (int) Unit direction of normal: -1=down/left, 1=up/right.
+			(int) for oblique segments unit direction of normal 
+				right 1, left -1.
+fill (int) if 1 the boundary is filled in, Warning: assumes the user has a closed boundary.
+EFFlag=0 (flag) Toggles recorder for Poynting flux through boundary: 0=off, 1=on.
+IdiagFlag=0 (flag) Toggles particle current accumulation: 0=off, 1=on.
+Ihist_avg=1 (int) Number of timesteps for averaging current plots.
+Ihist_len=1024 (int) Length of the current history arrays.
+diagSpeciesName=Noname (string) species for distribution function accumulation.
+				If not present or set to "Noname", the diagnostic is off.
+nxbins=100  (int) Number of spatial bins along boundary segment for distribution
+				accumulation.
+nenergybins=0  (int) Number of energy bins for distribution accumulation.
+nthetabins=0 (int) Number of bins for angular distribution function.
+theta_min=0 (Scalar) Minimum angle for angular distribution function.
+theta_max=90 (Scalar) Maximum angle for angular distribution function.
+energy_min=0 (Scalar) [eV] Minimum energy for dist. funtion collector.
+energy_max=100 (Scalar) [eV] Minimum energy for dist. funtion collector.
+name  (string) A name for this boundary, will appear in graphs under XOOPIC.
+C=1   (scalar) DC value for time-dependent function.
+A=0   (scalar) AC value for time-dependent function.
+frequency=0 (scalar) [Hz] Frequency of AC variation for time-dependent function.
+phase=0  (scalar) [rad] Initial phase of AC variation for time-dependent function.
+tdelay=0 (scalar) [s] Delay time before start of envelope function.
+trise=0  (scalar) [s] Rise time of envelope for time-dependent function.
+tpulse=10000   (scalar) [s] Pulse width of envelope for time-dependent function.
+tfall=0 (scalar) [s] Pulse fall time of envelope for time-dependent function.
+a0=1    (scalar) Low value of envelope for time-dependent function.
+a1=1    (scalar) High value of envelope for time-dependent function.
+xtFlag=0 (flag) Selects space function: 0 = default t-envelope
+   > 0 = string-interpreted function of the form: 1 = f(t), 2 = f(x),
+   3 = f1(x)f2(t), 4 = f(x,t) using F below.
+F="0" (string)  A string which is interpreted at runtime to give the time-dependence 
+	        of this boundary. (see timefunc.txt and evaluator.txt)
+
+Dielectric-----------------------------------
+
+Generic Boundary parameters, only 1 Segment permitted.
+er=1  (scalar) Relative permittivity.
+QuseFlag=1  (flag) Determines whether to use the accumulated surface charge in the
+				field solve; i.e. 0 indicates that the charge drains off.  This flag 
+				is only applicable to the electrostatic model.
+reflection=0	 (scalar) Coefficient for particle reflection between 0 and 1.
+refMaxE=1e10 (scalar) [eV] Only reflect particles below this energy.
+transparency=0 (scalar) Coefficient for particle transmission between 0 and 1.
+      Do not place non-zero value on system edge!
+Secondary group (see below) can contain zero or more of these.
+Secondary2 group (see below) can contain zero or more of these.
+
+Secondary------------------------------------
+
+Particle-impact induced emission. Angle of emission is isotropic.
+
+secondary=0 (scalar) Secondary emission coefficient, can be > 1
+threshold=0.5 (scalar) [eV] Emission threshold: incident energy must exceed to emit.
+Eemit=2 (scalar) [eV] Maximum energy of emitted secondaries (uniformly distributed).
+secSpecies=NULL  (string) Name of the species to emit as secondaries; 
+   must correspond to an existing species if secondary > 0.
+iSpecies=NULL (string) Incident species to generate secondaries.
+
+Secondary2-----------------------------------
+
+Secondary parameters.
+fReflected=0 (scalar) Fraction of emitted particles which are reflected primaries.
+fScattered=0 (scalar) Fraction of emitted particles which are scattered primaries.
+Eemit=2 (scalar) [eV] Most probable emission energy of true secondaries.
+energy_max0=0 (scalar) [eV] Impact energy at maximum yield.
+ks=1 (scalar) Surface roughness, 0<=ks<=2 (0 is roughest).
+
+DielectricRegion-----------------------------
+
+Dielectric parameters, only 1 Segment permitted.
+*note: for DielectricRegion, the points formed by (j1,k1) and (j2,k2)
+	indicate a rectangular region rather than a line segment.
+
+DielectricTriangle-----------------------------
+
+Dielectric parameters, only 1 Segment permitted.
+*note: for DielectricRegion, the points formed by (j1,k1) and (j2,k2)
+	indicate two vertices of a right triangle.  The third vertex
+	is determined by the normal:  if normal > 0, the third vertex
+	of the triangle is above the line.  Otherwise, it's below the
+	line.
+
+CurrentRegion-----------------------------------
+
+Generic Boundary parameters, only 1 Segment permitted.
+Current=1 (scalar) Magnitude in Amps of the TOTAL current in the region.
+direction=3 (int)  direction of current 1,2,3	
+currentFile (String) 	file containing current distribution, total current is	  
+								Current.
+analyticF (String)		Analytic function of x1,x2 describing the current distribution, total current is Current (see evaluator.txt)
+
+PlasmaSource-----------------------------------
+
+
+units1=MKS	(string) [MKS or EV] units for ALL the velocities for species 1
+v1drift1=0   (scalar) [m/s or eV] Drift velocity in x1.
+v2drift1=0   (scalar) [m/s or eV] Drift velocity in x2.
+v3drift1=0  (scalar) [m/s or eV] Drift velocity in x3.
+temperature1=0  (scalar) [m/s or eV] Isotropic temperature.  (see Load for definition)
+v1thermal1=0   (scalar) [m/s or eV] Thermal velocity in x1.  (see Load for definition)
+v2thermal1=0   (scalar) [m/s or eV] Thermal velocity in x2.  (see Load for definition)
+v3thermal1=0  (scalar) [m/s or eV] Thermal velocity in x3.  (see Load for definition) 
+Ucutoff1=0 (scalar) [m/s oreV] isotropic upper cutoff for temperature.
+v1Ucutoff1=0 (scalar) [m/s or eV] upper cutoff velocity in x1.
+v2Ucutoff1=0 (scalar) [m/s or eV] upper cutoff velocity in x2.
+v3Ucutoff1=0 (scalar) [m/s or eV] upper cutoff velocity in x3.
+Lcutoff1=0 (scalar) [m/s oreV] isotropic lower cutoff for temperature.
+v1Lcutoff1=0 (scalar) [m/s or eV] lower cutoff velocity in x1.
+v2Lcutoff1=0 (scalar) [m/s or eV] lower cutoff velocity in x2.
+v3Lcutoff1=0 (scalar) [m/s or eV] lower cutoff velocity in x3.
+speciesName1=NULL  (scalar) Refers to the Species with the same speciesName.
+
+units2=MKS	(string) [MKS or EV] units for ALL the velocities for species 2
+v1drift2=0   (scalar) [m/s or eV] Drift velocity in x1.
+v2drift2=0   (scalar) [m/s or eV] Drift velocity in x2.
+v3drift2=0  (scalar) [m/s or eV] Drift velocity in x3.
+temperature2=0  (scalar) [m/s or eV] Isotropic temperature.  (see Load for definition)
+v1thermal2=0   (scalar) [m/s or eV] Thermal velocity in x1.  (see Load for definition)
+v2thermal2=0   (scalar) [m/s or eV] Thermal velocity in x2.  (see Load for definition)
+v3thermal2=0  (scalar) [m/s or eV] Thermal velocity in x3.  (see Load for definition)
+Ucutoff2=0 (scalar) [m/s oreV] isotropic upper cutoff for temperature.
+v1Ucutoff2=0 (scalar) [m/s or eV] upper cutoff velocity in x1.
+v2Ucutoff2=0 (scalar) [m/s or eV] upper cutoff velocity in x2.
+v3Ucutoff2=0 (scalar) [m/s or eV] upper cutoff velocity in x3.
+Lcutoff2=0 (scalar) [m/s oreV] isotropic lower cutoff for temperature.
+v1Lcutoff2=0 (scalar) [m/s or eV] lower cutoff velocity in x1.
+v2Lcutoff2=0 (scalar) [m/s or eV] lower cutoff velocity in x2.
+v3Lcutoff2=0 (scalar) [m/s or eV] lower cutoff velocity in x3.
+speciesName2=NULL  (scalar) Refers to the Species with the same speciesName.
+
+j1,k1,j2,k2: two corner points to define the rectangle.
+sourceRate=0 (scalar) [#/m^3/s]	rate of plasma generation m^-3 s^-1
+np2c=1e6     (scalar) ratio of physical to computer particles
+analyticF="0.0" (string) Spatial distribution of the generated
+			particles.  Understands the variables
+			x1, x2, and t (see evaluator.txt)
+
+A plasma source is a rectangular region in which a plasma is
+generated at a certain rate.  THe default profile is uniform if
+analyticF is not given. It may be drawn in a strange fashion,
+don't worry about that.
+
+
+
+Conductor------------------------------------
+
+Dielectric parameters, multiple Segments permitted.
+
+Polarizer------------------------------------
+
+Conductor parameters, and:
+
+transmissivity=0  (scalar) Fraction of particles which pass through the polarizer
+Phi=90  (degrees) Polarization angle with respect to the simulation plane.
+		  This parameter can be a function of X as well, with X being
+		  the fraction along the length of the polarizer.  X = 0 is
+		  defined as the lower- or left-most point of the polarizer,
+		  and X = 1 is the other end.
+		  For example: Phi = 90 * X  gives a ramp of Phi from 0 to X.
+	   
+
+CylindricalAxis------------------------------
+
+Generic Boundary parameters.
+
+Generic Emitter Parameters-----------------------
+
+Dielectric  Parameters, Only 1 Segment permitted.
+units=MKS	(string) [MKS or EV] units for ALL the velocities
+v1drift=0   (scalar) [m/s or eV] Drift velocity in x1.
+v2drift=0   (scalar) [m/s or eV] Drift velocity in x2.
+v3drift=0  (scalar) [m/s or eV] Drift velocity in x3.
+temperature=0  (scalar) [m/s or eV] Isotropic temperature.  (see Load for definition)
+v1thermal=0   (scalar) [m/s or eV] Thermal velocity in x1.  (see Load for definition)
+v2thermal=0   (scalar) [m/s or eV] Thermal velocity in x2.  (see Load for definition)
+v3thermal=0  (scalar) [m/s or eV] Thermal velocity in x3.  (see Load for definition)
+Lcutoff=0 (scalar) [m/s oreV] isotropic lower cutoff for temperature.
+v1Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x1.
+v2Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x2.
+v3Lcutoff=0 (scalar) [m/s or eV] lower cutoff velocity in x3.
+Ucutoff=0 (scalar) [m/s oreV] isotropic upper cutoff for temperature.
+v1Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x1.
+v2Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x2.
+v3Ucutoff=0 (scalar) [m/s or eV] upper cutoff velocity in x3.
+np2c=1E6 (scalar) Number of physical particles to computer particles.
+speciesName=NULL  (scalar) Refers to the Species with the same speciesName.
+
+
+FowlerNordheimEmitter---------------------------------
+
+This is a field emitter, which obeys the Fowler-Nordheim model.
+The emitted current density, J_FN [A/m^2], is a function of the
+perpendicular electric field at the surface, E [V/m], and a
+number of special parameters:
+
+  J_FN = ( A_FN * (beta_FN * E)^2 / Phi_w_FN ) *
+         exp[ -(B_FN * v(y) * Phi_w_FN^1.5) / (beta_FN * E) ]
+
+  y(E) = C_y_FN * E^0.5 / Phi_w_FN
+
+  v(y) = 1 - C_v_FN * y^2
+
+Generic Emitter parameters, only 1 Segment permitted.
+
+A_FN=1.5414e-06 (scalar) [A-eV/V^2]  See equation above for meaning.
+B_FN=6.8308e+09 (scalar) [V/m/eV^1.5] See equation above for meaning.
+beta_FN=1. (scalar) [dimensionless]  See equation above for meaning.
+C_v_FN=0. (scalar) [dimensionless] See equation above for meaning.
+C_y_FN=3.79e-05 (scalar) [eV/(V/m)^0.5] See equation above for meaning.
+Phi_w_FN=4. (scalar) [eV]  The work function for electrons in the surface.
+nIntervals=0 (int) The number of intervals to be used for emitting particles.
+                   In the default case, nIntervals will be reset to the # of
+                   cells along the emitting boundary (with a minimum of 2),
+                   which  is the most reasonable thing to do.
+
+FieldEmitter2----------------------------------
+Describes a primary cell space charge limited field emitter using Gauss's Law
+
+Generic Emitter parameters, only 1 segment permitted
+threshold = 0 (Scalar) [V/m] The threshold field for emission
+
+BeamEmitter----------------------------------
+
+Generic Emitter parameters, only 1 Segment permitted.
+I=1   (scalar) [A] Emission current.
+thetadot=0  (scalar) [rad/s] Angular velocity of beam.
+nIntervals=0 (int) Number of intervals for inversion of spatial dependence of
+	J(x) as specified by F. Zero means use the number of cells.
+
+VarWeightBeamEmitter-------------------------
+
+BeamEmitter parameters, only 1 Segment permitted.
+nEmit=0 (int) Number of particles per timestep to emit; if nEmit=0 then the number 
+is computed using np2c.
+
+ExitPort-------------------------------------
+
+Generic Boundary parameters, only 1 Segment permitted.
+R=376.99 (scalar) [ohms] Resistive component of surface impedance.
+L=0   (scalar) [H] Inductive component of surface impedance.
+Cap=0   (scalar) [F] Capacitive component of surface impedance.
+Rin=376.99  (scalar) [ohms] Resistive component of surface impedance for incoming
+				wave.
+Lin=0   (scalar) [H] Inductive component of surface impedance for incoming
+			wave.
+Capin=0   (scalar) [F] Capacitive component of surface impedance for incoming
+			wave.
+
+PortTE---------------------------------------
+
+Generic Boundary parameters,only 1 Segment permitted.
+
+PortTM---------------------------------------
+
+Generic Boundary parameters, only 1 Segment permitted.
+
+PortTEM_MW------------------------------------
+Generic boundary parameters, only 1 Segment permitted.
+
+Notes:  At present, this boundary is ONLY for use with moving window code,
+and ONLY for use on the right-hand-wall of a cartesian (xy) system.
+Wave is polarized in the x2 (y) direction.
+
+pwFrequency (scalar) [radians/s] Frequency of the input plane wave.        
+pwPhase     (scalar) [radians]  phase of argument to input plane wave
+pwWavenumber (scalar) [1/m] wave number (k) of input wave (needed because
+                            a plasma may be present)
+pwAmplitude (scalar)  [V/m] Amplitude of E field to be input.
+pwDelay     (scalar)  [seconds] Time before wave begins to emit (no ramping yet!)
+n0          (scalar)  [#/m^3] Plasma density wave is propagating in.
+                        (redundant with k:  make SURE these two are consistent
+                         with each other.)
+
+AbsorbWave-----------------------------------[currently nonfunctional]
+
+Generic Boundary parameters, only 1 Segment permitted.
+wavePhase=1 (scalar) Normalized phase velocity of wave, vphase/c.
+
+LaunchWave-----------------------------------[currently nonfunctional]
+
+Generic Boundary parameters, only 1 Segment permitted.
+wavePhase=1 (scalar) Normalized phase velocity of wave, vphase/c.
+riseTime=0  (scalar) [s] Rise time of incoming TEM wave.
+amplitude=1 (scalar) [V/m] Amplitude of incoming TEM wave.
+pulseLength=1  (scalar) [s] Length of wave pulse.
+frequency=0 (scalar) [Hz] Sinusoidal modulation of waveform.
+
+Gap------------------------------------------
+
+Generic Boundary parameters, only 1 Segment permitted.
+*note: uses timefunction (Generic Boundary parameters) to set time-dependent 
+	field (V/m) uniformly in space across the gap.
+
+Equipotential--------------------------------
+[see timefunc.txt, evaluator.txt and eqpot.txt for gotchas]
+
+Conductor parameters.
+*note: uses timefunction (Generic Boundary parameters) to set spatially
+	uniform time-dependent voltage on surface.  Works as a grounded
+	Conductor in the electromagnetic model.
+*note: if you have multiple boundary segments which are all at the same potential
+	it is important for performance that you specify them all
+	in the same Equipotential group.
+
+VanalyticF = "1" (scalar) String specifying the analytic function with which
+             to scale all the other variables affecting the voltage
+             (the time function, C, A, a1, a0, tdelay, trise, tfall, tpulse).
+             The values "x1" and "x2", when used in VanalyticF, mean the
+             physical x1 and x2 coordinates.
+	
+
+Foil-----------------------------------------[currently nonfunctional]
+
+Generic Boundary parameters, multiple segments permitted.
+nemit=0  (scalar) Number of secondary electrons emitted per incident
+			electron.
+
+
+PortGauss --------------------------------
+
+PortGauss launches two linearly polarized electromagnetic
+pulses in 2-D Cartesian geometry. The pulses are launched 
+from a given boundary by controlling the temporal and spatial
+dependence of the electric field at that boundary. The
+transverse spatial profile is Gaussian along the boundary.
+The temporal variation can be either trapezoidal, Gaussian, 
+or a half-sine.  Pulse 0 is linearly polarized in the y 
+direction, while pulse 1 is linearly polarized in the z 
+direction.  The pulses are launched in accordance with paraxial
+theory, such that the waist (focus) is a given distance from
+the port.
+
+The parameters of pulse 0 (linearly polarized in the 
+y direction) are:
+
+ - waveLeng_p0            = wavelength [meters] of the EM wave
+ - amp_p0                 = peak wave amplitude of electric field [Volts/meter] 
+ - spotSize_p0            = The beam half width [meters] at the waist.
+ - focus_p0               = Displacement [meters] of the focus.
+ - pulShp_p0              = pulse shape (0=trapezoid; 1=Gaussian; 2=half-sine;
+                                         3=wide gaussian) 
+ - pulLeng_p0             = pulse length [meters]. (half-width for Gaussian, 
+				full for half-sine and trapezoid). 
+ - tdelay_p0              = time delay [seconds] to start pulse. 
+
+ - offset		= an offset in MKS units from the center of the
+ 			  simulation to the peak of the Gaussian.  Default
+			  is zero.
+
+The parameters of pulse 1 (linearly polarized in the z 
+direction) are the same, except that "_p0" is replaced
+by "_p1".  
+
+To have only one pulse, set the amplitude of the other to
+zero.
+
+The code crashes if the value of focus is set to zero. If the focus needs
+to be at the boundary, set the value of the focus equal to one or two
+cell lenght inside the region (Dx or 2*Dx). 
+ 
+For option 1, gaussian shape, at t = tdelay +- tpulse/2, the value is
+exp(-1), and zero beyond that.  For option 3, the pulse is actually cut
+off further out (meaning your pulse is 6x longer), so the minimum value
+is 4.8e-6 w.r.t the maximum.
+
+
+
+
+Diagnostics--------------------------------
+    For more information read diagnostic.txt
+j1 (int) x1 index for first diagnostic endpoint.
+k1 (int) x2 index for first diagnostic endpoint.
+j2=j1 (int) x1 index for second diagnostic endpoint.
+k2=k1 (int) x2 index for second diagnostic endpoint.
+
+Alternately, you may specify boundary locations in MKS units.
+However, XOOPIC will put the diagnostic on the
+nearest grid point.
+
+A1 (scalar) x1 location for first boundary endpoint. 
+A2 (scalar) x2 location for first boundary endpoint.
+B1 (scalar) x1 location for second boundary endpoint.
+B2 (scalar) x2 location for second boundary endpoint.
+
+VarName (string) name of variable to be plotted.  Currently the follow variables can be plotted.
+For time histories or for spatial regions:
+    E1 -> Ez (RZ) or Ex (XY)
+    E2 -> Er (RZ) or Ey (XY)
+    E3 -> Ephi (RZ) or Ez (XY)
+    B1 -> Bz (RZ) or Bx (XY)
+    B2 -> Br (RZ) or By (XY)
+    B3 -> Bphi (RZ) or Bz (XY)
+    I1 -> Iz (RZ) or Ix (XY) (only with EM field solve)
+    I2 -> Ir (RZ) or Iy (XY) (only with EM field solve)
+    I3 -> Iphi (RZ) or Iz (XY) (only with EM field solve)
+    intEdl1 -> Ez (RZ) or Ex (XY)
+    intEdl2 -> Er (RZ) or Ey (XY)
+    intEdl3 -> Ephi (RZ) or Ez (XY)
+	 poynting1 -> Poynting Vector in x1 (only with EM field solve)
+	 poynting2 -> Poynting Vector in x2 (only with EM field solve)
+	 poynting3 -> Poynting Vector in x3 (only with EM field solve)
+    rho -> charge density
+	 speciesName -> rho of a given species
+    phi -> potential (only with electrostatic field solve)
+	 Q -> surface charge on dielectrics
+    LaserSpotSize  ->  Integral of y*y* Ey*Ey / Integral of Ey * Ey over 
+		     the line k1 to k2, assuming the laser spot is centered
+		     at (k2-k1)/2
+		     Displayed is the average over HISTMAX timesteps of this
+		     measure.
+    WaveDirDiagnostic -> Computes over the mesh (Ey - c*Bz)/2 and (Ey + c*Bz)/2,
+                         which distinguishes left and right moving waves in
+                         the system (polarized in y).
+
+                         "polarizationEB = EzBy" in the "Diagnostic" group
+                         specifies the calculation of (Ez-c*By)/2 and
+                         (Ez + c*By)/2 instead. If "polarizationEB" is not
+                         given or "polarizationEB = EyBz", the computed 
+                         diagnostics is for (Ey - c*Bz)/2 and (Ey + c*Bz)/2.
+                         
+                         "psd1dFlag = 1" calculates the 1d power spectral 
+                         densities for the two linear combinations of E and B
+                         selected via the "polarizationEB". The 1d PSD are
+                         calculated along the x axis for each value of the
+                         y index. By default, the psd1dFlag is turned off, 
+                         i.e. its default value is zero.
+
+                         "windowName = Hann" specifies windowing of the data
+                         before the FFT is done. If "windowName" is not 
+                         given in the "Diagnostic" group, the "Blackman" window 
+                         is applied to the data. The following windows are 
+                         implemented: "Blackman", "Bartlett", "Hamming", 
+                         "Hann", and "Welch". 
+
+                         Here is an example of this diagnostics structure:
+
+                         Diagnostic
+                         {
+                         	j1 = 0
+                                j2 = Nx                 
+                                k1 = 0                  
+                                k2 = Ny
+                                VarName = WaveDirDiagnostic
+                                polarizationEB = EzBy
+                                psd1dFlag = 1 // calculate the 1d power spectral density
+                                windowName = Hann
+                                title = Wave Energy
+                                x1_Label = x
+                                x2_Label = y
+                                x3_Label = Wave Energy
+                         }                         
+
+                         An example in a working input file is: "inp/TI_H_WDD.inp".
+
+   PSDFieldDiag1d -> This diagnostic computes the power spectral density 
+                     of em field components. 
+                     The diagnostic calculates 1d FFT transforms along
+                     the first spatial coordinate of the computational grid and
+                     for each fixed value of the second spatial coordinate of the
+                     grid. This choice is based on the assumption that a 
+                     laser pulse always propagates along the first 
+                     spatial direction. 
+
+                     The resulting diagnostic displays a surface in 3D. The first
+                     coordinate of the diagnostic is the second coordinate of the 
+                     computational grid. The second coordinate of the diagnostic is
+                     the wave number of the Fourier transform. 
+
+                     Example of how to enable this diagnostic in the input file is
+                     the following structure:
+
+                     Diagnostic
+                     {
+                     	j1 = 0
+                        j2 = Nx
+                        k1 = 0
+                        k2 = Ny
+                        VarName = PSDFieldDiag1d
+                        windowName = Blackman
+                        title = 1D Power Spectral Density
+                        x1_Label = y
+                        x2_Label = kx
+                        x3_Label = 1d PSD
+                        fieldName = E
+                        fieldComponentLabel = 3
+                     }   
+
+                     Users can again specify a window function 
+                     for the data to be Fourier transformed. 
+                     The example above uses the Blackman window.
+                     The labels of the diagnostic plot axes as 
+                     well as the the plot title
+                     can also be specified via the input file. 
+
+                     In the example above, the power spectral
+                     density of the third component of the  
+                     electric field is calculated, "Ez".
+
+                     The calculation of this diagnostic is done in 
+                     the PSDFieldDiag1d class. This class also 
+                     contains one more diagnostic that is not
+                     currently available via the input file but
+                     can be enabled by setting the flag
+                     "flagChirp" to true in the "psdFieldDiag1d.cpp"
+                     file and recompiling with "HAVE_FFT" defined.
+
+                     This diagnostic calculates the frequency 
+                     spectrogram of field component through the
+                     middle of the pulse, defined by index of the
+                     second coordinate of the computational box
+                     set to its half value. The diagnostic
+                     selects 64 points at a time along the first
+                     coordinate of the computational box and 
+                     calculates the PSD of the specified field.
+                     For the value in the middle of this 64 
+                     points interval, the PSD is plotted along
+                     the frequencies of the FFT. A translation of
+                     16 points long the pulse is made and the
+                     procedure is repeated. It gives the frequency
+                     content of the pulse along its lengths.
+
+                     This is an experimental diagnostic and it is
+                     disabled by default. Once it is tested 
+                     extensively, it will be available through
+                     the input file. The intervals for the FFT
+                     and the skip will be parameters in the input file
+                     and not restricted to 64 and 16 since they
+                     depend on the size of the box. 
+
+                     This diagnostic is particularly good for detecting
+                     chirped signals. 
+                     
+                     An example in a working input file is: "inp/TI_H_WDD.inp".
+
+   PSDFieldDiag2d -> This diagnostic computes the power spectral density 
+                     of em field components. 
+
+                     The diagnostic calculates 2d FFT transforms along
+                     both spatial coordinate of the computational grid. 
+                     
+                     Here is an example of what is needed in an input file to
+                     enable it, assuming the code is compiled with the FFTW
+                     library enabled and linked.
+
+                     Diagnostic
+                     {
+                     	j1 = 0
+                        j2 = Nx
+                        k1 = 0
+                        k2 = Ny
+                        VarName = PSDFieldDiag2d
+                        windowName = None
+                        title = 2D Power Spectral Density
+                        x1_Label = kx
+                        x2_Label = ky
+                        x3_Label = 2d PSD
+                        fieldName = E
+                        fieldComponentLabel = 3
+                     }
+                     
+                     An example in a working input file is: "inp/TI_H_WDD.inp".
+                         
+For spatial regions
+    JdotE -> JdotE 
+x1_Label=x1 (string) x1 Label of the XGrafix plot
+x2_Label=x2 (string) x2 Label of the XGrafix plot
+x3_Label=x3 (string) x3 Label of the XGrafix plot
+title=not_named (string) Title of XGrafix window. 
+**************NOTE**************
+    DON'T HAVE TWO TITLES THE SAME.  XGrafix DOESN'T LIKE IT.
+nfft (int) number of data points for fft, must be power of 2[currently nonfunctional]
+HistMax=64 (int) maximum length of history array
+save=0 (int)  Flag: 1 saves the diagnostic data in the dumpfile
+				Flag: 0 restarts when restarted from a dumpfile
+Comb=0 (int) Every Comb'th value is left when HistMax is reached
+    **Note if Comb=0 the history is a local history.**
+Ave=0 (int) Averaged over Ave data points when adding to history array
+integral=NULL (string) one of: line (variable dotted into dl), flux (variable dotted 
+              into dS), sum (simple summation).
+
+
+

@@ -1,0 +1,476 @@
+AbsorbWave
+{
+  wavePhase = 1.0	// wavePhase
+}
+
+BeamEmitter
+{
+  I = 1.0	// 
+  thetadot = 0.0	// 
+  nIntervals = 0	// 
+}
+
+Boundary
+{
+  j1 = -1	// x1 Index for a boundary endpoint
+  k1 = -1	// x1 Index for a boundary endpoint
+  j2 = -1	// x2 Index for a boundary endpoint
+  k2 = -1	// x2 Index for a boundary endpoint
+  A1 = -1	// x1 Location (MKS) of boundary endpoint
+  A2 = -1	// x2 Location (MKS) of boundary endpoint
+  B1 = -1	// x1 Location (MKS) of boundary endpoint
+  B2 = -1	// x2 Location (MKS) of boundary endpoint
+  fill = 0	// if fill = 1 the boundary is filled in
+  normal = 1	// Sign of normal to surface (1 or -1)
+  EFFlag = 0	// A flag to record EM energy
+  IdiagFlag = 0	// Flag turning on and off current collection for this boundary
+  Ihist_len = 1024	// Length of the current history arrays. Default is 1024.
+  Ihist_avg = 1	// Number of timesteps for averaging current plots. Default is 1.
+  spotSize_p0 = 	// 
+  spotSize_p1 = 	// 
+  waveLeng_p0 = 	// 
+  waveLeng_p1 = 	// 
+  focus_p0 = 	// 
+  focus_p1 = 	// 
+  amp_p0 = 	// 
+  amp_p1 = 	// 
+  tdelay_p0 = 	// 
+  tdelay_p1 = 	// 
+  pulLeng_p0 = 	// 
+  pulLeng_p1 = 	// 
+  pulShp_p0 = 	// 
+  pulShp_p1 = 	// 
+  chirp_p0 = 	// 
+  chirp_p1 = 	// 
+  nxbins = 0	// 
+  nenergybins = 0	// 
+  nthetabins = 0	// 
+  theta_min = 0	// 
+  theta_max = 90	// 
+  energy_min = 0	// 
+  energy_max = 100	// 
+  name = Noname	// A string label for this boundary
+  C = 	// DC value of time dependent function on the boundary
+  A = 	// AC sinusoidal value of the boundary
+  frequency = 	// frequency of the AC signal in Hz
+  phase = 	// phase of the AC signal
+  trise = 	// rise time of the envelope
+  tpulse = 	// pulse time of the envelope
+  tfall = 	// fall time of the envelope
+  tdelay = 	// delay time before the envelope
+  a0 = 	// lower amplitude of envelope
+  a1 = 	// upper amplitude of envelope
+  xtFlag = 0	// 
+  F = 100	// 
+}
+
+Control
+{
+  MPIpartition = Nx1	// Partition info for MPI version
+  dt = 1.0e-12	// time step
+  emdamping = 0	// EMdamping, a value from 0 to 2
+  movingWindow = 0	// Moving window: 0 none, 1 system leftward = window right
+  shiftDelayTime = 0	// Time before shifting begins
+  gasOffTime = -1.0 // default is a negative value for not switching off the gas	// Time at which to set the neutral gas density to zero.
+  dumpTextFiles = 0	// write in files, particles and electric field in text
+  Frandseed = 0	// seed for frand
+  B01 = 0.0	// Ambient B field in x1 direction
+  B01analytic = 0.0	// Ambient B field in x1 direction
+  B02analytic = 0.0	// Ambient B field in x2 direction
+  B03analytic = 0.0	// Ambient B field in x3 direction
+  B02 = 0.0	// Ambient B field in x2 direction
+  B03 = 0.0	// Ambient B field in x3 direction
+  B1init = 0	// Initial B1 fields as a function of x1, x2
+  B2init = 0	// Initial B2 fields as a function of x1, x2
+  B3init = 0	// Initial B3 fields as a function of x1, x2
+  E1init = 0	// Initial E1 fields as a function of x1, x2
+  E2init = 0	// Initial E2 fields as a function of x1, x2
+  E3init = 0	// Initial E3 fields as a function of x1, x2
+  Bf = NULL	// file containing B field
+  zoff = 0.0	// z offset for wiggler field
+  betwig = 0.0	// kz for wiggler field
+  j1BeamDump = -1	// grid coord of left side (-1 = off)
+  j2BeamDump = -1	// grid coord of right side (-1 = off)
+  MarderIter = 0	// 
+  MarderParameter = 0.5	// Relaxation parameter, should be less than 0.5
+  ElectrostaticFlag = 0	// Flag: 1=Electrostatic, 0=Electromagnetic.
+  SynchRadiationFlag = 0	// Flag: 1=SynchRadiation, 0=Electromagnetic.
+  FreezeFields = 0	// 
+  NonRelativisticFlag = 0	// Flag: 1=NonRelativistic particle push, 0=Relativisticparticle push - default is 0.
+  nSmoothing = 0	// 
+  histmax = 4096	// 
+  InfiniteBFlag = 0	// Flag: 1=Non Relativistic Infinite B1, 0=Relativisticparticle push - default is 0.
+  FieldSubFlag = 1	// Flag: number of times to subcycle the fields - default is 1.
+  CurrentWeighting = 0	// Flag: 1=bilinear (need divergence clean), 0=charge conserving.
+  DivergenceCleanFlag = 0	// Flag: 1=use clean, 0=no clean.
+  BoltzmannFlag = 0	// Flag: 1=Boltzmann electrons field solve, 0=full particles
+  BoltzmannTemp = 1	// Temperature of Boltzmann electrons
+  BoltzmannDensity = 0.0	// Neutral density of Boltzmann electrons
+  BoltzSpecies = NULL	// name of Boltzmann Species
+  BoltzmannCharge = -1	// Charge of Boltzmann electrons
+  BoltzmannEBFlag = 0	// if EBFlag=1 energy balance is used, EBFlag=0 temperature constant
+  BoltzmannChargeRatio = 1	// Set the charge ratio of source to n0
+  echoFlag = 0	// 0 = no echo, 1 = echo input file
+  duplicateParticles = 0	// number of times to duplicate particles
+  np2cFactor = 1	// Dump file np2c multiplier
+  particleLimit = 1E8	// max. total particles in sim
+  presidue = 1E-3	// Residue for poisson solves
+  initPoissonSolve = 1	// flag turning on/off the intital poisson solve.
+}
+
+CurrentSource
+{
+  Vinitial = 0.0	// initial voltage of driven electrode
+}
+
+Diagnostics
+{
+  j1 = -1	// x1 Index for Diagnostic
+  k1 = 0	// x2 Index for Diagnostic
+  j2 = 0	// x1 Index for Diagnostic
+  k2 = 0	// x2 Index for Diagnostic
+  normal = 1	// normal for Diagnostic
+  A1 = 0	// x1 Location (MKS) of boundary endpoint
+  A2 = 0	// x2 Location (MKS) of boundary endpoint
+  B1 = 0	// x1 Location (MKS) of boundary endpoint
+  B2 = 0	// x2 Location (MKS) of boundary endpoint
+  VarName = NULL	// Name of Variable to be plotted
+  polarizationEB = EyBz	// E_component B_component
+  psd1dFlag = 0 // default is to turn off this calculation	// Flag for the 1D PSD
+  windowName = Blackman // default is the Blackman window	// Name of the window for use in the 1D PSD
+  fieldName = None // no field name is set by default	// E or B
+  fieldComponentLabel = 0 // the default is not a valid component label	// 1, 2, or 3
+  integral = NULL	// type of integral performed: line, flux, and sum
+  x1_Label = x1	// x1 Label the plot
+  x2_Label = x2	// x2 Label the plot
+  x3_Label = x3	// x3 Label the plot
+  title = not_named	// Title of the plot
+  nfft = 0	// number of fft must be power of 2
+  save = 0	// Flag: 1 saves the diagnostic data in the dumpfile
+  HistMax = 64	// Maximum Length of History Buffer
+  Comb = 0	// Every \'Comb\' value is left when HistMax is reached
+  Ave = 0	// Averaged over \'Ave\' when HistMax is reached
+  directory = 	// directory for output files; default = output
+  file = 	// name of output file; can include C printf format char %d for current step
+  append = 0	// append data to file (= 1) or write data to empty file each time (= 0)
+  n = 0	// defines step number at which to write data to file; default is 0 (no writing)
+  n_start = 0	// defines start computation step when writes in file starts; default is 0 = start with first step
+  n_step = 1	// defines step for computation step between writes in file; default is 1 = write every step
+  n_end = 0	// defines end computation step when writes in file stops; default is 0 = no last step
+  n_width = 0	// defines width of period in computational steps over which derivative is taken; only used in derivative diagnostics; default=0 -- no derivative is done
+  t = 0	// defines time at which to write data to file
+  t_start = 0	// defines start time when writes in file starts
+  t_step = 0	// defines time difference between writes in file
+  t_end = 0	// defines end time when writes in file stops
+  open = 0	// open diagnostics windows initially (=1) or not (=0, default)
+  species = 	// list for species to include in diagnostic; default is to include all species
+  disabled = 0	// is diagnostic active (= 0, default) or disabled (= 1)
+}
+
+DiagnosticParams		// this is NOT input file name but Class name!
+{
+  j1 = 	// x1 Index for a boundary endpoint
+  k1 = 	// x2 Index for a boundary endpoint
+  component = 1	// direction index of E field
+}
+
+Secondary
+{
+  secondary = 0	// 
+  threshold = 0.5	// 
+  Eemit = 2	// 
+  secSpecies = NULL	// 
+  iSpecies = NULL	// 
+  fReflected = 0	// 
+  fScattered = 0	// 
+  energy_w = 	// 
+  energy_max0 = 0	// 
+  ks = 1	// 
+  er = 1.0	// Relative dielectric constant
+  QuseFlag = 1	// Relative dielectric constant
+  reflection = 0	// reflected particle fraction
+  refMaxE = 1e10	// reflect for energy < refMaxE
+  transparency = 0	// 
+}
+
+Emitter
+{
+  speciesName = NULL	// name of species to emit
+  v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = 0.0	// isotropic thermal velocity
+  v1thermal = 0.0	// thermal velocity in direction 1
+  v2thermal = 0.0	// thermal velocity in direction 2
+  v3thermal = 0.0	// thermal velocity in direction 3
+  Lcutoff = 0.0	// Lower cutoff
+  v1Lcutoff = 0.0	// Lower velocity cutoff in direction 1
+  v2Lcutoff = 0.0	// Lower velocity cutoff in direction 2
+  v3Lcutoff = 0.0	// Lower velocity cutoff in direction 3
+  Ucutoff = 0.0	// Upper cutoff
+  v1Ucutoff = 0.0	// Upper velocity cutoff in direction 1
+  v2Ucutoff = 0.0	// Upper velocity cutoff in direction 2
+  v3Ucutoff = 0.0	// Upper velocity cutoff in direction 3
+  units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+  np2c = 1E6	// Number of physical particles per computer particle
+}
+
+ExitPort
+{
+  R = 376.99	// resistance looking out (ohms)
+  L = 0	// inductance looking out (H)
+  Cap = 0	// capacitance looking out (C)
+  Rin = 376.99	// resistance looking in (ohms)
+  Lin = 0	// inductance looking in (H)
+  Capin = 0	// capacitance looking in (C)
+}
+
+Equipotential
+{
+  VanalyticF = 1	// Voltage on this boundary as a function of spatial location x1, x2
+}
+
+FieldEmitter
+{
+  threshold = 0.0	// Threshold E field
+  threshold = 0.0	// Threshold E field
+}
+
+FowlerNordheimEmitter
+{
+  A_FN = 1.5414e-06	// Coefficient 'A' of the Fowler-Nordheim field emission model.
+  beta_FN = 1.0	// Coefficient 'beta' of the Fowler-Nordheim field emission model.
+  B_FN = 6.8308e+09	// Coefficient 'B' of the Fowler-Nordheim field emission model.
+  C_v_FN = 0.0	// Coefficient 'C_v' of the Fowler-Nordheim field emission model.
+  C_y_FN = 3.79e-05	// Coefficient 'C_y' of the Fowler-Nordheim field emission model.
+  Phi_w_FN = 4.0	// The material work function in eV.
+  nIntervals = 0	// Number of intervals along the emitting surface.
+}
+
+Gap
+{
+  IEFlag = 	// IEFlag = 0 electric field , IEFlag = 1 current in directin IEFlag
+}
+
+Grid
+{
+  J = 	// Integer number of grid cells in x1 direction
+  K = 	// Integer number of grid cells in x2 direction
+  x1s = 	// Scalar starting value for grid x1 (left)
+  x1f = 	// Scalar finishing value for grid x1 (right)
+  n1 = 	// Non-uniform grid exponent in x1
+  x2s = 	// Scalar starting value for grid x2 (bottom)
+  x2f = 	// Scalar finishing value for grid x2 (top)
+  n2 = 	// Non-uniform grid exponent in x2
+  Geometry = 0					//	default to ZRGEOM	// Geometry of mesh RZ (flag = 0; it is default value if parameter not given) or XY (flag = 1)
+  PeriodicFlagX1 = 0	// Flag: 0 not periodic, 1 periodic
+  PeriodicFlagX2 = 0	// Flag: 0 not periodic, 1 periodic
+  dx1 = 1	// Function scaling mesh spacing in X1
+  dx2 = 1	// Function scaling mesh spacing in X2
+}
+
+H5Diagnostics
+{
+  VarName = NULL	// Name of Variable to be plotted
+  dumpPeriod = 0  // value of zero => dump at same times as dump file	// Period of diagnostic dump.
+  fileName = Diagnostics  // will later set this to be <inputfilebase>.h5	// Name of diagnostic HDF5 dump file.
+}
+
+CurrentRegion
+{
+  Current = 1	// Magnitude in Amps of the current in the loop
+  direction = 3	// direction of current 1,2,3
+  currentFile = NULL	// file containing current disribution
+  analyticF = 0.0 	// Analytic function of x1,x2 describing the current
+}
+
+LaserPlasmaSource
+{
+  velocity = 2.99792458e+08	// 
+  x1Flag = 1	// 
+  pulseWidth = 0	// 
+  delayTime = 0.	// time delay before laser pulse begins
+}
+
+LaunchWave
+{
+  wavePhase = 1.0	// wavePhase
+  riseTime = 0	// riseTime
+  amplitude = 1.0	// amplitude
+  pulseLength = 1.0	// pulseLength
+}
+
+Load
+{
+  v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = 0.0	// isotropic thermal velocity
+  v1thermal = 0.0	// thermal velocity in direction 1
+  v2thermal = 0.0	// thermal velocity in direction 2
+  v3thermal = 0.0	// thermal velocity in direction 3
+  Ucutoff = 0.0	// Upper isotropic cutoff
+  v1Ucutoff = 0.0	// Upper velocity cutoff in direction 1
+  v2Ucutoff = 0.0	// Upper velocity cutoff in direction 2
+  v3Ucutoff = 0.0	// Upper velocity cutoff in direction 3
+  Lcutoff = 0.0	// isotropic cutoff
+  v1Lcutoff = 0.0	// Lower velocity cutoff in direction 1
+  v2Lcutoff = 0.0	// Lower velocity cutoff in direction 2
+  v3Lcutoff = 0.0	// Lower velocity cutoff in direction 3
+  density = 0.0	// uniform density of real particles
+  x1MinMKS = 0.0	// minimun x1 postion to start load
+  x1MaxMKS = 0.0	// maximun z postion to start load
+  x2MinMKS = 0.0	// minimun r postion to start load
+  x2MaxMKS = 0.0	// maximun r postion to start load
+  np2c = 1e6 	// number of computer particles to real particles
+  speciesName = NULL	// unique species name
+  analyticF = 0.0	// Analytic function of x1,x2 describing the particle density
+  Name = noname	// name of this load
+  densityfile = NULL	// file containing density
+  LoadMethodFlag = RANDOM	// Flag to control loading method, RANDOM or QUIET_START.
+  units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+}
+
+Load_PW
+{
+  Name = shiftLoad  // The whole point of this	// name of this load
+  pwFrequency = 0	// frequency of input wave.
+  pwPhase = 0	// phase of input wave.
+  pwWavenumber = 0	// wave number(k) of input wave.
+  pwAmplitude = 0	// amplitude of input wave.
+  pwDelay = 0	// delay of input wave.
+}
+
+MCC
+{
+  gas = NULL	// name of the gas
+  pressure = 0	// Neutral gas pressure in Torr
+  temperature = 0.025	// Neutral gas temperature in eV
+  analyticF = 0.0	// Analytic function of x1,x2 describing the neutral gas density
+  eSpecies = NULL	// electron species for ioniz.
+  iSpecies = NULL	// ion species for ioniz.
+  iSpeciesPlusPlus = NULL	// ion species for ioniz.
+  ionzFraction_i = 1	// num ions created in ionz event
+  ecxFactor = 1	// 
+  icxFactor = 1	// 
+  relativisticMCC = 0	// Flag: 0=Original MCC models, 1=Relativistic MCC models.
+  x1MinMKS = -1.	// minimum x1 position defining neutral gas region
+  x1MaxMKS = -1.	// maximum x1 position defining neutral gas region
+  x2MinMKS = -1.	// minimum x2 position defining neutral gas region
+  x2MaxMKS = -1.	// maximum x2 postion defining neutral gas region
+  delayTime = 0.	// time delay before MCC algorithm activates
+  stopTime = -1.	// time after which MCC algorithm ceases
+  collisionFlag = 1	// default = 1(true) for invoking collisions in the Monte Carlo
+  tunnelingIonizationFlag = 0	// default = 0(false) for not using laser ionization in the Monte Carlo
+  ETIPolarizationFlag = 0	// default = 0 for linearly polarized E field, = 1 for circularly polarized
+  EfieldFrequency = -1.	// Frequency of the external alternating E field
+  discardDumpFileNGDDataFlag = 0	// default = 0(false) for using the NDG data in dump files
+  TI_numMacroParticlesPerCell = 10	// default = 10 for number of macro particles in a cell due to tunneling ionization
+}
+
+OpenBoundaryEmitter
+{
+  nEmit = 0	// 
+}
+
+{name = _name; description = _description;}
+{
+  void Parameter::setNameAndDescription(ostring _name, ostring _description) = 	// {name = _name; description = _description;}
+}
+
+ParticleGroup
+{
+  maxN = 	// Maximum number of particles in group
+  mRatio = 	// Ratio of specie mass to electron mass
+  np2c = 	// Number of particles per cell
+}
+
+PlasmaSource
+{
+  speciesName1 = NULL	// name of first species
+  v1drift1 = 0.0	// drift velocity in direction 1
+  v2drift1 = 0.0	// drift velocity in direction 2
+  v3drift1 = 0.0	// drift velocity in direction 3
+  temperature1 = 0.0	// isotropic thermal velocity
+  v1thermal1 = 0.0	// thermal velocity in direction 1
+  v2thermal1 = 0.0	// thermal velocity in direction 2
+  v3thermal1 = 0.0	// thermal velocity in direction 3
+  Ucutoff1 = 0.0	// Ucutoff
+  v1Ucutoff1 = 0.0	// Upper velocity cutoff in direction 1
+  v2Ucutoff1 = 0.0	// Upper velocity cutoff in direction 2
+  v3Ucutoff1 = 0.0	// Upper velocity cutoff in direction 3
+  Lcutoff1 = 0.0	// Lcutoff
+  v1Lcutoff1 = 0.0	// Lower velocity cutoff in direction 1
+  v2Lcutoff1 = 0.0	// Lower velocity cutoff in direction 2
+  v3Lcutoff1 = 0.0	// Lower velocity cutoff in direction 3
+  units1 = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+  speciesName2 = NULL	// name of species to emit
+  v1drift2 = 0.0	// drift velocity in direction 1
+  v2drift2 = 0.0	// drift velocity in direction 2
+  v3drift2 = 0.0	// drift velocity in direction 3
+  temperature2 = 0.0	// isotropic thermal velocity
+  v1thermal2 = 0.0	// thermal velocity in direction 1
+  v2thermal2 = 0.0	// thermal velocity in direction 2
+  v3thermal2 = 0.0	// thermal velocity in direction 3
+  Ucutoff2 = 0.0	// Ucutoff
+  v1Ucutoff2 = 0.0	// Upper velocity cutoff in direction 1
+  v2Ucutoff2 = 0.0	// Upper velocity cutoff in direction 2
+  v3Ucutoff2 = 0.0	// Upper velocity cutoff in direction 3
+  Lcutoff2 = 0.0	// Lcutoff
+  v1Lcutoff2 = 0.0	// Lower velocity cutoff in direction 1
+  v2Lcutoff2 = 0.0	// Lower velocity cutoff in direction 2
+  v3Lcutoff2 = 0.0	// Lower velocity cutoff in direction 3
+  units2 = 	// units of ALL velocities for second species maxwellian (MKS,EV)
+  analyticF = 0.0	// analytic distribution functions
+  sourceRate = 0.0	// rate of plasma generation m^-3 s^-1
+  np2c = 1E6	// ratio of physical to computer particles
+}
+
+PMLWave
+{
+  sigma = 1	// sigma
+  thickness = 4	// thichness
+}
+
+Polarizer
+{
+  transmissivity = 0	// transmissivity of this boundary to particles
+  Phi = 90	// angle w.r.t simulation plane of the conductivity in the perpendicular direction (degrees)
+}
+
+Segment
+{
+  A1 = -1	// x1 location for first segment endpoint.
+  A2 = -1	// x2 location for first segment endpoint.
+  B1 = -1	// x1 location for second segment endpoint.
+  B2 = -1	// x2 location for second segment endpoint.
+  normal = 0	// direction of normal.
+  name = Noname	// name of this segment
+  j1 = -1	// x1 location for first segment endpoint.
+  k1 = -1	// x2 location for first segment endpoint.
+  j2 = -1	// x1 location for second segment endpoint.
+  k2 = -1	// x2 location for second segment endpoint.
+}
+
+Species
+{
+  name = NULL	// unique name string
+  q = 1.60206e-19	// charge (C)
+  m = 9.1093897e-31	// mass (kg)
+  subcycle = 1	// subcycle index
+  supercycle = 1	// supercycle index
+  collisionModel = none	// model for collisions
+  threshold = 0	// threshold energy (eV)
+  particleLimit = 1e8	// This species particle limit
+  TAModel = none	// pair species for inter species coulomb collisions
+  coulomb = none	// pair species nanbu coulomb collisions
+  nanbu = 0	// Flag = 1 for calculation of intraspecies coulomb collision; Default value is 0.
+  IntraTAModel = 0	// Flag = 1 for calculation of intraspecies coulomb collision; Default value is 0.
+  rmsDiagnosticsFlag = 0	// Flag = 1 for calculation and plotting of RMS diagnostics; Default value is 0.
+}
+
+VarWeightEmitter
+{
+  nEmit = 0	// 
+}
+

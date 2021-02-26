@@ -1,0 +1,92 @@
+default
+{
+waveguide
+pml is at left and TE wave launching is at right
+}
+Region
+{
+Grid
+{
+	J = 50
+	x1s = 0.0
+	x1f = 0.01
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.002
+	n2 = 1.0
+	Geometry = 1
+}
+Control
+{
+	dt = 2e-14
+	ElectrostaticFlag = 0
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+PortTE
+{
+	j1 = 50
+	k1 = 0
+	j2 = 50
+	k2 = 10
+	normal = -1
+	frequency = 1e11
+	A = 1e7
+	C = 0
+//	tdelay = 0
+//	tpulse = 5e-11
+//	trise =0 
+//	tfall = 0
+//	a0 = 0
+//	a1 = 1
+	EFFlag = 1
+	name = PortTE
+}
+Conductor
+{
+	name = TheTopWall
+	j1 = 0
+	k1 = 10
+	j2 = 50
+	k2 = 10
+	normal = -1
+}
+Diagnostic
+{
+	title = Ez middle
+	j1 = 25
+	k1 = 0
+	j2 = 25
+	k2 = 10
+	VarName = E3
+ 	x1_Label = time
+  	x2_Label = Voltage
+	integral = sum
+  	HistMax = 81920
+}
+PMLPort
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+	sigma = 100
+	thickness = 4
+	name = PMLPort
+}
+Conductor
+{
+	name = theBottomWall
+	j1 = 0
+	k1 = 0
+	j2 = 50
+	k2 = 0
+	normal = 1
+}
+}

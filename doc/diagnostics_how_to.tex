@@ -1,0 +1,140 @@
+\documentstyle[12pt]{article}
+\pagestyle{empty}
+\topmargin -0.60in
+\oddsidemargin 0.0625in
+\textheight 9.00in
+\textwidth 6.50in
+\renewcommand{\baselinestretch}{1.4}
+\parskip 0.20in
+
+\begin{document}
+\pagestyle{plain}
+
+\begin{center}
+\Huge
+Adding Diagnostics to XOOPIC
+\\[10mm]
+\large
+Last change: 2016-02-26
+\end{center}
+
+\section{A top level explanation of how XOOPIC runs}
+
+The XOOPIC GUI, XGrafix, controls the simulation once it is running.
+Based on user input, it displays diagnostics or runs the simulation.
+
+XGrafix causes the simulation to advance a timestep by calling the
+XGMainLoop() function, (in {\tt xg/xgmain.cpp}) which in turn calls Physics(),
+which executes the numerical model of the simulation, and 
+Maintain\_Diagnostics(), which extracts information from the physics
+model for examination.
+
+Summarizing:
+The user controls XGrafix, XGrafix calls/controls XGMainLoop, which
+calls Physics() and Maintain\_Diagnostics().
+
+It is in Maintain\_Diagnostics that one would process raw Physics() data,
+such as taking FFT's of electric fields on the mesh, or maintaining
+a history of some quantity.  Maintain\_Diagnostics in turn calls history(),
+which maintains quantities as a function of time.
+
+\section{Files to modify to add a diagnostic}
+
+These are the files which are relevant to initializing and maintaining
+a diagnostic:
+\begin{itemize}
+  \item {\bf {\tt otools/diagn.cpp}}:  This file contains the function
+  Diagnostics::Diagnostics(), which gets initializes the diagnostic arrays and
+  sets up histories, and gets 
+
+  \item {\bf {\tt otools/initwin.cpp}}:  This file contains the calls to
+  XGrafix2.0, which set up the graphics windows for the diagnostics. 
+
+  \item {\bf {\tt otools/diagn.h}}:  declarations and definitions for the
+  diagnostics. It is also a means of giving {\tt initwin.cpp} access to
+  variables declared in {\tt diagn.cpp}.
+\end{itemize}
+
+For some diagnostics, you might have to modify the files in the {\tt physics/}
+to have them provide additional data for your diagnostics.
+
+\section{Example of adding a simple diagnostic}
+
+Suppose a time history of the electrostatic
+potential at a point A is needed.  This is a list of the things that would
+need to be done to add the diagnostic:
+
+\subsection{Step 1}
+in {\tt otools/diagn.cpp}:
+
+At the top of the file, declare a place to store the time history:
+
+{\bf Scalar *phi\_history\_at\_A;}
+
+\subsection{Step 2}
+In the function Set\_Diagnostics in {\tt otools/diagn.cpp}, allocate
+space for this diagnostic and write zeros to the newly allocated memory.
+
+{\bf  phi\_history\_at\_A = new Scalar[HISTMAX+1];  //allocate memory \\
+	 //initialize it to zero: \\
+  memset(phi\_history\_at\_A,0,(HISTMAX+1)*sizeof(Scalar)); }
+
+It is important to initialize memory to zero:  XGrafix may operate on the
+data before it is valid, (such as trying to display the history before the
+simulation has advanced a timestep), and many architectures will crash if
+you try to access invalid floating-point data.
+
+\subsection{Step 3}
+In the history() function, add the line:
+
+{\bf  phi\_history\_at\_A[hist\_hi] = phi[jm/2][km/2];}
+
+Add this line near the line: 
+
+{\bf  energy\_e[hist\_hi] = Uetot;}
+  
+in the history() function.  A history of phi at the grid location (jm/2,km/2)
+will now be maintained in the array ``phi\_history\_at\_A''.  "jm" and "km"
+are the maximum values of j and k respectively, so this diagnostic will
+take the potential history near the middle of the device.
+
+\subsection{Step 4}
+Also in the history function, add the line
+{\bf  phi\_history\_at\_A[i] = phi\_history\_at\_A[k]; }
+
+near the line:
+
+{\bf  energy\_e[i] = energy\_e[k];}
+
+  Since the time history is taken through the entire simulation, but the phi\_history
+array has only HISTMAX+1 entries, we must "comb" the time history periodically.
+This line ensures that this diagnostic will be properly combed.
+
+
+\subsection{Step 5}
+
+Add this line to {\tt diagn.h}:
+
+{\bf  extern Scalar *phi\_history\_at\_A;}
+
+\subsection{Step 6}
+ Make the call to XGrafix in {\tt initwin.cpp} which will set up a window
+to display this data in.
+
+In {\tt initwin.cpp}, add these lines to the InitWin() function:
+
+{\bf  XGSet2D("linlin","phi", "Potential history at point A", "closed", 700,400,
+	1.0,1.0,True,True,0,0,0.0,0.0);\\
+  XGCurve(t\_array, phi\_history\_at\_A, \&hist\_hi, 1); }
+
+These function calls are from the XGrafix 2.0 library.  Refer to the manual for
+XGrafix 2.0 for a description of XGrafix and these function calls.
+
+\subsection{Step 7}
+
+  Recompile xoopic and examine the diagnostic to see if you have carried
+out the previous steps correctly.  Adding this diagnostic took 9 lines of code.
+
+
+\end{document}
+

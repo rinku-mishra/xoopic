@@ -1,0 +1,195 @@
+## ####################################################################
+##
+## File:	filelists.am
+##
+## Purpose:	Makes various lists for easy inclusion into makefiles
+##
+## Version:	$Id: filelists.am 1799 2006-05-10 20:51:30Z kruger $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+# This creates a nicely formatted list of all header files
+hdrs.txt:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) hdrs.txt); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	hdrs=`ls *.h 2>/dev/null`; \
+	if test -n "$$hdrs"; then \
+	  echo "  " $$hdrs | fmt -w 60 >tmp; \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>hdrs.txt; \
+	  rm tmp; \
+	fi)
+
+# This creates a nicely formatted list of all C++ source files
+cxxsrcs.txt:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) cxxsrcs.txt); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	cxxsrcs=`ls *.cxx 2>/dev/null`; \
+	if test -n "$$cxxsrcs"; then \
+	  echo "  " $$cxxsrcs | fmt -w 60 >tmp; \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>cxxsrcs.txt; \
+	  rm tmp; \
+	fi)
+
+cppsrcs.txt:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) cppsrcs.txt); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	cppsrcs=`ls *.cpp 2>/dev/null`; \
+	if test -n "$$cppsrcs"; then \
+	  echo "  " $$cppsrcs | fmt -w 60 >tmp; \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>cppsrcs.txt; \
+	  rm tmp; \
+	fi)
+
+# Some people like to do quick hacks in builddir by copying over source
+# files.  This will add that information to config_summary_file so that
+# it is complete in its build information
+# Only works if top_config_summary_file is defined.
+buildfile_check:
+	if test "$(top_srcdir)" != "$(top_builddir)"; then \
+	if test -n "$(top_config_summary_file)"; then \
+	echo "C++ source files files found in "$(top_builddir) >> $(top_config_summary_file); \
+	make build_cppsrcs.txt \
+	fi \
+	fi
+
+# This creates a nicely formatted list of all source files
+# in build directory.  
+# Meant to only be invoked by buildfile_check
+build_cppsrcs.txt:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) cppsrcs.txt); \
+	  done; \
+	fi
+	(rm -f tmp; \
+	cppsrcs=`ls *.cpp 2>/dev/null`; \
+	if test -n "$$cppsrcs"; then \
+	  echo "  " $$cppsrcs | fmt -w 60 >tmp; \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>>$(top_config_summary_file); \
+	  rm tmp; \
+	fi)
+
+# This creates a nicely formatted list of all files with 
+# suffixes in DIST_SUFFIXES
+distfiles.txt:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) distfiles.txt); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	if test -n "$(DIST_FILES)"; then \
+	  echo "  " $(DIST_FILES) | fmt -w 60 >>tmp; \
+	fi; \
+	if test -n "$(DIST_SUFFIXES)"; then \
+	  for i in $(DIST_SUFFIXES); do \
+	    hassuffix=`ls *$$i 2>/dev/null`; \
+	    if test -n "$$hassuffix"; then \
+	      echo "  " *$$i | fmt -w 60 >>tmp; \
+	    fi; \
+	  done; \
+	fi; \
+	if test -n "$(H5TESTS)"; then \
+	  for i in $(H5TESTS); do \
+	    echo "  " $${i}_accepted/*.h5 | fmt -w 60 >>tmp; \
+	  done; \
+	fi; \
+	if test -n "$(NODIST_FILES)" -a -f tmp; then \
+	  for i in $(NODIST_FILES); do \
+	    mv tmp tmp1; \
+	    sed "s/$$i//" <tmp1 >>tmp; \
+	  done; \
+	  rm tmp1; \
+	fi; \
+	if test -f tmp; then \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//' >distfiles.txt; \
+	  rm tmp; \
+	fi; \
+	)
+
+makefilefiles: hdrs.txt cppsrcs.txt cxxsrcs.txt distfiles.txt
+
+updatemakefile.am:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) updatemakefile.am); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	$(top_srcdir)/config/updatemfs.sh )
+
+# This creates a nicely formatted list of all header files
+makefile.hdrs:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) makefile.hdrs); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	hdrs=`ls *.h 2>/dev/null`; \
+	if test -n "$$hdrs"; then \
+	  echo "HDR_FILES =   " $$hdrs | fmt -w 60 >tmp; \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>Makefile.hdrs; \
+	  rm tmp; \
+	fi)
+
+# This creates a nicely formatted list of all files with 
+# suffixes in DIST_SUFFIXES
+makefile.dist:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	  (cd $$i; $(MAKE) makefile.dist); \
+	  done; \
+	fi
+	(cd $(srcdir); \
+	rm -f tmp; \
+	if test -n "$(DIST_FILES)"; then \
+	  echo "EXTRA_DIST_FILES = " $(DIST_FILES) | fmt -w 60 >>tmp; \
+	fi; \
+	if test -n "$(DIST_SUFFIXES)"; then \
+	  for i in $(DIST_SUFFIXES); do \
+	    echo "  " *$$i | fmt -w 60 >>tmp; \
+	  done; \
+	fi; \
+	if test -n "$(NODIST_FILES)" -a -f tmp; then \
+	  mv tmp tmp1; \
+	  for i in $(NODIST_FILES); do \
+	    sed "s/$$i//" <tmp1 >>tmp; \
+	  done; \
+	  rm tmp1; \
+	fi; \
+	if test -f tmp; then \
+	  sed 's/$$/ \\/' <tmp | sed '$$s/\\//'>>Makefile.dist; \
+	  rm tmp; \
+	fi; \
+	)
+
+clean-local: clean-makefilefiles
+clean-makefilefiles:
+	(cd $(srcdir); \
+	rm -f hdrs.txt cppsrcs.txt cxxsrcs.txt distfiles.txt)
+
+.PHONY: hdrs.txt cppsrcs.txt cxxsrcs.txt distfiles.txt 
+.PHONY: clean-makefilefiles updatemakefile.am
+.PHONY: makefile.dist makefile.hdrs
+

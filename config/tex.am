@@ -1,0 +1,63 @@
+## ####################################################################
+##
+## File:	tex.am
+##
+## Purpose:	For making TeX documents
+##
+## Version:	$Id: filelists.am 1799 2006-05-10 20:51:30Z kruger $
+##
+## Copyright 2007, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+SUFFIXES = .tex .bib .pdf .aux .bbl
+
+.tex.pdf:
+	rm -f $@
+	@if test -n "$(PDFLATEX)"; then \
+	  (export TEXINPUTS=.:$(srcdir):; \
+	  $(PDFLATEX) $< && \
+	  if test -f *.bib; then \
+	    export BIBINPUTS=$(srcdir); \
+	    bibtex `basename $< .tex`; \
+	  fi; \
+	  if test -f `basename $< .tex`.idx; then \
+	    makeindex `basename $< .tex`.idx; \
+	  fi; \
+	  $(PDFLATEX) $< && $(PDFLATEX) $< ); \
+	fi
+
+.log.texerrs:
+	@rm -f $@
+	@echo "Undefined references:" >>$@
+	@for uref in `grep undefined $< | grep -v There | sed 's/.*\`//g' | sed "s/'.*//g" | sort -u`; do \
+	  echo "--> $$uref " >>$@; \
+	  grep -n "[rc][ei].*$$uref" $(srcdir)/`basename $< .log`.tex | grep -v '.tex:[0-9]*:%' | sed 's/:/:  /' >>$@; \
+	done
+	@echo "Multiply defined references:" >>$@
+	@for mlab in `grep 'multiply defined' $< | sed 's/.*\`//g' | sed "s/'.*//g"`; do \
+	  echo "--> $$mlab " >>$@;\
+	  grep -n 'label{'$$mlab'}' $(srcdir)/`basename $< .log`.tex >>$@; \
+	done
+	@cat $@
+
+texerrs:
+	if test -n "$(SUBDIRS)"; then \
+	  for i in $(SUBDIRS); do \
+	    (cd $$i; make texerrs); \
+	  done; \
+	fi
+	if test -n "$(TEXFILES)"; then \
+	  for i in $(TEXFILES); do \
+	    make $$i.texerrs; \
+	  done; \
+	fi
+
+clean-local: clean-tex
+clean-tex:
+	rm -f *.aux *.bbl *.blg *.idx *.ilg *.ind *.log *.texerrs *.toc
+
+.PHONY: texerrs
+
+

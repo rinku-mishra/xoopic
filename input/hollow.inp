@@ -1,0 +1,197 @@
+hollow.inp
+{
+	 psd jklee81895 hollow cathode
+}
+Variables
+{
+	 x1max = .015
+	 x2max = .01
+	 Jmax = 60
+	 Kmax = 30
+	 jLeftSideWall = Jmax*27/60
+	 jRightSideWall = Jmax*33/60
+	 kbottom = Kmax*9/30
+}
+Region
+{
+	 Species
+	 {
+		  name = electrons 
+		  m = 9.11E-31
+		  q = -1.6E-19
+		  collisionModel= ion
+	 }
+	 Species
+	 {
+		  name = argon 
+		  m = 6.68E-26
+		  q = 1.6E-19
+		  collisionModel= electron
+	 }
+	 Grid
+	 {
+		  J = Jmax
+		  x1s = 0.0
+		  x1f = x1max
+		  K = Kmax
+		  x2s = 0.0
+		  x2f = x2max
+		  Geometry = 0
+	 }
+	 Control
+	 {
+		  dt = 5.0E-13
+		  ElectrostaticFlag = 1
+		  presidue = 1e-4
+	 }
+	 MCC
+	 {
+		  gas = Ar
+		  pressure = 0.3
+		  eSpecies = electrons
+		  iSpecies = argon
+	 }
+	 Equipotential
+	 {
+		  C = -2000
+		  A = 0
+		  frequency = 1E8
+		  phase = 90
+		  trise = 0
+		  tpulse = 15e-6
+		  tfall = 1e-9
+		  a1 = 1
+		  a0 = 0
+		  Secondary
+		  {
+				secondary = 0.3
+				secSpecies = electrons
+				iSpecies = argon
+		  }
+		  Segment
+		  {
+				j1 = 0
+				j2 = 0
+				k1 = 0
+				k2 = Kmax
+				normal = 1
+		  }
+		  Segment
+		  {
+				j1 = 0
+				j2 = jRightSideWall
+				k1 = Kmax
+				k2 = Kmax
+				normal = -1 
+		  }
+		  Segment
+		  {
+				j1 = jLeftSideWall
+				j2 = jLeftSideWall
+				k1 = Kmax
+				k2 = kbottom
+				normal = -1
+		  }
+		  Segment
+		  {
+				j1 = jLeftSideWall
+				j2 = jRightSideWall
+				k1 = kbottom
+				k2 = kbottom
+				normal = -1
+		  }
+		  Segment
+		  {
+				j1 = jRightSideWall
+				j2 = jRightSideWall
+				k1 = kbottom
+				k2 = Kmax
+				normal = 1
+		  }
+	 }
+	 Conductor
+	 {
+		  j1 = Jmax
+		  j2 = Jmax
+		  k1 = Kmax
+		  k2 = 0
+		  normal = -1
+	 }
+	 Dielectric
+	 {
+		  er = 1.0
+		  j1 = jRightSideWall
+		  j2 = Jmax
+		  k1 = Kmax
+		  k2 = Kmax
+		  normal = -1
+	 }
+	 CylindricalAxis
+	 {
+		  j1 = 0
+		  k1 = 0
+		  j2 = Jmax
+		  k2 = 0
+		  normal = 1
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.000
+		  x1MaxMKS = 0.00675
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.01
+		  speciesName = electrons 
+		  density = 1.0e17
+		  np2c = 3E8
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.00
+		  x1MaxMKS = 0.00675
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.01
+		  speciesName = argon 
+		  density = 1.0e17
+		  np2c = 3E8
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.00675
+		  x1MaxMKS = 0.00825
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.003
+		  speciesName = argon
+		  density = 1.e17
+		  np2c = 3e8
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.006750
+		  x1MaxMKS = 0.00825
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.003
+		  speciesName = electrons 
+		  density = 1.0e17
+		  np2c = 3E8
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.00825
+		  x1MaxMKS = 0.015
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.01
+		  speciesName = argon 
+		  density = 1.0e17
+		  np2c = 3E8
+	 }
+	 Load
+	 {
+		  x1MinMKS = 0.00825
+		  x1MaxMKS = 0.015
+		  x2MinMKS = 0.0
+		  x2MaxMKS = 0.01
+		  speciesName = electrons
+		  density = 1.e17
+		  np2c = 3e8
+	 }
+}

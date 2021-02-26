@@ -1,0 +1,8 @@
+; .r plot_Efield
+; plot_Efield, "Ez2", "x", "y", "z", 1, 2.355e15
+; .r plot_psd
+; plot_psd, "Ez2PSD1d", "x", "y", "z", 1, 2.355e15
+.r plot_ChirpSpectrogram
+plot_ChirpSpectrogram, "Ez2ChirpSpectrogram", "x", "y", "z", 0, 1
+exit
+

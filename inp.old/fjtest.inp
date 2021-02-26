@@ -1,0 +1,109 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 70
+	x1s = 0.0
+	x1f = 0.34
+	n1 = 1.0
+	K = 10
+	x2s = 0.0
+	x2f = 0.01905
+	n2 = 1.0
+}
+Control
+{
+	dt = 1.0E-11
+	ElectrostaticFlag = 1
+}
+Species
+{
+        ID = 0
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+	speciesID = 0
+	thetadot = 0.0
+	I = 10
+	numberparticlesinmacro = 1.0E7
+	vzdrift = 1e8
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+	vthcutoff = 0
+}
+Conductor
+{
+	er = 1
+	j1 = 0
+	k1 = 10
+	j2 = 70
+	k2 = 10
+	normal = -1
+}
+Conductor
+{
+	er = 1
+	j1 = 70
+	k1 = 10
+	j2 = 70
+	k2 = 0
+	normal = -1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 3
+	j2 = 3
+	k2 = 5
+	normal = -1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 5
+	k1 = 3
+	j2 = 5
+	k2 = 5
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 5
+	j2 = 5
+	k2 = 5
+	normal = 1
+}
+Dielectric
+{
+	er = 1.0
+	j1 = 3
+	k1 = 3
+	j2 = 5
+	k2 = 3
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 70
+	k2 = 0
+	normal = 1
+}

@@ -1,0 +1,270 @@
+ESaccel
+{
+	Static alternating plate structure with propagating ionization front 
+	following T. Katsouleas.
+}
+Variables
+{
+	period_z = 2.5e-2 // period of electrodes in z
+	dy = 1.25e-2 // gap distance
+	n_plates = 4 // number of plates
+	plate_frac = 0.75 // fraction of period_z comprising plate
+	t_pulse = 50e-12 // pulse length
+	n_max = 1e19 // peak density
+	channel_delta = dy/8 // distance between laser channel and wall
+	V0 = 2e3 // plate voltage
+	c = 3e8
+}
+Region
+{
+Grid
+{
+	J = 128
+	x1s = 0.0
+	x1f = n_plates*period_z
+	n1 = 1.0
+	K = 64
+	x2s = 0.0
+	x2f = dy
+	n2 = 1.0
+	Geometry = 1
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1E-13
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+Species
+{
+	name = electrons
+	m = 9.11E-31
+	q = 1.6e-19
+}
+Species
+{
+	name = Ar
+	m = 1836*40*9.11E-31
+	q = 1.6e-19
+}
+LaserPlasmaSource
+{
+	name = plasmaSource
+	A1 = 0
+	A2 = channel_delta
+	B1 = n_plates*period_z
+	B2 = dy - channel_delta
+	units1 = EV
+	speciesName1 = electrons
+	temperature1 = 0
+	units2 = EV
+	speciesName2 = Ar
+	temperature2 = 0
+	sourceRate = n_max/t_pulse // rate of plasma generation
+//	np2c = 1e11
+	np2c = 1e10
+	velocity = 3e8 // velocity of propagation of ionization pulse
+	x1Flag = 1 // 1 = horizontal motion
+	pulseWidth = t_pulse*3e8 // spatial width of pulse in m
+}
+Dielectric
+{
+	name = left
+	A1 = 0
+	A2 = 0
+	B1 = 0
+	B2 = dy
+	normal = 1
+}
+Dielectric
+{
+	name = right
+	A1 = n_plates*period_z
+	A2 = 0
+	B1 = n_plates*period_z
+	B2 = dy
+	normal = -1
+}
+Dielectric
+{
+	name = gap0bottom
+	A1 = 0
+	A2 = 0
+	B1 = (1 - plate_frac)*0.5*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap0top
+	A1 = 0
+	A2 = dy
+	B1 = (1 - plate_frac)*0.5*period_z
+	B2 = dy
+	normal = -1
+}
+Equipotential
+{
+	name = plate1top
+	A1 = (1 - plate_frac)*0.5*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*0.5 + plate_frac)*period_z
+	B2 = dy
+	C = V0
+	normal = -1
+}
+Conductor
+{
+	name = plate1bottom
+	A1 = (1 - plate_frac)*0.5*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*0.5 + plate_frac)*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap1bottom
+	A1 = ((1 - plate_frac)*0.5 + plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*1.5 + plate_frac)*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap1top
+	A1 = ((1 - plate_frac)*0.5 + plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*1.5 + plate_frac)*period_z
+	B2 = dy
+	normal = -1
+}
+Equipotential
+{
+	name = plate2bottom
+	A1 = ((1 - plate_frac)*1.5 + plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*1.5 + 2*plate_frac)*period_z
+	B2 = 0
+	C = V0
+	normal = 1
+}
+Conductor
+{
+	name = plate2top
+	A1 = ((1 - plate_frac)*1.5 + plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*1.5 + 2*plate_frac)*period_z
+	B2 = dy
+	normal = -1
+}
+Dielectric
+{
+	name = gap2bottom
+	A1 = ((1 - plate_frac)*1.5 + 2*plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*2.5 + 2*plate_frac)*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap2top
+	A1 = ((1 - plate_frac)*1.5 + 2*plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*2.5 + 2*plate_frac)*period_z
+	B2 = dy
+	normal = -1
+}
+Equipotential
+{
+	name = plate3top
+	A1 = ((1 - plate_frac)*2.5 + 2*plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*2.5 + 3*plate_frac)*period_z
+	B2 = dy
+	C = V0
+	normal = -1
+}
+Conductor
+{
+	name = plate3bottom
+	A1 = ((1 - plate_frac)*2.5 + 2*plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*2.5 + 3*plate_frac)*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap3bottom
+	A1 = ((1 - plate_frac)*2.5 + 3*plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*3.5 + 3*plate_frac)*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap3top
+	A1 = ((1 - plate_frac)*2.5 + 3*plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*3.5 + 3*plate_frac)*period_z
+	B2 = dy
+	normal = -1
+}
+Equipotential
+{
+	name = plate4bottom
+	A1 = ((1 - plate_frac)*3.5 + 3*plate_frac)*period_z
+	A2 = 0
+	B1 = ((1 - plate_frac)*3.5 + 4*plate_frac)*period_z
+	B2 = 0
+	C = V0
+	normal = 1
+}
+Conductor
+{
+	name = plate4top
+	A1 = ((1 - plate_frac)*3.5 + 3*plate_frac)*period_z
+	A2 = dy
+	B1 = ((1 - plate_frac)*3.5 + 4*plate_frac)*period_z
+	B2 = dy
+	normal = -1
+}
+Dielectric
+{
+	name = gap4bottom
+	A1 = ((1 - plate_frac)*3.5 + 4*plate_frac)*period_z
+	A2 = 0
+	B1 = n_plates*period_z
+	B2 = 0
+	normal = 1
+}
+Dielectric
+{
+	name = gap4top
+	A1 = ((1 - plate_frac)*3.5 + 4*plate_frac)*period_z
+	A2 = dy
+	B1 = n_plates*period_z
+	B2 = dy
+	normal = -1
+}
+}

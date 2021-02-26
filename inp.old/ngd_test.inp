@@ -1,0 +1,255 @@
+// $Id: ngd_test.inp 1644 2001-06-06 22:16:09Z dad $
+ngd_test
+{
+
+Testing the generalized treatment of Neutral Gas Density --
+}
+
+// Define variables that can be used throughout this input file.
+
+Variables
+{
+// First, define some useful constants.
+	pi = 3.14159265358979323846
+	speedOfLight = 2.99792458e+08
+	electronMass = 9.1093897e-31
+	unitCharge = electronMass * 1.75881962e11
+	electronCharge = -1. * unitCharge
+	electronMassEV = electronMass * speedOfLight * speedOfLight / unitCharge
+	ionCharge = unitCharge
+	unitMassMKS = electronMass / 5.48579903e-04
+	lithiumMassNum = 6.942
+	lithiumMass = unitMassMKS * lithiumMassNum
+	hydrogenMassNum = 1.00797
+	hydrogenMass = unitMassMKS * hydrogenMassNum
+	nitrogenMassNum = 14.007
+	nitrogenMass = unitMassMKS * nitrogenMassNum
+	argonMassNum = 39.95
+	argonMass =  unitMassMKS * argonMassNum
+
+// Next, define the parameters of the high-energy electron beam.
+	beamEnergyEV = 100.e+03
+	totalNumBeam = 1.5e+10
+	totalBeamCharge = totalNumBeam * electronCharge
+	totalBeamRadius = 0.2e-4
+  totalBeamArea = pi * totalBeamRadius * totalBeamRadius
+
+// Define the number of grids in R and Z
+  totalSimulationLength = 0.0072
+	numRgrids = 10
+	numZgrids = 100
+	numCells = numRgrids * numZgrids
+
+// Number of beam particles
+	numBeamPtclsPerCell = 10
+
+// Calculate the size of the simulation region, grid spacings, time step.
+// We are assuming the same grid size in both z and r	
+  maxRadiusMKS = totalBeamRadius
+  maxLengthMKS = totalBeamRadius * numZgrids / numRgrids
+  rGridSize = maxRadiusMKS / numRgrids
+  zGridSize = maxLengthMKS / numZgrids
+  dx = 1. / sqrt( 1./(rGridSize*rGridSize) + 1./(zGridSize*zGridSize) )
+	timeStep = 0.7 * dx / speedOfLight
+
+// Calculate peak currents for defining emission of the high-energy beam.
+  peakCurrentDensity=1.e+10  // A/m^2
+  peakCurrent = peakCurrentDensity * totalBeamArea
+
+// Define gas density, pressure and other MCC parameters
+  gasTempEV       = 1.0e-06  // make gas cold (cannot set temperature to zero)
+  nitrogenDensity = 2.2e+24  // density of neutral N2 (molecular nitrogen) in m^-3
+                             // density of nitrogen atoms is twice N2 density
+  gasDensityMKS   = 2.0 * nitrogenDensity
+  gasPressureTorr = 1.20e-21 * gasDensityMKS * gasTempEV
+  lithiumPressureTorr = 100 * gasPressureTorr
+
+}
+
+// This simulation has only one "region", which contains grid, all particles, etc.
+Region
+{
+
+// Define the grid for this region.
+Grid
+{
+
+// Define number of grids along Z-axis and physical coordinates.
+	J = numZgrids
+	x1s = 0.0
+	x1f = maxLengthMKS
+	n1 = 1.0
+
+// Define number of grids along R-axis and physical coordinates.
+	K = numRgrids
+	x2s = 0.0
+	x2f = maxRadiusMKS
+	n2 = 1.0
+}
+
+// Specify "control" parameters for this region
+Control
+{
+// Specify the time step.
+	dt = timeStep
+// Specify initial value of the field in the x direction
+        E1init=3.0E10
+}
+
+// Define the nitrogen ions.
+Species
+{
+  name = nitrogen_ions
+  m = nitrogenMass
+  q = ionCharge
+  subcycle = 100
+  particleLimit = 8.0e+04 // prevents out-of-control growth in # of ptcls
+}
+
+// Define the hydrogen ions.
+Species
+{
+  name = hydrogen_ions
+  m = hydrogenMass
+  q = ionCharge
+  subcycle = 40
+  particleLimit = 8.0e+04 // prevents out-of-control growth in # of ptcls
+}
+
+// Define the lithium ions.
+Species
+{
+  name = lithium_ions
+  m = lithiumMass
+  q = ionCharge
+  subcycle = 40
+  particleLimit = 8.0e+04 // prevents out-of-control growth in # of ptcls
+}
+
+// Define the secondary electrons.
+Species
+{
+  name = electrons
+  m = electronMass
+  q = electronCharge
+  collisionModel = 1
+  particleLimit = 8.0e+04 // prevents out-of-control growth in # of ptcls
+}
+
+// Define the beam positrons.
+Species
+{
+  name = positrons
+  m = electronMass
+  q = unitCharge
+  collisionModel = 1
+  rmsDiagnosticsFlag = 1
+}
+
+// Define the beam emitter, which introduces the high-energy beam into the
+// simulation.
+
+VarWeightBeamEmitter
+{
+  speciesName = positrons
+  I = peakCurrent
+
+// Macroparticles are emitted from the left boundary, close to the axis of symmetry.
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = 2
+	normal = 1
+	np2c = 1000.
+
+// Emit particles, directed along the Z-axis,  with specified energy and temperature.
+	units = EV
+	v1drift = beamEnergyEV
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas = N
+  relativisticMCC = 1
+  pressure = gasPressureTorr
+  temperature = gasTempEV
+  eSpecies = electrons
+  iSpecies = nitrogen_ions
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas                         = H
+  pressure                    = gasPressureTorr
+  temperature                 = gasTempEV
+  eSpecies                    = electrons
+  iSpecies                    = hydrogen_ions
+  // turn on tunneling ionization in linearly polarized alternating field
+  tunnelingIonizationFlag     = 1       
+  // fix the number of macro particles to be created in each cell
+  TI_numMacroParticlesPerCell = 10
+}
+
+// Specify the Monte Carlo collision parameters for background gas
+MCC
+{
+  gas = Li
+  relativisticMCC = 1
+  pressure = lithiumPressureTorr
+  temperature = gasTempEV
+  eSpecies = electrons
+  iSpecies = lithium_ions
+}
+
+// Specify a perfect conductor along the left boundary.  This serves as a particle
+//   boundary condition (catches particles that leave the simulation) and as a
+//   field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = 0
+	k1 = 0
+	k2 = numRgrids
+	normal = 1
+}
+
+// Specify a perfect conductor along the radial boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_z is forced to vanish).
+
+Conductor
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = numRgrids
+	normal = -1
+}
+
+// Specify a perfect conductor along the right boundary.  This serves as a
+//   particle boundary condition (catches particles that leave the simulation)
+//   and as a field boundary condition (E_r is forced to vanish).
+
+Conductor
+{
+	j1 = numZgrids
+	j2 = numZgrids
+	k1 = numRgrids
+	k2 = 0
+	normal = -1
+}
+
+// Define the cylindrical symmetry axis.
+CylindricalAxis
+{
+	j1 = 0
+	j2 = numZgrids
+	k1 = 0
+	k2 = 0
+	normal = 1
+}
+
+}

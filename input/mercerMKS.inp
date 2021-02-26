@@ -1,0 +1,130 @@
+plasmatest
+{
+ Plasma in a simple magnetic mirror
+}
+Variables
+{
+	nplasma = 1.0e12
+}
+Region
+{
+Grid
+{
+	Geometry = 0
+	J = 128
+	x1s = 0.0
+	x1f = 0.6
+	n1 = 1.0
+	K = 32
+	x2s = 0.0
+	x2f = 0.15
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 5.0E-12
+//      B01 = 1.0
+	initPoissonSolve = 1
+	NonRelativisticFlag = 0 // 1=>nonrel, 0=> relativistic kinematics
+	Rule
+	{
+	 Limit
+	 dt <= 0.0
+	 Fatal -- time step must be positive
+	}
+}
+Species
+{
+        name = electron
+        m = 9.11E-31
+        q = -1.602e-19
+}
+Species
+{
+	name = proton
+	m = 1.673e-27
+	q = 1.602e-19
+}
+VarWeightLoad
+{
+//	units = eV
+//	temperature = 100.0
+//	v1thermal = 57.7
+//	v2thermal = 57.7
+//	v3thermal = 57.7
+	units = MKS
+	temperature = 4.2e6
+//	density = 1.0e12
+	x1MinMKS = 0.10
+	x1MaxMKS = 0.45
+	x2MinMKS = 0.00
+	x2MaxMKS = 0.1
+	np2c = 2.5e5
+	speciesName = electron
+	analyticF = (1.0e12)*step(0.05^2-(x1-0.3)^2-x2^2) 
+	LoadMethodFlag = 0
+}
+VarWeightLoad
+{
+//	units = eV
+//	temperature = 100.0
+//	v1thermal = 57.7
+//	v2thermal = 57.7	
+//	v3thermal = 57.7
+	units = MKS
+	temperature = 9.8e4
+//	density = 1.0e12
+	x1MinMKS = 0.15
+	x1MaxMKS = 0.45
+	x2MinMKS = 0.00
+	x2MaxMKS = 0.10	
+	np2c = 2.5e5
+	speciesName = proton
+	analyticF = (1.0e12)*step(0.05^2-(x1-0.3)^2-x2^2) 
+	LoadMethodFlag = 0
+}
+Conductor
+{
+	A1 = 0
+	A2 = 0
+	B1 = 0
+	B2 = 0.15
+	normal = 1
+}
+Conductor
+{
+	A1 = 0
+	A2 = 0.15
+	B1 = 0.6
+	B2 = 0.15
+	normal = -1
+}
+Conductor
+{
+	A1 = 0.6
+	A2 = 0.15
+	B1 = 0.6
+	B2 = 0.0
+	normal = -1
+}
+CylindricalAxis
+{
+	A1 = 0.0
+	A2 = 0.0
+	B1 = 0.6
+	B2 = 0.0
+	normal = 1
+}
+}

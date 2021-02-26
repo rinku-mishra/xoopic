@@ -1,0 +1,387 @@
+#define L1 .70524
+#define Rdrift .0765
+#define RdriftK 30
+#define Rmax .148
+#define RbeamMax .07417  // delta beam = .00254m
+#define RbeamMaxK 29  // RbeamMax/Rmax (.50115) * Kmax
+#define RbeamMin .07163
+#define RbeamMinK 28  // RbeamMin/Rmax (.48399) * Kmax
+#define Gap1 .02
+#define Zgap1 .188
+#define Gap2 .0202
+#define Gap3 .02
+#define Jmax 276
+#define Kmax 58
+#define gap1l .188
+#define gap1lJ 74  // gap1l/L1 * Jmax
+#define cavlinner .0785 // Rdrift + 2mm
+#define cav1innerR 31 // cavlinnerR/Rmax (.53041) * Kmax
+#define cav1l .078
+#define cav1lJ 30 // cal1l/L1 * Jmax
+#define cav1r .208
+#define cav1rJ 81 // cav1rJ/L1 * Jmax
+#define gap2 .292
+#define gap2J 114 // gap2/L1 * Jmax
+#define cav2R .424
+#define cav2RJ 166 // cav2R/L1 * Jmax
+#define R2min .0865 // Rdrift + 2cm
+#define R2minK 34 //R2min/Rmax (.58446) * Kmax
+#define cav2L .3122 //gap2 + .0202 
+#define cav2LJ 122 // cav2L/L1 * Jmax
+#define gap3 .574
+#define gap3J 225 // gap3/L1 * Jmax
+#define cav3RJ Jmax
+#define RoutWaveGuide .142
+#define RoutWaveGuideK 57  // RoutWaveGuide/Rmax (.95946) * Kmax
+#define RinWaveGuide .128  
+#define RinWaveGuideK 50  // RinWaveGuide/Rmax (.86486) * Kmax
+#define R3min R2min
+#define R3minK R2minK
+#define cav3L .594
+#define cav3LJ 232  //cav3L/L1 * Jmax
+#define Rshunt .06
+#define RshuntK 24 //Rshunt/Rmax (.40541) * Kmax
+#define RouterShunt .05
+#define RouterShuntK 20 //RouterShunt/Rmax (.33784) * Kmax
+#define ZmaxShunt .60524
+#define ZmaxShuntJ 237 //ZmaxShunt/L1 * Jmax
+#define RinnerShunt .03
+#define RinnerShuntK 12  //RinnerShunt/Rmax (.20270) * Kmax
+#define Zshunt .49124
+#define ZshuntJ 192 //Zshunt/L1 * Jmax
+Klystron
+{
+  RKO klystron
+}
+Grid
+{
+	J = Jmax
+	x1s = 0.0
+	x1f = L1
+	n1 = 1.0
+	K = Kmax
+	x2s = 0.0
+	x2f = Rmax
+	n2 = 1.0
+}
+Control
+{
+	dt = 4E-12
+	B01 = .8
+}
+Species
+{
+	name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	speciesName = electrons
+	j1 = 0
+	k1 = RbeamMinK
+	j2 = 0
+	k2 = RbeamMaxK
+	normal = 1
+	numberparticlesinmacro = 1e10
+	I = 10000
+	vthermal = 0
+	thetadot = 0.0
+	vzdrift = 2.59e8
+}
+ExitPort
+{// free space boundary below the beam 
+	j1 = 0 
+	k2 = RbeamMinK
+	j2 = 0
+	k1 = 0
+	normal = 1
+	EFFlag = 1
+        name = below beam
+        C = 0
+        A = 0
+        frequency = 1
+}
+ExitPort
+{// free space boundary above the beam
+	j1 = 0
+	k1 = RbeamMaxK
+	j2 = 0
+	k2 = RdriftK
+	normal = 1
+	EFFlag = 1
+        name = above beam
+        C = 0
+        A = 0
+        frequency = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = RdriftK
+	j2 = 0
+	k2 = Kmax
+	normal = 1
+}
+Conductor
+{/*C1*/
+	j1 = 0
+	k2 = RdriftK
+	j2 = gap1lJ
+	k1 = RdriftK
+	normal = -1
+}
+Conductor
+{/*C2*/
+	j1 = gap1lJ
+	k2 = RdriftK
+	j2 = gap1lJ
+	k1 = cav1innerR
+	normal = 1
+}
+Conductor
+{ /*C2.5*/
+	j1 = gap1lJ
+	k2 = cav1innerR
+	j2 = cav1lJ
+	k1 = cav1innerR
+	normal = 1
+}
+Conductor
+{ /*C3*/
+	j1 = cav1lJ
+	k2 = cav1innerR
+	j2 = cav1lJ
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C4*/
+	j1 = cav1lJ
+	k2 = Kmax
+	j2 = cav1rJ
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C5*/
+	j1 = cav1lJ
+	k2 = Kmax
+	j2 = cav1lJ
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C5.3*/
+	j1 = cav1rJ
+	k2 = Kmax
+	j2 = cav1rJ
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C5.6*/
+	j1 = cav1rJ
+	k2 = RdriftK
+	j2 = gap2J
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C6*/
+	j1 = gap2J
+	k2 = RdriftK
+	j2 = gap2J
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C7*/
+	j1 = gap2J
+	k2 = Kmax
+	j2 = cav2RJ
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C8*/
+	j1 = gap2J
+	k2 = Kmax
+	j2 = cav2RJ
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C9*/
+	j1 = cav2RJ
+	k2 = Kmax
+	j2 = cav2RJ
+	k1 = R2minK
+	normal = 1
+}
+Conductor
+{ /*C10*/
+	j1 = cav2RJ
+	k2 = R2minK
+	j2 = cav2LJ
+	k1 = R2minK
+	normal = 1
+}
+Conductor
+{ /*C11*/
+	j1 = cav2LJ
+	k2 = R2minK
+	j2 = cav2LJ
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C12*/
+	j1 = cav2LJ
+	k2 = RdriftK
+	j2 = gap3J
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C13*/
+	j1 = gap3J
+	k2 = RdriftK
+	j2 = gap3J
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C14*/
+	j1 = gap3J
+	k2 = Kmax
+	j2 = Jmax
+	k1 = Kmax
+	normal = 1
+}
+Conductor
+{ /*C15*/
+	j1 = cav3RJ
+	k2 = Kmax
+	j2 = cav3RJ
+	k1 = RoutWaveGuideK
+	normal = 1
+}
+ExitPort
+{ /*output waveguide*/
+	j1 = cav3RJ
+	k2 = RinWaveGuideK
+	j2 = cav3RJ
+	k1 = RoutWaveGuideK
+	normal = -1
+	EFFlag = 1
+        name = Out Wave Guide
+	R = 37
+        C = 0
+        A = 0
+        frequency = 1
+}
+Conductor
+{ /*C16*/
+	j1 = cav3RJ
+	k2 = RinWaveGuideK
+	j2 = cav3RJ
+	k1 = R3minK
+	normal = 1
+}
+Conductor
+{ /*C17*/
+	j1 = cav3RJ
+	k2 = R3minK
+	j2 = cav3LJ
+	k1 = R3minK
+	normal = 1
+}
+Conductor
+{ /*C18*/
+	j1 = cav3LJ
+	k2 = R3minK
+	j2 = cav3LJ
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C19*/
+	j1 = cav3LJ
+	k2 = RdriftK
+	j2 = Jmax
+	k1 = RdriftK
+	normal = 1
+}
+Conductor
+{ /*C20*/
+	j1 = Jmax
+	k2 = RdriftK
+	j2 = Jmax
+	k1 = RshuntK
+	normal = 1
+}
+Conductor
+{ /*C21*/
+	j1 = Jmax
+	k2 = RshuntK
+	j2 = cav3LJ
+	k1 = RshuntK
+	normal = 1
+}
+Conductor
+{ /*C22*/
+	j1 = cav3LJ
+	k2 = RshuntK
+	j2 = cav3LJ
+	k1 = RouterShuntK
+	normal = 1
+}
+Conductor
+{ /*C23*/
+	j1 = cav3LJ
+	k2 = RouterShuntK
+	j2 = ZmaxShuntJ
+	k1 = RouterShuntK
+	normal = 1
+}
+Conductor
+{ /*C24*/
+	j1 = ZmaxShuntJ
+	k2 = RouterShuntK
+	j2 = ZmaxShuntJ
+	k1 = RinnerShuntK
+	normal = 1
+}
+Conductor
+{ /*C25*/
+	j1 = gap3J
+	k2 = RinnerShuntK
+	j2 = ZmaxShuntJ
+	k1 = RinnerShuntK
+	normal = 1
+}
+Conductor
+{ /*C26*/
+	j1 = gap3J
+	k2 = RinnerShuntK
+	j2 = gap3J
+	k1 = RshuntK
+	normal = 1
+}
+Conductor
+{ /*C27*/
+	j1 = gap3J
+	k2 = RshuntK
+	j2 = ZshuntJ
+	k1 = RshuntK
+	normal = 1
+}
+Conductor
+{ /*C28*/
+	j1 = ZshuntJ
+	k2 = RshuntK
+	j2 = ZshuntJ
+	k1 = 0
+	normal = 1
+}

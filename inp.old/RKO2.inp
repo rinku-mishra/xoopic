@@ -1,0 +1,423 @@
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Klystron
+{
+  RKO klystron
+}
+Grid
+{
+	J = 276
+	x1s = 0.0
+	x1f = .70524
+	n1 = 1.0
+	K = 58
+	x2s = 0.0
+	x2f = .148
+	n2 = 1.0
+}
+Control
+{
+	dt = 2E-12
+	B01 = .8
+}
+Species
+{
+	name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+BeamEmitter
+{
+	speciesName = electrons
+	j1 = 0
+	k1 = 26
+	j2 = 0
+	k2 = 28
+	normal = 1
+	numberparticlesinmacro = 1e10
+	I = 10000
+	vthermal = 0
+	thetadot = 0.0
+	vzdrift = 2.59e8
+}
+Conductor
+{
+	j1 = 0 
+	k2 = 26
+	j2 = 0
+	k1 = 21
+	normal = 1
+}
+ExitPort
+{ 
+	j1 = 0 
+	k2 = 0
+	j2 = 0
+	k1 = 21
+	normal = 1
+        EFFlag = 1
+        name = below beam
+        C = 0
+        A = 0
+        frequency = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 28
+	j2 = 0
+	k2 = 30
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 30
+	j2 = 0
+	k2 = 58
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k2 = 30
+	j2 = 74
+	k1 = 30
+	normal = -1
+}
+Conductor
+{
+	j1 = 74
+	k2 = 30
+	j2 = 74
+	k1 = 31
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 74
+	k2 = 31
+	j2 = 30
+	k1 = 31
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 30
+	k2 = 31
+	j2 = 30
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 30
+	k2 = 58
+	j2 = 81
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 30
+	k2 = 58
+	j2 = 30
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 81
+	k2 = 58
+	j2 = 81
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 81
+	k2 = 30
+	j2 = 114
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 114
+	k2 = 30
+	j2 = 114
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 114
+	k2 = 58
+	j2 = 166
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 114
+	k2 = 58
+	j2 = 166
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 166
+	k2 = 58
+	j2 = 166
+	k1 = 34
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 166
+	k2 = 34
+	j2 = 122
+	k1 = 34
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 122
+	k2 = 34
+	j2 = 122
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 122
+	k2 = 30
+	j2 = 225
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 225
+	k2 = 30
+	j2 = 225
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 225
+	k2 = 58
+	j2 = 276
+	k1 = 58
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k2 = 58
+	j2 = 276
+	k1 = 57
+	normal = 1
+}
+ExitPort
+{ 
+	j1 = 276
+	k2 = 50
+	j2 = 276
+	k1 = 57
+	normal = -1
+	EFFlag = 1
+        name = Out Wave Guide
+	R = 37
+        C = 0
+        A = 0
+        frequency = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k2 = 50
+	j2 = 276
+	k1 = 34
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k2 = 34
+	j2 = 232
+	k1 = 34
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 232
+	k2 = 34
+	j2 = 232
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 232
+	k2 = 30
+	j2 = 276
+	k1 = 30
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k2 = 30
+	j2 = 276
+	k1 = 24
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k2 = 24
+	j2 = 232
+	k1 = 24
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 232
+	k2 = 24
+	j2 = 232
+	k1 = 20
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 232
+	k2 = 20
+	j2 = 237
+	k1 = 20
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 237
+	k2 = 20
+	j2 = 237
+	k1 = 12
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 225
+	k2 = 12
+	j2 = 237
+	k1 = 12
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 225
+	k2 = 12
+	j2 = 225
+	k1 = 24
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 225
+	k2 = 24
+	j2 = 192
+	k1 = 24
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 192
+	k2 = 24
+	j2 = 192
+	k1 = 0
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 168
+	k2 = 24
+	j2 = 192
+	k1 = 0
+	normal = 1
+}
+Conductor
+{ 
+	j1 = 276
+	k1 = 24
+	j2 = 258
+	k2 = 30
+	normal = 1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 276
+	k2 = 0
+	normal = 1
+}

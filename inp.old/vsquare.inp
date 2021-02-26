@@ -1,0 +1,150 @@
+default
+{
+A dielectric ring is hit by a beam
+}
+Grid
+{
+	J = 13
+	x1s = 0.0
+	x1f = 0.1
+	n1 = 1.0
+	K = 13
+	x2s = 0.0
+	x2f = 0.02
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+}
+Control
+{
+	dt = 1.0E-11
+	ElectrostaticFlag = 1
+}
+Species
+{
+        name = positrons
+        m = 9.11E-31
+        q = 1.6e-19
+}
+BeamEmitter
+{
+	speciesName = positrons
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 10
+	normal = 1
+	numberparticlesinmacro = 10000
+	I = 0.000001
+	thetadot = 0.0
+	vzdrift = 1e7
+	vrdrift = 0
+	vthdrift = 0
+	vzthermal = 0
+	vrthermal = 0
+	vththermal = 0
+	vzcutoff = 0
+	vrcutoff = 0
+}
+Conductor
+{
+	j1 = 0
+	k1 = 10
+	j2 = 0
+	k2 = 13
+	normal = 1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 13
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
+Conductor
+{
+	j1 = 13
+	k1 = 13
+	j2 = 13
+	k2 = 0
+	normal = -1
+}
+Equipotential
+{
+	C = 0.5
+	A = 0.5
+	frequency = 6.28E9
+	phase = 1.571
+	j1 = 3
+	k1 = 3
+	j2 = 3
+	k2 = 10
+	normal = -1
+}
+Equipotential
+{
+	C = 0.5
+	A = 0.5
+	frequency = 6.28E9
+	phase = 1.571
+	j1 = 3
+	k1 = 4
+	j2 = 10
+	k2 = 9
+	normal = -1
+}
+Equipotential
+{
+	C = 0.5
+	A = 0.5
+	frequency = 6.28E9
+	phase = 1.571
+	j1 = 10
+	k1 = 3
+	j2 = 10
+	k2 = 10
+	normal = 1
+}
+Equipotential
+{
+	C = 0.5
+	A = 0.5
+	frequency = 6.28E9
+	phase = 1.571
+	j1 = 3
+	k1 = 10
+	j2 = 10
+	k2 = 10
+	normal = 1
+}
+Equipotential
+{
+	C = 0.5
+	A = 0.5
+	frequency = 6.28E9
+	phase = 1.571
+	j1 = 3
+	k1 = 3
+	j2 = 10
+	k2 = 3
+	normal = -1
+}
+CylindricalAxis
+{
+	j1 = 0
+	k1 = 0
+	j2 = 13
+	k2 = 0
+	normal = 1
+}

@@ -1,0 +1,6 @@
+
+Fix diagnostics
+Beamemiter to all boundaries
+Fix the mover.
+Make boltzmann self-consistent.
+Parallel mover even w/o field size.

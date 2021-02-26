@@ -1,0 +1,29 @@
+## ####################################################################
+##
+## File:	clean-cxx.am
+##
+## Purpose:	Adds in more things to clean.
+##
+## Version:	$Id: clean-cxx.am 2259 2007-05-17 16:24:39Z dws $
+##
+## Copyright 2001, Tech-X Corporation.  Freely distributable provided
+## copyright statement remains intact.
+##
+## ####################################################################
+
+clean-local: clean-cxx
+clean-cxx:
+	rm -f *.bak core *.prev $(MOCSRC) $(GEN_FILES)
+	rm -rf ii_files cxx_repository exec_repository so_locations ti_files
+	rm -rf *.app SunWS_cache
+	rm -rf config-$(COMPDIR).h
+
+distclean-local: distclean-depend distclean-config
+
+distclean-depend:
+	rm -f .depend
+
+distclean-config:
+	rm -f config.summary
+
+.PHONY: clean-cxx

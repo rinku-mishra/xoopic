@@ -1,0 +1,98 @@
+default
+{
+sumitomo's surface wave source, 20cmx20cm !!!!
+}
+Grid
+{
+	J = 13
+	x1s = 0.0
+	x1f = 0.20
+	n1 = 1.0
+	K = 13
+	x2s = 0.0
+	x2f = 0.20
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memory problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt = 1.594387e-12
+	ElectrostaticFlag = 2
+	FieldSubFlag = 1
+}
+Species
+{
+        name = electrons
+        m = 9.11E-31
+        q = -1.6e-19
+}
+Species
+{
+        name = ions
+        m = 6.626e-26
+        q = 1.6e-19
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 1
+	k2 = 0
+	normal = 1
+}
+DielectricRegion
+{
+	j1 = 0
+	k1 = 0
+	j2 = 1
+	k2 = 13
+	er = 2.5
+}
+Conductor
+{
+	j1 = 1
+	k1 = 0
+	j2 = 13
+	k2 = 0
+	normal = +1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 0
+	j2 = 0
+	k2 = 13
+	normal = +1
+}
+Conductor
+{
+	j1 = 0
+	k1 = 13
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
+Equipotential
+{
+	C = -180
+	A =  90
+	frequency = 2.5e5
+	phase = 0
+	j1 = 13
+	k1 = 0
+	j2 = 13
+	k2 = 13
+	normal = -1
+}
