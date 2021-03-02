@@ -6,8 +6,8 @@
 #include "spbound.h"
 #include "diags.h"
 ///\dad{end}
-Scalar erf(Scalar x);
-Scalar erfc(Scalar x);
+//Scalar erf(Scalar x);
+//Scalar erfc(Scalar x);
 
 DiagnosticParams::DiagnosticParams(GridParams* _GP)
 	  : ParameterGroup()
