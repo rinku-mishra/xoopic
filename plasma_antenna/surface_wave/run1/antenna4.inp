@@ -1,0 +1,428 @@
+Plasma_Antenna_TM
+{
+Plasma Antenna using ExitPort
+}
+Variables
+{
+
+// ******************************
+// General physical parameters
+// ******************************
+
+  Q 		 = 1.60217662e-19
+  mAr	     = 6.6335209E-26
+  mE 		 = 9.11E-31
+  speedLight = 2.9979e8
+  EPS0       = 8.85418782e-12
+  EPSR       = 5// Dielectric value of Glass
+
+  PLA_DEN	 = 1E12
+  Te         =   3
+  Ti 		 = 0.3
+  Ni      	 = PLA_DEN
+  Ne 		 = 1.0 * PLA_DEN
+  DRIFTE     = 7.0e+06//1E6  % m/s
+  TE         = sqrt(2*(Te*Q)/mE)//   % m/s sqrt(2*(Ti*Q)/mE)
+  TI        = sqrt(2*(Ti*Q)/mAr)//   % m/s sqrt(2*(Ti*Q)/mE)
+  wpe 		   = (8.98E3)*sqrt(Ne*1E-6)//
+  PL_FREQ_E  = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
+  ds         = 0.005 * speedLight / PLASMA_FREQ_E//
+  Freq = 2.45e9
+
+
+  
+ // ******************************
+//	DEVICE PARAMETERS
+// ******************************
+
+  RADIUS = 0.15//   %in meter
+  LENGTH = 0.3//    %in meter
+  
+
+
+
+// *************************
+// 	SPATIAL Grid parameters
+// *************************
+
+  Nx =  128
+  Ny =  64
+  dx =  LENGTH/Nx
+  dy =  RADIUS/Ny
+  Lx =  LENGTH
+  Ly =  RADIUS
+
+  simulationVolume = Lx * Ly
+  numCells         = Nx * Ny
+
+// *************************
+// streaming electrons
+// *************************
+
+  totalNumElectrons    = Ne * simulationVolume
+  numElectronsPerCell  = 4
+  numElectronPtcls     = numElectronsPerCell * numCells
+  electronNumRatio     = totalNumElectrons / numElectronPtcls //np2c
+//  electronNumRatio = 1e6
+  electronVelocityMKS  = DRIFTE
+  peakCurrentElectrons = Q * Ne * Ly * electronVelocityMKS
+
+  Te_MKS = sqrt(2*(Te*Q)/mE)  // Te_MKS   //  SAYAN 07.03.2020
+
+// *************************
+// RF SOURCE PARAMETERS
+// *************************
+
+  RF_POWER        = 100 //Watt
+  omega           = 100e9 // in Hz
+  phi             = pi/2 // radian
+  BeamVoltage   = RF_POWER/peakCurrentElectrons   // in VOLT
+
+// *************************
+// TEMPORAL Grid parameters
+// *************************
+
+  d         = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep  = 0.003 * d / electronVelocityMKS
+}
+
+
+Region
+{
+Grid
+{
+	J = Nx
+	x1s = 0.0
+	x1f = LENGTH
+	n1 = 1.0
+	K = Ny
+	x2s = 0.0 		
+	x2f = RADIUS
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memorElectric field near the sourcey problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt =timeStep
+	ElectrostaticFlag = 0
+        particleLimit = 1E8
+	FieldSubFlag = 25
+     
+}
+
+MCC
+{
+	gas = Ar
+	pressure = 0.005
+	eSpecies = electrons
+	iSpecies = argon
+	collisionFlag=1
+	ecxFactor = 0
+	icxFactor = 0
+}
+
+Species
+{
+  name = electrons
+  m = mE
+  q = -Q
+  collisionModel = 1   
+ 
+}
+Species
+{
+  name = argon
+  m = mAr
+  q = Q
+  collisionModel = 2  
+}
+
+
+/////////////////// Load
+Load
+{
+ v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = TE	// isotropic thermal velocity
+  density = PLA_DEN	// uniform density of real particles
+  x1MinMKS = 0.01*LENGTH	// minimun x1 postion to start load
+  x1MaxMKS = 0.99*LENGTH	// maximun z postion to start load
+  x2MinMKS = 0.37*RADIUS	// minimun r postion to start load
+  x2MaxMKS = 0.63*RADIUS	// maximun r postion to start load
+  np2c = electronNumRatio	// number of computer particles to real particles
+  speciesName = electrons	// unique species name
+//  LoadMethodFlag = QUIET_START	// Flag to control loading method, RANDOM or QUIET_START.
+ // units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+}
+
+Load
+{
+  v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = TI	// isotropic thermal velocity
+  density = PLA_DEN	// uniform density of real particles
+  x1MinMKS = 0.01*LENGTH	// minimun x1 postion to start load
+  x1MaxMKS = 0.99*LENGTH	// maximun z postion to start load
+  x2MinMKS = 0.37*RADIUS	// minimun r postion to start load
+  x2MaxMKS = 0.63*RADIUS	// maximun r postion to start load
+  np2c = electronNumRatio	// number of computer particles to real particles
+  speciesName = argon	// unique species name
+//  LoadMethodFlag = QUIET_START	// Flag to control loading method, RANDOM or QUIET_START.
+//  units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+}
+
+////////////// Dielectric
+
+DielectricRegion   //Bottom
+{
+	er = EPSR
+	A1 = 0.0*LENGTH
+	A2 = 0.0*RADIUS
+	B1 = LENGTH
+	B2 = 0.35*RADIUS
+}
+
+
+DielectricRegion   //Top
+{
+	er = EPSR
+	A1 = 0.0*LENGTH
+	A2 = 0.65*RADIUS
+	B1 = LENGTH
+	B2 = RADIUS
+	
+}
+////////////////////////////////////////////// Boundary ///////////////
+ExitPort    //Top
+{
+
+	A1 = LENGTH
+	A2 = RADIUS
+	B1 = 0.0*LENGTH
+	B2 = RADIUS
+	normal = -1
+	R = 1
+	C = 0
+}
+
+ExitPort   //Left
+{
+
+	A1 = 0.0*LENGTH
+	A2 = 0.65*RADIUS
+	B1 = 0.0*LENGTH
+	B2 = 0.35*RADIUS
+	normal = 1
+	R = 1
+	C = 0
+}
+
+ExitPort   //Bottom
+{
+
+	A1 = 0.0*LENGTH
+	A2 = 0.0*RADIUS
+	B1 = LENGTH
+	B2 = 0.0*RADIUS
+	normal = 1
+	R = 1
+	C = 0
+}
+
+
+///////////////////  
+Gap      //Top
+{
+	A1 = 0.0*LENGTH
+	A2 = 0.65*RADIUS
+	B1 = 0.0*LENGTH
+	B2 = RADIUS
+	normal = 1
+	frequency = Freq
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+
+
+//////////////////////
+
+Gap      //Bottom
+{
+
+	A1 = 0.0*LENGTH
+	A2 = 0.0*RADIUS
+	B1 = 0.0*LENGTH
+	B2 = 0.35*RADIUS
+	normal = 1
+	frequency = Freq
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+
+
+Equipotential
+{
+	C = -50
+	A =  90
+	frequency = 2.5e5
+	phase = 0
+	A1 = LENGTH
+	A2 = RADIUS
+	B1 = LENGTH
+	B2 = 0.0*RADIUS
+	normal = -1
+}
+
+
+//CylindricalAxis
+//{/
+//	A1 = 0.0*LENGTH
+//	A2 = 0.0*RADIUS
+//	B1 = LENGTH
+//	B2 = 0.0*RADIUS
+//	normal = 1
+//}
+////////////////////////////////////////////
+//                    Diagnostics
+////////////////////////////////////////////
+	
+Diagnostic
+{
+	 HistMax = 512
+	 Comb = 2
+	 Ave = 0
+	 A1 = LENGTH
+        A2 = 0.1*RADIUS
+        B1 = 0.0*LENGTH
+        B2 = 0.1*RADIUS
+	 VarName = phi
+	 title = phi at edge of ring
+	 x1_Label = radius
+	 x2_Label = time
+}
+Diagnostic
+{
+	 HistMax = 512
+	 Comb = 2
+	 Ave = 0
+        A1 = LENGTH
+        A2 = 0.1*RADIUS
+        B1 = 0.0*LENGTH
+        B2 = 0.1*RADIUS
+	 VarName = Q
+	 title = Charge at edge of ring
+	 x1_Label = radius
+	 x2_Label = time
+}
+
+
+Diagnostic
+{
+   A1 = 0.05*LENGTH
+   A2 = 0.1*RADIUS
+   B1 = 0.05*LENGTH
+   B2 = 0.1*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field near the source near the lower dielectric
+   HistMax = 10240
+} 
+
+
+Diagnostic
+{
+   A1 = 0.05*LENGTH
+   A2 = 0.5*RADIUS
+   B1 = 0.05*LENGTH
+   B2 = 0.5*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field at mid portion of the dielectric tube near the source
+   HistMax = 10240
+}
+
+
+Diagnostic
+{
+   A1 = 0.05*LENGTH
+   A2 = 0.9*RADIUS
+   B1 = 0.05*LENGTH
+   B2 = 0.9*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field near the top dielectric tube near the source
+   HistMax = 10240
+}
+
+
+Diagnostic
+{
+	 HistMax = 512
+	 Comb = 2
+	 Ave = 0
+	 A1 = LENGTH
+        A2 = 0.9*RADIUS
+        B1 = 0.0*LENGTH
+        B2 = 0.9*RADIUS
+	 VarName = phi
+	 title = top phi at edge of ring
+	 x1_Label = radius
+	 x2_Label = time
+}
+
+Diagnostic
+{
+   A1 = 0.5*LENGTH
+   A2 = 0.1*RADIUS
+   B1 = 0.5*LENGTH
+   B2 = 0.1*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field at mid length of the tube lower dielectric
+   HistMax = 10240
+} 
+
+Diagnostic
+{
+   A1 = 0.5*LENGTH
+   A2 = 0.5*RADIUS
+   B1 = 0.5*LENGTH
+   B2 = 0.5*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field at mid length of the tube mid portion 
+   HistMax = 10240
+}
+
+
+Diagnostic
+{
+   A1 = 0.5*LENGTH
+   A2 = 0.9*RADIUS
+   B1 = 0.5*LENGTH
+   B2 = 0.9*RADIUS
+   VarName = E1
+   windowName = None
+   title = Electric field at mid length of the tube top dielectric
+   HistMax = 10240
+}
+
+}
+
+

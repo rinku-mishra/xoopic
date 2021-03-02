@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+# Data
+plasma_antenna/surface_wave/data/*
