@@ -9,7 +9,7 @@ Variables
 // General physical parameters
 // ******************************
 
-  Q 		 = 1.60217662e-19
+  Q          = 1.60217662e-19
   mAr	     = 6.6335209E-26
   mE 		 = 9.11E-31
   speedLight = 2.9979e8
@@ -18,7 +18,7 @@ Variables
 
   PLA_DEN	 = 1E12
   KB = 1.38e-23
-  Te         =   3
+  Te         =  0.1
   Ti 		 = 0.3
   Ni      	 = PLA_DEN
   Ne 	    = 1.0 * PLA_DEN
@@ -27,22 +27,21 @@ Variables
   TI        = sqrt(2*(Ti*Q)/mAr)//   % m/s sqrt(2*(Ti*Q)/mE)
   wpe       = (8.98E3)*sqrt(Ne*1E-6)//
   PL_FREQ_E  = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
-  ds         = 0.005 * speedLight / PL_FREQ_E//
-  Freq = 2.45e6
+  ds         = 0.05 * speedLight / PL_FREQ_E//
+  Freq = 2.45e9
 
-  DL = sqrt((EPS0*TE*KB)/(Ne*Q*Q))    // Debye Length
+  DL =  0.003  //sqrt((EPS0*TE*KB)/(Ne*Q*Q))    // Debye Length
  
  
-
 
 // ******************************
- //	Numerical Variables
- // ******************************
+//	Numerical Variables
+// ******************************
   pRNum = 20
   pLNum = 100
   gNum = 10
 
- // ******************************
+// ******************************
 //	DEVICE PARAMETERS
 // ******************************
   plasmaRad = (DL*pRNum)           // plasma radius in meter
@@ -86,7 +85,7 @@ Variables
   phi             = pi/2 // radian
   BeamVoltage   = RF_POWER/peakCurrentElectrons   // in VOLT
 
- // *************************
+// *************************
 // TEMPORAL Grid parameters
 // *************************
 
@@ -175,9 +174,9 @@ ExitPort   //Left
 {
 
 	A1 = 0.0*plasmaLen
-	A2 = sysRad-gThick
+	A2 = -plasmaRad
 	B1 = 0.0*plasmaLen
-	B2 = -sysRad+gThick
+	B2 = plasmaRad
 	normal = 1
 	R = 1
 	C = 0
@@ -187,9 +186,9 @@ ExitPort   //Right
 {
 
 	A1 = plasmaLen
-	A2 = sysRad-gThick
+	A2 = -sysRad
 	B1 = plasmaLen
-	B2 = -sysRad+gThick
+	B2 = sysRad
 	normal = -1
 	R = 1
 	C = 0
@@ -259,9 +258,9 @@ DielectricRegion   //Top
 {
 	er = EPSR
 	A1 = 0.0*plasmaLen
-	A2 = sysRad
+	A2 = plasmaRad
 	B1 = plasmaLen
-	B2 = sysRad-gThick
+	B2 = sysRad+gThick
 
 }
 
@@ -302,12 +301,12 @@ Gap      //Bottom
 //{
 //	C = -50
 //	A =  90
-//	frequency = 2.5e5
+//	frequency = 2.5e3
 //	phase = 0
-//	A1 = LENGTH
-//	A2 = RADIUS
-//	B1 = LENGTH
-//	B2 = 0.0*RADIUS
+//	A1 = plasmaLen
+//	A2 = -sysRad
+//	B1 = plasmaLen
+//	B2 = sysRad
 //	normal = -1
 //}
 
