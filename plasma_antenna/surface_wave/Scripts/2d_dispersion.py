@@ -8,21 +8,21 @@ import os
 from time import sleep
 from tqdm import tqdm
 
-dataDir  = "../data/antenna4/disp_data"
+dataDir  = "../data/run1_data/surfwave_1/disp_data"
 #Use the data directory 
 fileBase = 'Ex_'  #base name for E-filed data (e.g. if Ez_1, Ez_2 ... then Ez_)
-Lx       = 0.3
-Nx       = 128
-Ny       = 64
+Lx       = 0.235
+Nx       = 100
+Ny       = 60
 Nt       = 10000  #Number of time data (number of files)
 period   = 5  #period value set while dumping data E-data
-yLoc0     = 64 #
-dt       = 2E-13*period
+yLoc0     = int(Ny/4) #
+dt       = 9.05e-12*period
 dx       = Lx/Nx
 
 # Selecting omega and k
 OmegaLow = 0
-OmegaHigh = int(Nt/200) #TIMESTEP #4000
+OmegaHigh = int(Nt/3000) #TIMESTEP #4000
 KLow =  0
 KHigh = Nx #TIMESTEP #4000
 

@@ -9,30 +9,31 @@ Variables
 // General physical parameters
 // ******************************
 
-  Q          = 1.60217662e-19
-  mAr	     = 6.6335209E-26
-  mE 		 = 9.11E-31
-  speedLight = 2.9979e8
-  EPS0       = 8.85418782e-12
-  EPSR       = 5// Dielectric value of Glass
+  Q           = 1.60217662e-19
+  mAr	      = 6.6335209E-26
+  mE 	      = 9.11E-31
+  speedLight  = 2.9979e8
+  EPS0        = 8.85418782e-12
+  EPSR        = 5 // Dielectric value of Glass
 
-  PLA_DEN	 = 1E12
-  KB = 1.38e-23
-  Te         =  0.1
-  Ti 		 = 0.3
-  Ni      	 = PLA_DEN
-  Ne 	    = 1.0 * PLA_DEN
-  DRIFTE    = 7.0e+06//1E6  % m/s
-  TE        = sqrt(2*(Te*Q)/mE)//   % m/s sqrt(2*(Ti*Q)/mE)
-  TI        = sqrt(2*(Ti*Q)/mAr)//   % m/s sqrt(2*(Ti*Q)/mE)
-  wpe       = (8.98E3)*sqrt(Ne*1E-6)//
-  PL_FREQ_E  = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
-  ds         = 0.05 * speedLight / PL_FREQ_E//
-  Freq = 2.45e9
+  PLA_DEN     = 1E12
+  KB          = 1.38e-23
+  Te          = 0.1
+  Ti 	      = 0.1
+  TeK	      = Te*11604.525
+  TiK         = Ti*11604.525
+  Ni          = PLA_DEN
+  Ne 	      = 1.0 * PLA_DEN
+  DRIFTE      = 7.0e+06//1E6  % m/s
+  TE          = sqrt(2*(Te*Q)/mE)//   % m/s sqrt(2*(Ti*Q)/mE)
+  TI          = sqrt(2*(Ti*Q)/mAr)//   % m/s sqrt(2*(Ti*Q)/mE)
+  wpe         = (8.98E3)*sqrt(Ne*1E-6)//
+  PL_FREQ_E   = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
+  ds          = 0.05 * speedLight / PL_FREQ_E//
+  Freq        = 2.45e9 //500E6
+  DL          = sqrt((EPS0*TeK*KB)/(Ne*Q*Q)) //0.003   // Debye Length
 
-  DL =  0.003  //sqrt((EPS0*TE*KB)/(Ne*Q*Q))    // Debye Length
- 
- 
+
 
 // ******************************
 //	Numerical Variables
@@ -136,8 +137,8 @@ MCC
 	pressure = 0.005
 	eSpecies = electrons
 	iSpecies = argon
-	collisionFlag=0
-	ecxFactor = 0
+	collisionFlag=1
+	ecxFactor = 1
 	icxFactor = 0
 }
 
@@ -323,125 +324,8 @@ Gap      //Bottom
 //                    Diagnostics
 ////////////////////////////////////////////
 
-Diagnostic
-{
-	 HistMax = 512
-	 Comb = 2
-	 Ave = 0
-	 A1 = LENGTH
-        A2 = 0.1*RADIUS
-        B1 = 0.0*LENGTH
-        B2 = 0.1*RADIUS
-	 VarName = phi
-	 title = phi at edge of ring
-	 x1_Label = radius
-	 x2_Label = time
-}
-Diagnostic
-{
-	 HistMax = 512
-	 Comb = 2
-	 Ave = 0
-        A1 = LENGTH
-        A2 = 0.1*RADIUS
-        B1 = 0.0*LENGTH
-        B2 = 0.1*RADIUS
-	 VarName = Q
-	 title = Charge at edge of ring
-	 x1_Label = radius
-	 x2_Label = time
-}
 
 
-Diagnostic
-{
-   A1 = 0.05*LENGTH
-   A2 = 0.1*RADIUS
-   B1 = 0.05*LENGTH
-   B2 = 0.1*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field near the source near the lower dielectric
-   HistMax = 10240
-}
 
-
-Diagnostic
-{
-   A1 = 0.05*LENGTH
-   A2 = 0.5*RADIUS
-   B1 = 0.05*LENGTH
-   B2 = 0.5*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field at mid portion of the dielectric tube near the source
-   HistMax = 10240
-}
-
-
-Diagnostic
-{
-   A1 = 0.05*LENGTH
-   A2 = 0.9*RADIUS
-   B1 = 0.05*LENGTH
-   B2 = 0.9*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field near the top dielectric tube near the source
-   HistMax = 10240
-}
-
-
-Diagnostic
-{
-	 HistMax = 512
-	 Comb = 2
-	 Ave = 0
-	 A1 = LENGTH
-        A2 = 0.9*RADIUS
-        B1 = 0.0*LENGTH
-        B2 = 0.9*RADIUS
-	 VarName = phi
-	 title = top phi at edge of ring
-	 x1_Label = radius
-	 x2_Label = time
-}
-
-Diagnostic
-{
-   A1 = 0.5*LENGTH
-   A2 = 0.1*RADIUS
-   B1 = 0.5*LENGTH
-   B2 = 0.1*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field at mid length of the tube lower dielectric
-   HistMax = 10240
-}
-
-Diagnostic
-{
-   A1 = 0.5*LENGTH
-   A2 = 0.5*RADIUS
-   B1 = 0.5*LENGTH
-   B2 = 0.5*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field at mid length of the tube mid portion
-   HistMax = 10240
-}
-
-
-Diagnostic
-{
-   A1 = 0.5*LENGTH
-   A2 = 0.9*RADIUS
-   B1 = 0.5*LENGTH
-   B2 = 0.9*RADIUS
-   VarName = E1
-   windowName = None
-   title = Electric field at mid length of the tube top dielectric
-   HistMax = 10240
-}
 
 }
