@@ -16,7 +16,7 @@ Variables
   EPS0        = 8.85418782e-12
   EPSR        = 5 // Dielectric value of Glass
 
-  PLA_DEN     = 1E12
+  PLA_DEN     = 1E5
   KB          = 1.38e-23
   Te          = 0.1
   Ti 	      = 0.1

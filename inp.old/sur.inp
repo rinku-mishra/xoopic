@@ -2,6 +2,8 @@ default
 {
 sumitomo's surface wave source, 20cmx20cm !!!!
 }
+Region
+{
 Grid
 {
 	J = 49
@@ -30,9 +32,15 @@ Control
 {
 	dt = 1.594387e-12
 	ElectrostaticFlag = 0
-	gasPressure = 0.01
-        eCollisionalFlag = 1
 	FieldSubFlag = 25
+}
+MCC
+{
+	gas = Ar
+	eSpecies = electrons
+	iSpecies = argon
+	pressure = 0.01
+        collisionFlag = 1
 }
 Species
 {
@@ -42,14 +50,14 @@ Species
 }
 Species
 {
-        name = ions
+        name = argon
         m = 6.626e-26
         q = 1.6e-19
 }
 Diagnostic
 {
         Ave = 40000 
-        PlotLabel = JdotE
+        VarName = JdotE
         j1 = 1
         k1 = 1
         j2 = 48
@@ -59,32 +67,32 @@ Diagnostic
 Load
 {
         speciesName = electrons
-        zMinMKS = .022
-        zMaxMKS = .2
-        rMinMKS = .0
-        rMaxMKS = .19
-        vrdrift = 0
-        vzdrift = 0
-        vthdrift = 0
+        x1MinMKS = .022
+        x1MaxMKS = .2
+        x2MinMKS = .0
+        x2MaxMKS = .19
+        v1drift = 0
+        v2drift = 0
+        v3drift = 0
         temperature = 4.2e5
-        cutoff = 0
-        density = 3e14
-        np2c = 1e9
+       // cutoff = 0
+        density = 3e5
+        np2c = 1e1
 }
 Load
 {
-        speciesName = ions
-        zMinMKS = .022
-        zMaxMKS = .2
-        rMinMKS = .0
-        rMaxMKS = .19
-        vrdrift = 0
-        vzdrift = 0
-        vthdrift = 0
+        speciesName = argon
+        x1MinMKS = .022
+        x1MaxMKS = .2
+        x2MinMKS = .0
+        x2MaxMKS = .19
+   	 v1drift = 0
+        v2drift = 0
+        v3drift = 0
         temperature = 4.2e2
-        cutoff = 0
-        density = 3e14
-        np2c = 1e9
+        //cutoff = 0
+        density = 3e5
+        np2c = 1e1
 }
 Gap
 {
@@ -114,7 +122,7 @@ ExitPort
 	k1 = 0
 	j2 = 49
 	k2 = 0
-	normal = +1
+	normal = 1
 }
 ExitPort
 {
@@ -124,7 +132,7 @@ ExitPort
 	k2 = 49
 	R = 1
 	C = 0
-	normal = +1
+	normal = 1
 }
 ExitPort
 {
@@ -147,4 +155,5 @@ Equipotential
 	j2 = 49
 	k2 = 49
 	normal = -1
+}
 }

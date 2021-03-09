@@ -137,8 +137,8 @@ MCC
 	pressure = 0.005
 	eSpecies = electrons
 	iSpecies = argon
-	collisionFlag=1
-	ecxFactor = 1
+	collisionFlag=0
+	ecxFactor = 0
 	icxFactor = 0
 }
 

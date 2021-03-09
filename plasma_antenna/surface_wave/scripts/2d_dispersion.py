@@ -14,15 +14,15 @@ fileBase = 'Ex_'  #base name for E-filed data (e.g. if Ez_1, Ez_2 ... then Ez_)
 Lx       = 0.235
 Nx       = 100
 Ny       = 60
-Nt       = 10000  #Number of time data (number of files)
+Nt       = 154000  #Number of time data (number of files)
 period   = 5  #period value set while dumping data E-data
 yLoc0     = int(Ny/4) #
-dt       = 9.05e-12*period
+dt       =7.2e-11*period
 dx       = Lx/Nx
 
 # Selecting omega and k
 OmegaLow = 0
-OmegaHigh = int(Nt/3000) #TIMESTEP #4000
+OmegaHigh = int(Nt/300) #TIMESTEP #4000
 KLow =  0
 KHigh = Nx #TIMESTEP #4000
 

@@ -16,7 +16,7 @@ Variables
   EPS0        = 8.85418782e-12
   EPSR        = 5 // Dielectric value of Glass
 
-  PLA_DEN     = 1E12
+  PLA_DEN     = 1E5
   KB          = 1.38e-23
   Te          = 0.1
   Ti 	      = 0.1
@@ -38,7 +38,7 @@ Variables
 // ******************************
 //	Numerical Variables
 // ******************************
-  pRNum = 5
+  pRNum = 20
   pLNum = 100
   gNum = 10
 
@@ -137,8 +137,8 @@ MCC
 	pressure = 0.005
 	eSpecies = electrons
 	iSpecies = argon
-	collisionFlag=1
-	ecxFactor = 1
+	collisionFlag=0
+	ecxFactor = 0
 	icxFactor = 0
 }
 
@@ -425,5 +425,20 @@ Diagnostic
    HistMax = 10240
 }
 
+Diagnostic
+{
+   A1 = 0.2*plasmaLen
+   A2 = plasmaRad
+   B1 = 0.2*plasmaLen
+   B2 = plasmaRad
+    Comb = 100
+    Ave = 100
+    HistMax = 512
+    title = JdotE
+    VarName = JdotE
+    x1_Label = X
+    x2_Label = Y
+    x3_Label = JdotE
+}    
 
 }
