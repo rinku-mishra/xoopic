@@ -7,7 +7,7 @@ from spectrum import*
 # numerical data file
 
 
-filename1="../data/run1_data/surfwave_1/Long_run/oscillation_near_top_dielectric.txt"
+filename1="/scratch/data/run1_data/surfwave_1/Long_run/oscillation_near_top_dielectric.txt"
 
 #filename2="/home/rinku/XOOPIC/xoopic/Antenna/pot_osc_new/den_1e15/antenna_1e15_electric_field_near_the_source_top.txt"
 
