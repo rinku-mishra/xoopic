@@ -34,3 +34,6 @@
 
 # Data
 plasma_antenna/surface_wave/data/*
+*.dmp
+*.dat
+*.png
