@@ -2,10 +2,10 @@
 import os
 import numpy as np
 
-dir0 = "../output"
-dir1 = "../output/phi/"
-dir2 = "../output/density/"
-dir3 = "../output/E/"
+dir0 = "/scratch/data/outputs"
+dir1 = "/scratch/data/outputs/phi/"
+dir2 = "/scratch/data/outputs/density/"
+dir3 = "/scratch/data/outputs/E_35/"
 if os.path.exists(dir0):
 	if os.path.exists(dir1):
 		os.system('rm '+dir1+'*')

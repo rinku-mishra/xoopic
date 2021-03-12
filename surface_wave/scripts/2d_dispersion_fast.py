@@ -15,7 +15,7 @@ Lx       = 0.235
 #Nx       = 100
 #Ny       = 60
 NtStart  = 100
-NtStop   = 100000  #Number of time data (number of files)
+NtStop   = 10000000  #Number of time data (number of files)
 period   = 10  #period value set while dumping data E-data
 dt       = 9.05e-11*period
 
@@ -28,7 +28,7 @@ dx   = Lx/Nx
 
 # Selecting omega and k
 OmegaLow = 0
-OmegaHigh = int(NtStop/300) //int(NtStop/1000)  #4000
+OmegaHigh = 1000 //int(NtStop/1000)  #4000
 KLow =  0
 KHigh = Nx  #4000
 
