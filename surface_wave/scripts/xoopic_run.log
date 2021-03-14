@@ -1,0 +1,286 @@
+
+Starting XOOPIC version 2.70
+(c) Copyright 1995-2010 The Regents of the University of California.
+Plasma Theory and Simulation Group
+University of California at Berkeley
+http://ptsg.eecs.berkeley.edu
+
+Starting program. 
+Reading input file. 
+
+Input file is '../inputs/surface_wave_prad_5.inp'
+Running for 100000 steps
+Dumping every 100000 steps
+Running without X
+Periodic dumping in overwrite mode.
+{
+}
+
+
+
+
+
+Q           = 1.60217662e-19
+mAr	      = 6.6335209E-26
+mE 	      = 9.11E-31
+speedLight  = 2.9979e8
+EPS0        = 8.85418782e-12
+EPSR        = 5
+
+PLA_DEN     = 1E12
+KB          = 1.38e-23
+Te          = 0.1
+Ti 	      = 0.1
+TeK	      = Te*11604.525
+TiK         = Ti*11604.525
+Ni          = PLA_DEN
+Ne 	      = 1.0 * PLA_DEN
+DRIFTE      = 7.0e+06
+TE          = sqrt(2*(Te*Q)/mE)
+TI          = sqrt(2*(Ti*Q)/mAr)
+wpe         = (8.98E3)*sqrt(Ne*1E-6)
+PL_FREQ_E   = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)
+ds          = 0.05 * speedLight / PL_FREQ_E
+Freq        = 2.45e9
+DL          = sqrt((EPS0*TeK*KB)/(Ne*Q*Q))
+
+
+
+
+
+
+pRNum = 5
+pLNum = 100
+gNum = 10
+
+
+
+
+plasmaRad = (DL*pRNum)
+gThick    = DL*gNum
+sysRad    = plasmaRad + gThick
+plasmaLen = (DL*pLNum)
+
+
+
+
+
+
+Nx =  pLNum
+Ny =  2*(pRNum + gNum)
+dx =  DL
+dy =  DL
+Lx =  plasmaLen
+Ly =  sysRad*2
+
+simulationVolume = Lx * Ly
+numCells         = Nx * Ny
+
+
+
+
+
+totalNumElectrons    = Ne * simulationVolume
+numElectronsPerCell  = 4
+numElectronPtcls     = numElectronsPerCell * numCells
+electronNumRatio     = totalNumElectrons / numElectronPtcls
+electronVelocityMKS  = DRIFTE
+peakCurrentElectrons = Q * Ne * Ly * electronVelocityMKS
+
+
+
+
+
+
+RF_POWER        = 100
+omega           = 100e9
+phi             = pi/2
+BeamVoltage   = RF_POWER/peakCurrentElectrons
+
+
+
+
+
+d         = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+timeStep  = 0.003 * d / electronVelocityMKS
+
+}
+creating Grid
+creating Control
+creating MCC
+creating Species
+creating Species
+creating ExitPort
+creating ExitPort
+creating ExitPort
+creating ExitPort
+creating Load
+creating Load
+creating DielectricRegion
+creating DielectricRegion
+creating Gap
+creating Gap
+creating Diagnostic
+creating Diagnostic
+creating Diagnostic
+creating Diagnostic
+
+Calling AdvisorManager::checkRules().
+Multigrid may not be the Poisson solve for you.  Try to have 2^N = Jmax and 2^M = Kmax.
+Multigrid may not be the Poisson solve for you.  Try to have 2^N = Jmax and 2^M = Kmax.
+GridProbe: you choose Varname = - choose later
+GridProbe: you choose Varname = E1
+GridProbe: you choose Varname = E1
+GridProbe: you choose Varname = E1
+
+Entering Set_diags...
+Entering InitWin...
+Output directory '/scratch/data/outputs/E_5/' created.
+Dumping fields
+J = 100
+K = 30
+
+Field positions:
+
+Starting XOOPIC version 2.70
+(c) Copyright 1995-2010 The Regents of the University of California.
+Plasma Theory and Simulation Group
+University of California at Berkeley
+http://ptsg.eecs.berkeley.edu
+
+Starting program. 
+Reading input file. 
+
+Input file is '../inputs/surface_wave_prad_15.inp'
+Running for 100000 steps
+Dumping every 100000 steps
+Running without X
+Periodic dumping in overwrite mode.
+{
+}
+
+
+
+
+
+Q           = 1.60217662e-19
+mAr	      = 6.6335209E-26
+mE 	      = 9.11E-31
+speedLight  = 2.9979e8
+EPS0        = 8.85418782e-12
+EPSR        = 5
+
+PLA_DEN     = 1E12
+KB          = 1.38e-23
+Te          = 0.1
+Ti 	      = 0.1
+TeK	      = Te*11604.525
+TiK         = Ti*11604.525
+Ni          = PLA_DEN
+Ne 	      = 1.0 * PLA_DEN
+DRIFTE      = 7.0e+06
+TE          = sqrt(2*(Te*Q)/mE)
+TI          = sqrt(2*(Ti*Q)/mAr)
+wpe         = (8.98E3)*sqrt(Ne*1E-6)
+PL_FREQ_E   = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)
+ds          = 0.05 * speedLight / PL_FREQ_E
+Freq        = 2.45e9
+DL          = sqrt((EPS0*TeK*KB)/(Ne*Q*Q))
+
+
+
+
+
+
+pRNum = 15
+pLNum = 100
+gNum = 10
+
+
+
+
+plasmaRad = (DL*pRNum)
+gThick    = DL*gNum
+sysRad    = plasmaRad + gThick
+plasmaLen = (DL*pLNum)
+
+
+
+
+
+
+Nx =  pLNum
+Ny =  2*(pRNum + gNum)
+dx =  DL
+dy =  DL
+Lx =  plasmaLen
+Ly =  sysRad*2
+
+simulationVolume = Lx * Ly
+numCells         = Nx * Ny
+
+
+
+
+
+totalNumElectrons    = Ne * simulationVolume
+numElectronsPerCell  = 4
+numElectronPtcls     = numElectronsPerCell * numCells
+electronNumRatio     = totalNumElectrons / numElectronPtcls
+electronVelocityMKS  = DRIFTE
+peakCurrentElectrons = Q * Ne * Ly * electronVelocityMKS
+
+
+
+
+
+
+RF_POWER        = 100
+omega           = 100e9
+phi             = pi/2
+BeamVoltage   = RF_POWER/peakCurrentElectrons
+
+
+
+
+
+d         = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+timeStep  = 0.003 * d / electronVelocityMKS
+
+}
+creating Grid
+creating Control
+creating MCC
+creating Species
+creating Species
+creating ExitPort
+creating ExitPort
+creating ExitPort
+creating ExitPort
+creating Load
+creating Load
+creating DielectricRegion
+creating DielectricRegion
+creating Gap
+creating Gap
+creating Diagnostic
+creating Diagnostic
+creating Diagnostic
+creating Diagnostic
+
+Calling AdvisorManager::checkRules().
+Multigrid may not be the Poisson solve for you.  Try to have 2^N = Jmax and 2^M = Kmax.
+Multigrid may not be the Poisson solve for you.  Try to have 2^N = Jmax and 2^M = Kmax.
+GridProbe: you choose Varname = - choose later
+GridProbe: you choose Varname = E1
+GridProbe: you choose Varname = E1
+GridProbe: you choose Varname = E1
+
+Entering Set_diags...
+Entering InitWin...
+Output directory '/scratch/data/outputs/E_15/' created.
+Dumping fields
+J = 100
+K = 50
+
+Field positions:

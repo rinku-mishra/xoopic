@@ -378,8 +378,8 @@ Diagnostic
         // writing defined by computational steps
         n = 0
         // computational step to start writing; default value is 0 (beginning of simulation)
-        n_start = 100
-        n_step = 10
+        n_start = 0
+        n_step = 1
         n_end = 0
         title = Ex data
 }
