@@ -335,7 +335,7 @@ Diagnostic
    VarName = E1
    integral = sum
    windowName = None
-   title = Ex(0.1Lx,t) near the top dielectric
+   title = Ex_01_Lx near the top dielectric
    HistMax = 10240
 }
 
@@ -350,7 +350,7 @@ Diagnostic
    VarName = E1
    integral = sum
    windowName = None
-   title = Ex(0.5Lx,t) near the top dielectric
+   title = Ex_05_Lx near the top dielectric
    HistMax = 10240
 }
 
@@ -365,7 +365,7 @@ Diagnostic
    VarName = E1
    integral = sum
    windowName = None
-   title = Ex(0.9Lx,t) near the top dielectric
+   title = Ex_09_Lx near the top dielectric
    HistMax = 10240
 }
 

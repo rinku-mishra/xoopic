@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 #Use the data directory
 mode          = "split"
-run           = "E_25"
+run           = "E_11"
 yLoc          =  11
 dataDir       = "/scratch/data/outputs/"+run+"/"
 processedDir  = "/scratch/data/outputs/dispDataProcessed/"
@@ -123,4 +123,4 @@ if processing == False:
 	#plt.title("Real")
 	plt.colorbar(im,ax=ax)
 	plt.savefig('dispersion'+run+'_%d'%yLoc+'.png')
-	plt.show()
+plt.show()

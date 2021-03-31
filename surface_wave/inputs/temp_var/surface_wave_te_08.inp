@@ -18,7 +18,7 @@ Variables
 
   PLA_DEN     = 1E12
   KB          = 1.38e-23
-  Te          = 0.1
+  Te          = 0.08
   Ti 	      = 0.1
   TeK	      = Te*11604.525
   TiK         = Ti*11604.525
@@ -371,7 +371,7 @@ Diagnostic
 
 Diagnostic
 {
-        directory = /scratch/data/outputs/E_25/
+        directory = /scratch/data/outputs/E_te08/
         file = Ex_%08d.dat
         VarName = Ex
         // optional parameters
