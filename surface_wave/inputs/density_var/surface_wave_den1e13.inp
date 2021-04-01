@@ -16,10 +16,10 @@ Variables
   EPS0        = 8.85418782e-12
   EPSR        = 5 // Dielectric value of Glass
 
-  PLA_DEN     = 1E11
+  PLA_DEN     = 1E14
   KB          = 1.38e-23
-  Te          = 0.01
-  Ti 	      = 0.01
+  Te          = 0.1
+  Ti 	      = 0.1
   TeK	      = Te*11604.525
   TiK         = Ti*11604.525
   Ni          = PLA_DEN
@@ -31,7 +31,7 @@ Variables
   PL_FREQ_E   = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
   ds          = 0.05 * speedLight / PL_FREQ_E//
   Freq        = 2.45e9 //500E6
-  DL          = sqrt((EPS0*TeK*KB)/(Ne*Q*Q)) //0.003   // Debye Length
+  DL          = .00003        //sqrt((EPS0*TeK*KB)/(Ne*Q*Q)) //0.003   // Debye Length
 
 
 
@@ -371,7 +371,7 @@ Diagnostic
 
 Diagnostic
 {
-        directory = /scratch/data/outputs/E_1e11/
+        directory = /scratch/data/outputs/E_1e13/
         file = Ex_%08d.dat
         VarName = Ex
         // optional parameters
@@ -380,7 +380,7 @@ Diagnostic
         // computational step to start writing; default value is 0 (beginning of simulation)
         n_start = 0
         n_step = 1
-      n_end = 0
+        n_end = 0
         title = Ex data
 }
 
