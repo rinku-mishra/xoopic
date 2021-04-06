@@ -1,0 +1,488 @@
+Plasma_Antenna_TM
+{
+Plasma Antenna using ExitPort
+}
+Variables
+{
+dumpPeriod = 100000
+// ******************************
+// General physical parameters
+// ******************************
+
+  Q           = 1.60217662e-19
+  mAr	      = 6.6335209E-26
+  mE 	      = 9.11E-31
+  speedLight  = 2.9979e8
+  EPS0        = 8.85418782e-12
+  EPSR        = 5 // Dielectric value of Glass
+
+  PLA_DEN     = 1E12
+  KB          = 1.38e-23
+  Te          = 6
+  Ti 	      = 0.1
+  TeK	      = Te*11604.525
+  TiK         = Ti*11604.525
+  Ni          = PLA_DEN
+  Ne 	      = 1.0 * PLA_DEN
+  DRIFTE      = 7.0e+06//1E6  % m/s
+  TE          = sqrt(2*(Te*Q)/mE)//   % m/s sqrt(2*(Ti*Q)/mE)
+  TI          = sqrt(2*(Ti*Q)/mAr)//   % m/s sqrt(2*(Ti*Q)/mE)
+  wpe         = (8.98E3)*sqrt(Ne*1E-6)//
+  PL_FREQ_E   = sqrt((Ne*Q*Q)/(EPS0*mE))/(2*pi)//
+  ds          = 0.05 * speedLight / PL_FREQ_E//
+  Freq        = 2.45e9 //500E6
+  DL          = sqrt((EPS0*TeK*KB)/(Ne*Q*Q)) //0.003   // Debye Length
+
+
+
+// ******************************
+//	Numerical Variables
+// ******************************
+  pRNum = 25
+  pLNum = 100
+  gNum = 10
+
+// ******************************
+//	DEVICE PARAMETERS
+// ******************************
+  plasmaRad = (DL*pRNum)           // plasma radius in meter
+  gThick    = DL*gNum              // glass thickness
+  sysRad    = plasmaRad + gThick   // system radius in meter
+  plasmaLen = (DL*pLNum)           // system length in meter
+
+
+// *************************
+// 	SPATIAL Grid parameters
+// *************************
+
+  Nx =  pLNum
+  Ny =  2*(pRNum + gNum)
+  dx =  DL
+  dy =  DL
+  Lx =  plasmaLen
+  Ly =  sysRad*2
+
+  simulationVolume = Lx * Ly
+  numCells         = Nx * Ny
+
+// *************************
+// streaming electrons
+// *************************
+
+  totalNumElectrons    = Ne * simulationVolume
+  numElectronsPerCell  = 4
+  numElectronPtcls     = numElectronsPerCell * numCells
+  electronNumRatio     = totalNumElectrons / numElectronPtcls //np2c
+  electronVelocityMKS  = DRIFTE
+  peakCurrentElectrons = Q * Ne * Ly * electronVelocityMKS
+
+
+// *************************
+// RF SOURCE PARAMETERS
+// *************************
+
+  RF_POWER        = 100 //Watt
+  omega           = 100e9 // in Hz
+  phi             = pi/2 // radian
+  BeamVoltage   = RF_POWER/peakCurrentElectrons   // in VOLT
+
+// *************************
+// TEMPORAL Grid parameters
+// *************************
+
+  d         = 1. / sqrt( 1./(dx*dx) + 1./(dy*dy) )
+  timeStep  = 0.003 * d / electronVelocityMKS
+
+}
+
+
+Region
+{
+Grid
+{
+	J = Nx
+	x1s = 0.0
+	x1f = plasmaLen
+	n1 = 1.0
+	K = Ny
+	x2s = -sysRad
+	x2f = sysRad
+	n2 = 1.0
+	Rule
+	{
+	 Limit
+	 n1 < 0.25
+	 Fatal -- n1 < 0.25 grid spacing too nonuniform to ensure accuracy
+	}
+	Rule
+	{
+	 Algebra
+	 J * K > 10000
+	 Warning -- J*K >= 10000 may mean memorElectric field near the sourcey problems!
+	}
+	Geometry = 1
+}
+Control
+{
+	dt =timeStep
+	ElectrostaticFlag = 0
+        particleLimit = 1E8
+	FieldSubFlag = 25
+
+}
+
+MCC
+{
+	gas = Ar
+	pressure = 0.005
+	eSpecies = electrons
+	iSpecies = argon
+	collisionFlag=0
+	ecxFactor = 1
+	icxFactor = 1
+}
+
+Species
+{
+  name = electrons
+  m = mE
+  q = -Q
+  collisionModel = None //1
+
+}
+Species
+{
+  name = argon
+  m = mAr
+  q = Q
+  collisionModel = None //2
+}
+
+////////////////////////////////////////////// Boundary ///////////////
+ExitPort    //Top
+{
+
+	A1 = 0.0*plasmaLen
+	A2 = sysRad
+	B1 = plasmaLen
+	B2 = sysRad
+	normal = -1
+	R = 1
+	C = 0
+}
+
+ExitPort   //Left
+{
+
+	A1 = 0.0*plasmaLen
+	A2 = -plasmaRad
+	B1 = 0.0*plasmaLen
+	B2 = plasmaRad
+	normal = 1
+	R = 1
+	C = 0
+}
+
+ExitPort   //Right
+{
+
+	A1 = plasmaLen
+	A2 = -sysRad
+	B1 = plasmaLen
+	B2 = sysRad
+	normal = -1
+	R = 1
+	C = 0
+}
+
+ExitPort   //Bottom
+{
+
+	A1 = 0.0*plasmaLen
+	A2 = -sysRad
+	B1 = plasmaLen
+	B2 = -sysRad
+	normal = 1
+	R = 1
+	C = 0
+}
+
+
+/////////////////// Load
+Load
+{
+  v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = TE	// isotropic thermal velocity
+  density = PLA_DEN	// uniform density of real particles
+  x1MinMKS = 0.0	// minimun x1 postion to start load
+  x1MaxMKS = plasmaLen	// maximun z postion to start load
+  x2MinMKS = -plasmaRad	// minimun r postion to start load
+  x2MaxMKS = plasmaRad	// maximun r postion to start load
+  np2c = electronNumRatio	// number of computer particles to real particles
+  speciesName = electrons	// unique species name
+//  LoadMethodFlag = QUIET_START	// Flag to control loading method, RANDOM or QUIET_START.
+  units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+}
+
+Load
+{
+  v1drift = 0.0	// drift velocity in direction 1
+  v2drift = 0.0	// drift velocity in direction 2
+  v3drift = 0.0	// drift velocity in direction 3
+  temperature = TI	// isotropic thermal velocity
+  density = PLA_DEN	// uniform density of real particles
+  x1MinMKS = 0.0	// minimun x1 postion to start load
+  x1MaxMKS = plasmaLen	// maximun z postion to start load
+  x2MinMKS = -plasmaRad	// minimun r postion to start load
+  x2MaxMKS = plasmaRad	// maximun r postion to start load
+  np2c = electronNumRatio	// number of computer particles to real particles
+  speciesName = argon	// unique species name
+//  LoadMethodFlag = QUIET_START	// Flag to control loading method, RANDOM or QUIET_START.
+  units = MKS	// units of ALL velocities for maxwellian (MKS,EV)
+}
+
+////////////// Dielectric
+
+DielectricRegion   //Bottom
+{
+	er = EPSR
+	A1 = 0.0*plasmaLen
+	A2 = -sysRad
+	B1 = plasmaLen
+	B2 = -sysRad+gThick
+}
+
+
+DielectricRegion   //Top
+{
+	er = EPSR
+	A1 = 0.0*plasmaLen
+	A2 = plasmaRad
+	B1 = plasmaLen
+	B2 = sysRad+gThick
+
+}
+
+
+///////////////////
+Gap      //Top
+{
+	A1 = 0.0*plasmaLen
+	A2 = sysRad
+	B1 = 0.0*plasmaLen
+	B2 = sysRad-gThick
+	normal = 1
+	frequency = Freq
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+
+
+//////////////////////
+
+Gap      //Bottom
+{
+
+	A1 = 0.0*plasmaLen
+	A2 = -sysRad
+	B1 = 0.0*plasmaLen
+	B2 = -sysRad+gThick
+	normal = 1
+	frequency = Freq
+	A = 1e3
+	C = 0
+	EFFlag = 1
+}
+
+
+//Equipotential
+//{
+//	C = -50
+//	A =  90
+//	frequency = 2.5e3
+//	phase = 0
+//	A1 = plasmaLen
+//	A2 = -sysRad
+//	B1 = plasmaLen
+//	B2 = sysRad
+//	normal = -1
+//}
+
+
+//CylindricalAxis
+//{/
+//	A1 = 0.0*LENGTH
+//	A2 = 0.0*RADIUS
+//	B1 = LENGTH
+//	B2 = 0.0*RADIUS
+//	normal = 1
+//}
+////////////////////////////////////////////
+//                    Diagnostics
+////////////////////////////////////////////
+
+
+Diagnostic
+{
+   A1 = 0.1*plasmaLen
+   A2 = plasmaRad
+   B1 = 0.1*plasmaLen
+   B2 = plasmaRad
+   save = 1
+   VarName = E1
+   integral = sum
+   windowName = None
+   title = Ex_01_Lx near the top dielectric
+   HistMax = 10240
+}
+
+
+Diagnostic
+{
+   A1 = 0.5*plasmaLen
+   A2 = plasmaRad
+   B1 = 0.5*plasmaLen
+   B2 = plasmaRad
+   save = 1
+   VarName = E1
+   integral = sum
+   windowName = None
+   title = Ex_05_Lx near the top dielectric
+   HistMax = 10240
+}
+
+
+Diagnostic
+{
+   A1 = 0.9*plasmaLen
+   A2 = plasmaRad
+   B1 = 0.9*plasmaLen
+   B2 = plasmaRad
+   save = 1
+   VarName = E1
+   integral = sum
+   windowName = None
+   title = Ex_09_Lx near the top dielectric
+   HistMax = 10240
+}
+
+
+// Ex_custom dump
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = Ex_%08d.dat
+        VarName = Ex
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = Ex_custom
+}
+
+// Ey_custom dump
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = Ey_%08d.dat
+        VarName = Ey
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = Ey_custom
+}
+
+// phase space dump
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = ux_x_%08d.dat
+        VarName = ux vs x, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = ux_x_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = ux_y_%08d.dat
+        VarName = ux vs y, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = ux_y_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = uy_x_%08d.dat
+        VarName = uy vs x, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = uy_x_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/E_te6data
+        file = uy_y_%08d.dat
+        VarName = uy vs y, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = uy_y_custom
+}
+
+
+
+
+
+
+//Diagnostic
+//{
+//        directory = /scratch/data/outputs/E_te08/
+//        file = Ex_%08d.dat
+//        VarName = Ex
+//        // optional parameters
+//        // writing defined by computational steps
+//        n = 0
+//        // computational step to start writing; default value is 0 (beginning of simulation)
+//        n_start = 0
+//        n_step = 1
+//       n_end = 0
+//        title = Ex data
+//}
+
+
+}

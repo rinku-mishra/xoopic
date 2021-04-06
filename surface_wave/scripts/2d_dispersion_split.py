@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 #Use the data directory
 mode          = "split"
-run           = "E_11"
+run           = "E_10"
 yLoc          =  11
 dataDir       = "/scratch/data/outputs/"+run+"/"
 processedDir  = "/scratch/data/outputs/dispDataProcessed/"

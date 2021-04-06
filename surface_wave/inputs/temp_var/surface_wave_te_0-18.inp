@@ -4,7 +4,7 @@ Plasma Antenna using ExitPort
 }
 Variables
 {
-
+dumpPeriod = 100000
 // ******************************
 // General physical parameters
 // ******************************
@@ -18,7 +18,7 @@ Variables
 
   PLA_DEN     = 1E12
   KB          = 1.38e-23
-  Te          = 0.15
+  Te          = 0.18
   Ti 	      = 0.1
   TeK	      = Te*11604.525
   TiK         = Ti*11604.525
@@ -369,20 +369,120 @@ Diagnostic
    HistMax = 10240
 }
 
+
+// Ex_custom dump
+
 Diagnostic
 {
-        directory = /scratch/data/outputs/E_te08/
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
         file = Ex_%08d.dat
         VarName = Ex
         // optional parameters
         // writing defined by computational steps
         n = 0
-        // computational step to start writing; default value is 0 (beginning of simulation)
+        // computational step to start writing; default value is 0 (beginning o>
         n_start = 0
-        n_step = 1
-       n_end = 0
-        title = Ex data
+        n_step = dumpPeriod
+        n_end = 0
+        title = Ex_custom
 }
+
+// Ey_custom dump
+Diagnostic
+{
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
+        file = Ey_%08d.dat
+        VarName = Ey
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = Ey_custom
+}
+
+// phase space dump
+Diagnostic
+{
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
+        file = ux_x_%08d.dat
+        VarName = ux vs x, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = ux_x_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
+        file = ux_y_%08d.dat
+        VarName = ux vs y, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = ux_y_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
+        file = uy_x_%08d.dat
+        VarName = uy vs x, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = uy_x_custom
+}
+
+Diagnostic
+{
+        directory = /scratch/data/outputs/temp_var/E_te0-18data
+        file = uy_y_%08d.dat
+        VarName = uy vs y, all species
+        // optional parameters
+        // writing defined by computational steps
+        n = 0
+        // computational step to start writing; default value is 0 (beginning o>
+        n_start = 0
+        n_step = dumpPeriod
+        n_end = 0
+        title = uy_y_custom
+}
+
+
+
+
+
+
+//Diagnostic
+//{
+//        directory = /scratch/data/outputs/E_te08/
+//        file = Ex_%08d.dat
+//        VarName = Ex
+//        // optional parameters
+//        // writing defined by computational steps
+//        n = 0
+//        // computational step to start writing; default value is 0 (beginning of simulation)
+//        n_start = 0
+//        n_step = 1
+//       n_end = 0
+//        title = Ex data
+//}
 
 
 }
