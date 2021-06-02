@@ -37,3 +37,6 @@ plasma_antenna/surface_wave/data/*
 *.dmp
 *.dat
 *.png
+
+*.txt
+.DS_Store
